@@ -43,7 +43,6 @@ namespace Embraer_Backend.Controllers
             if (ModelState.IsValid)            
             {
                 var insert = _arModel.InsertArComprimido(_configuration,_ar);
-
                 if(insert==true)
                 {
                    

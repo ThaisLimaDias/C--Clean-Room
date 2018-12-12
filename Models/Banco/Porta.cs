@@ -14,7 +14,8 @@ namespace Embraer_Backend.Models
         public long? IdColetaPorta { get; set; }
         public long? IdLocalColeta { get; set; }
         public DateTime? DtColeta{get;set;}  
-        public long? IdSensores{get;set;} 
+        public long? IdSensores{get;set;}
+        public string DescSensor{get;set;}
         public string Valor {get;set;}  
         public string DescPorta{get;set;}     
     }
@@ -30,8 +31,8 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaPorta,IdLocalColeta,DtColeta,Valor,IdSensores";
-                sSql = sSql + " FROM TB_COLETA_PORTA";
+                sSql = "SELECT IdColetaPorta,IdLocalColeta,DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
 
 
@@ -61,8 +62,9 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaPorta,IdLocalColeta, DtColeta,IdSensores,Valor,DescPorta FROM TB_COLETA_PORTA";
-                sSql = sSql + " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA";
+                sSql = "SELECT IdColetaPorta,IdLocalColeta, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
+                sSql = sSql + " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA ";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta + " AND IdSensores =" + IdSensores + " ORDER BY DtColeta DESC)";                                
                                 
 

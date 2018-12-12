@@ -15,7 +15,9 @@ namespace Embraer_Backend.Models
         public long IdLocalColeta { get; set; }
         public DateTime? DtColeta{get;set;}  
         public long IdSensores{get;set;} 
+        public string DescSensor{get;set;}
         public decimal Valor {get;set;}
+        public string UnidMedida {get;set;}
         public long IdCadParametroSistema { get; set; }
         public decimal ControleMin {get;set;}
         public decimal EspecificacaoMin {get;set;}
@@ -35,10 +37,10 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaPressao,IdLocalColeta,DtColeta,IdSensores";
-                sSql = sSql + ",Valor,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = "SELECT IdColetaPressao,IdLocalColeta,DtColeta,P.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax";
-                sSql = sSql + " FROM TB_COLETA_PRESSAO";
+                sSql = sSql + " FROM TB_COLETA_PRESSAO P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
 
                 if(IdLocalColeta !=null)
@@ -67,10 +69,10 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT TOP 1 IdColetaPressao,IdLocalColeta,DtColeta,IdSensores";
-                sSql = sSql + ",Valor,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = "SELECT TOP 1 IdColetaPressao,IdLocalColeta,DtColeta,P.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax";
-                sSql = sSql + " FROM TB_COLETA_PRESSAO";
+                sSql = sSql + " FROM TB_COLETA_PRESSAO P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  
                 sSql = sSql + " ORDER BY DtColeta DESC";               
 

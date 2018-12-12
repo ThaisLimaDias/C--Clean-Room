@@ -20,6 +20,9 @@ namespace Embraer_Backend.Controllers
         IEnumerable<Equipamentos> _equips;
         EquipamentosModel _equipsModel= new EquipamentosModel();
 
+        IEnumerable<ControleApontamento> _ctrl;
+        ControleApontamentoModel _ctrlModel= new ControleApontamentoModel();
+
         public GeralController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -36,6 +39,21 @@ namespace Embraer_Backend.Controllers
             else 
                 return StatusCode(505,"Não foi encotrado nenhum local de Apontamento verifique o log de erros do sistema!");
         }
+        
+        [HttpGet]      
+        public IActionResult  ControleApontamento(string DescApont)
+        { 
+            log.Debug("Get de quantos pontos de coleta terá um Apontamento.");        
+            _ctrl = _ctrlModel.SelectControleApontamento(_configuration,DescApont);
+
+            if (_ctrl.Count()>0)
+                return Ok(_ctrl);
+            else 
+                return StatusCode(505,"Não foi encotrado nenhum controle de apontamento para a descrição informada verifique o log de erros do sistema!");
+        }
+
+
+
         [HttpGet]      
         public IActionResult  Equipamentos()
         { 

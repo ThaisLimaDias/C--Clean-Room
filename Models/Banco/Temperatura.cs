@@ -15,12 +15,15 @@ namespace Embraer_Backend.Models
         public long IdLocalColeta { get; set; }
         public DateTime? DtColeta{get;set;}  
         public long IdSensores{get;set;} 
+        public string DescSensor{get;set;}
         public decimal Valor {get;set;}
+        public string UnidMedida {get;set;}
         public long IdCadParametroSistema { get; set; }
         public decimal ControleMin {get;set;}
         public decimal EspecificacaoMin {get;set;}
         public decimal EspecificacaoMax {get;set;}
         public decimal ControleMax {get;set;}
+        public string Etapa{get;set;}
 
     }
 
@@ -35,10 +38,10 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaTemperatura,IdLocalColeta,DtColeta,IdSensores";
-                sSql = sSql + ",Valor,IdCadParametroSistema,ControleMin,EspecificacaoMin";
-                sSql = sSql + ",EspecificacaoMax,ControleMax";
-                sSql = sSql + " FROM TB_COLETA_TEMPERATURA";
+                sSql = "SELECT IdColetaTemperatura,IdLocalColeta,DtColeta,T.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",EspecificacaoMax,ControleMax,Etapa";
+                sSql = sSql + " FROM TB_COLETA_TEMPERATURA T INNER JOIN TB_SENSORES S ON T.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
 
                 if(IdLocalColeta !=null)
@@ -67,10 +70,10 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT TOP 1 IdColetaTemperatura,IdLocalColeta,DtColeta,IdSensores";
-                sSql = sSql + ",Valor,IdCadParametroSistema,ControleMin,EspecificacaoMin";
-                sSql = sSql + ",EspecificacaoMax,ControleMax";
-                sSql = sSql + " FROM TB_COLETA_TEMPERATURA";
+                sSql = "SELECT TOP 1 IdColetaTemperatura,IdLocalColeta,DtColeta,T.IdSensores,Descricao AS DescSensor";
+                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",EspecificacaoMax,ControleMax,Etapa";
+                sSql = sSql + " FROM TB_COLETA_TEMPERATURA T INNER JOIN TB_SENSORES S ON T.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  
                 sSql = sSql + " ORDER BY DtColeta DESC";                    
                                 

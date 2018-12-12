@@ -26,11 +26,7 @@ namespace Embraer_Backend.Controllers
             _configuration = configuration;
         } 
 
-        // [HttpGet] 
-        // public IActionResult Index()
-        // {           
-                     
-        // }
+       
 
         //Get api/GetIluminancia
         [HttpGet]      
