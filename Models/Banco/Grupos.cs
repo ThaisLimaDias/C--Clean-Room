@@ -135,7 +135,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
             }
         }
 
-        public IEnumerable<Grupos> DeleteFuncao(IConfiguration _configuration,long IdFuncaoLiberada)
+        public bool DeleteFuncao(IConfiguration _configuration,long IdFuncaoLiberada)
         {            
                 try
                 {
@@ -150,12 +150,12 @@ namespace C_Embraer_Clean_Room.Models.Banco
                         grupos = db.Query<Grupos>(sSql,commandTimeout:0);
                     }
 
-                    return grupos;
+                    return true;
                 }
                 catch (Exception ex)
                 {
                     log.Error("Erro GruposModel-DeleteFuncao:" + ex.Message.ToString());
-                    return null;
+                    return false;
                 }
         }   
 

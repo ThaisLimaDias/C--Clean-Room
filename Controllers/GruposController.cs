@@ -97,19 +97,22 @@ namespace Embraer_Backend.Controllers
         public IActionResult PutDeletarFuncao(long IdFuncaoLiberada)
         {       
 
-                if(IdFuncaoLiberada!=0){
-                log.Debug("Put De Deletar Função!");            
+                if(IdFuncaoLiberada!=0)
+                {
+                    log.Debug("Put De Deletar Função!");            
 
-                _gruposModel.DeleteFuncao(_configuration,IdFuncaoLiberada);
+                    var del = _gruposModel.DeleteFuncao(_configuration,IdFuncaoLiberada);
+                    if (del == true)
+                    {
+                        log.Debug("Put De Deletar Função Deletou Com Sucesso");  
+                        return Ok();
+                    }
 
-                    log.Debug("Put De Deletar Função Deletou Com Sucesso");  
-                    return Ok();
-                
-                return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
-
-                }else{
-                    return StatusCode(505,"Não foi recebido o parametro IdFuncaoLiberada");
+                    else
+                        return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
                 }
+                else
+                    return StatusCode(505,"Não foi recebido o parametro IdFuncaoLiberada");
                      
         }
 
