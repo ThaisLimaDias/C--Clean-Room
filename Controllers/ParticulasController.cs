@@ -16,8 +16,10 @@ namespace Embraer_Backend.Controllers
         private readonly IConfiguration _configuration; 
         ParticulasModel _prtModel = new ParticulasModel();    
         LocalMedicaoModel _localMedicaoModel = new LocalMedicaoModel();
+        ParametrosModel _parModel = new ParametrosModel();
         IEnumerable<Particulas> _particulas;
         IEnumerable<ParticulasMedicoes> _medicoes;
+        IEnumerable<Parametros> _par;
 
         IEnumerable<ParticulasTam> _tampart;
 
@@ -25,6 +27,17 @@ namespace Embraer_Backend.Controllers
         {            
             _configuration = configuration;
         } 
+        public IActionResult  Index(long IdLocalMedicao)
+        {
+            if (IdLocalMedicao>0)
+            {
+                log.Debug("Get Do parametro de Particulas!"); 
+                _par = _parModel.SelectParametros(_configuration,IdLocalMedicao,"Particulas");
+                return Ok(_par);
+            }
+            else 
+                return StatusCode(505,"Não foi recebido o parametro IdLocalMedicao!");
+        }
 
         //Get api/GetParticulas
         [HttpGet]       

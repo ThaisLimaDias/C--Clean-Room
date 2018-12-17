@@ -12,7 +12,6 @@ namespace Embraer_Backend.Models
     public class Parametros
     {
         public long IdCadParametroSistema { get; set; }
-
         public string DescLocalMedicao {get;set;}
         public string DescParametro { get; set; }
         public decimal  ControleMin {get;set;}
@@ -30,7 +29,7 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ParametrosModel));
         
-        public IEnumerable<Parametros> SelectParametros(IConfiguration _configuration, long IdLocalMedicao)
+        public IEnumerable<Parametros> SelectParametros(IConfiguration _configuration, long IdLocalMedicao,string DescParametro)
         {            
             try
             {
@@ -42,6 +41,9 @@ namespace Embraer_Backend.Models
 
                 if(IdLocalMedicao!=0)
                     sSql = sSql + " AND P.IdLocalMedicao=" + IdLocalMedicao;
+
+                if(DescParametro!=null && DescParametro!="")
+                    sSql = sSql + " AND DescParametro LIKE '%" + DescParametro + "%'";
 
                 IEnumerable <Parametros> _parametros;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

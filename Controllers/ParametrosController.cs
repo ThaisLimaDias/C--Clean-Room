@@ -24,7 +24,7 @@ namespace Embraer_Backend.Controllers
         [HttpGet] 
         public IActionResult Index()
         {           
-            return Ok(_prtmModel.SelectParametros(_configuration,0));            
+            return Ok(_prtmModel.SelectParametros(_configuration,0,null));            
         }
 
         //Get api/GetParametros
@@ -34,7 +34,7 @@ namespace Embraer_Backend.Controllers
             if (IdLocalMedicao!=0)
             {
                     log.Debug("Get Dos paramtros pelo IdLocalMedicao "+ IdLocalMedicao);            
-                    prtm=_prtmModel.SelectParametros(_configuration,IdLocalMedicao);
+                    prtm=_prtmModel.SelectParametros(_configuration,IdLocalMedicao,null);
                     return Json(prtm);
             }
             else

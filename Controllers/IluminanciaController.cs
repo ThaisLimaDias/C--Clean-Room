@@ -16,17 +16,29 @@ namespace Embraer_Backend.Controllers
         private readonly IConfiguration _configuration; 
         IluminanciaModel _ilModel = new IluminanciaModel();    
         EquipamentosModel _equipModel = new EquipamentosModel(); 
-
         LocalMedicaoModel _localMedicaoModel = new LocalMedicaoModel();
+        ParametrosModel _parModel = new ParametrosModel();
         IEnumerable<Iluminancia> _iluminancias;
         IEnumerable<IluminanciaMedicoes> _medicoes;
+
+        IEnumerable<Parametros> _par;
 
         public IluminanciaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
         } 
 
-       
+        public IActionResult  Index(long IdLocalMedicao)
+        {
+            if (IdLocalMedicao>0)
+            {
+                log.Debug("Get Do parametro de Iluminancia!"); 
+                _par = _parModel.SelectParametros(_configuration,IdLocalMedicao,"Iluminância");
+                return Ok(_par);
+            }
+            else 
+                return StatusCode(505,"Não foi recebido o parametro IdLocalMedicao!");
+        }
 
         //Get api/GetIluminancia
         [HttpGet]      
