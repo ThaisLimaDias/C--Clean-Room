@@ -11,23 +11,23 @@ namespace Embraer_Backend.Models
     public class Usuario
     {
         public long IdUsuario { get; set; }
+        public string Nome {get; set;}
         public string CodUsuario { get; set; }
-        public string Nome {get;set;}
-        public string NumChapa { get; set; }
-        public string IdNivelAcesso {get;set;}
-        public string Status{get;set;}
+        public string Senha {get; set;}
+        public string Funcao {get; set;}
+        public string Status {get; set;}
     }
     
     public class UsuarioModel
     {        
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(UsuarioModel));
-        public IEnumerable<Usuario> SelectUsuario(IConfiguration _configuration, string codUser)
+        public IEnumerable<Usuario> SelectUsuario(IConfiguration _configuration, string codUsuario)
         {            
                 try
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdUsuario,CodUsuario,Nome,NumChapa,IdNivelAcesso,Status FROM SPI_DB_EMBRAER_COLETA WHERE CodUsuario='"+ codUser + "'"; 
+                    sSql = "SELECT IdUsuario,Nome,CodUsuario,Senha,Funcao FROM TB_USUARIO WHERE CodUsuario='"+ codUsuario+"'"; 
                     
                     IEnumerable<Usuario> usuarios;
          
@@ -45,18 +45,18 @@ namespace Embraer_Backend.Models
                 }
         }
 
-        public (bool,string) UpdateUsuario (IConfiguration _configuration,Usuario _user)
+        public bool UpdateUsuario (IConfiguration _configuration,Usuario _user)
         {
             try{
                 string sSql = string.Empty;
 
                 sSql = "UPDATE SPI_DB_EMBRAER_COLETA SET";
-                sSql=sSql="[CodUsuario]='"+ _user.CodUsuario + "'";
-                sSql=sSql="[Nome]='"+ _user.Nome + "'";
-                sSql=sSql="[NumChapa]='"+ _user.NumChapa + "'";
-                sSql=sSql="[IdNivelAcesso]='" + _user.IdNivelAcesso + "'";
-                sSql=sSql="[Status]='" + _user.Status + "'";
-                sSql = "WHERE IdUsuario=" + _user.IdUsuario;
+                sSql+="[Nome]='"+ _user.Nome + "'";
+                sSql+="[CodUsuario]='" + _user.CodUsuario + "'";
+                sSql+="[Senha]='"+ _user.Senha + "'";
+                sSql+="[Funcao]='" + _user.Funcao + "'";
+                sSql+="[Status]='" + _user.Status + "'";
+                sSql+= "WHERE IdUsuario=" + _user.IdUsuario;
 
                 int update = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
@@ -65,31 +65,31 @@ namespace Embraer_Backend.Models
                 }
                 if(update<=0)
                 {
-                    return (false, string.Empty);
+                    return (false);
                 }
-                return (true,string.Empty);
+                return (true);
 
             }
             catch(Exception ex)
             {
                 log.Error("Erro UsuarioModel-UpdateUsuario:" + ex.Message.ToString());
-                return (false,"UpdateUsuario: Ocorreu um erro ao atualizar informações no banco de dados");
+                return (false);
             }
         }
-        public (bool,string) InsertUsuario(IConfiguration _configuration,Usuario _user)
+        public bool InsertUsuario(IConfiguration _configuration, string Nome,string codUsuario, string Senha,string Funcao )
         {
             
             string sSql = string.Empty;
             try
             {
-                sSql= "INSERT INTO SPI_DB_EMBRAER_COLETA ([CodUsuario],[Nome],[NumChapa],[IdNivelAcesso],[Status])";
-                sSql = "VALUES";
-                sSql = "('" + _user.CodUsuario + "'";
-                sSql = ",'" + _user.Nome + "'";
-                sSql = ",'" + _user.NumChapa + "'";
-                sSql = "," + _user.IdNivelAcesso;
-                sSql = ",'" + _user.Status + "')";
-                sSql = sSql + "SELECT @@IDENTITY";
+                sSql= "INSERT INTO TB_USUARIO ([Nome],[CodUsuario],[Senha],[Funcao],[Status])";
+                sSql += "VALUES";
+                sSql += "('" + Nome + "'";
+                sSql += ",'" + codUsuario + "'";
+                sSql += ",'" +  Senha + "'";
+                sSql += ",'" +  Funcao + "'";
+                sSql += ",'Bloqueado')";
+                sSql += "SELECT @@IDENTITY";
 
                 long insertId = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
@@ -98,17 +98,50 @@ namespace Embraer_Backend.Models
                 }
                 if(insertId>=0)
                 {
-                    _user.IdUsuario=insertId;
-                    return (true, string.Empty);
+                    return (true);
                 }
-                return (false,string.Empty);
+                return (false);
             }
             
             catch(Exception ex)
             {
                 log.Error("Erro UsuarioModel-InsertUsuario:" + ex.Message.ToString());
-                return (false,"InsertUsuario: Ocorreu um erro ao inserir informações no banco de dados");
+                return (false);
             }
+
+
         }
+        public bool DeleteUsuario (IConfiguration _configuration,long IdUsuario)
+        {            
+                try{
+                string sSql = string.Empty;
+
+                sSql = "UPDATE TB_USUARIO SET";
+                sSql+="[Status]='Bloqueado'";
+                sSql+= " WHERE IdUsuario=" + IdUsuario;
+
+                int update = 0;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("SPI_DB_EMBRAER_COLETA")))
+                {
+                    update = db.Execute(sSql,commandTimeout:0);
+                }
+                if(update<=0)
+                {
+                    return (false);
+                }
+
+                
+
+                    return(true);
+            }
+            catch(Exception ex)
+            {
+                log.Error("Erro GruposModel-UpdateGrupos:" + ex.Message.ToString());
+                return (false);
+            }
+
+        
+
     }
+}
 }
