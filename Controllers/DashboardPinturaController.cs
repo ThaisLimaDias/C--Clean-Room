@@ -31,8 +31,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Temperatura Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);          
                 _retorno = _model.SelectTemperatura(_configuration,IdLocalColeta).FirstOrDefault();
+                
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
 
-                return Json(_retorno);
+                if (difMin<ultColetaMinutos)
+                    return Json(_retorno);
+                else    
+                    return Ok();
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -48,8 +55,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro umidade Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);            
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
-                                
-                return Ok(_retorno);
+
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                if (difMin<ultColetaMinutos)
+                    return Ok(_retorno);
+                else
+                    return Ok();
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -118,7 +132,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Pressão Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);            
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
-                return Ok(_retorno);
+
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                if (difMin<ultColetaMinutos)
+                    return Ok(_retorno);
+                else
+                    return Ok();
                 
             }
             else
@@ -156,7 +178,13 @@ namespace Embraer_Backend.Controllers
 
                 foreach(var item in _sensores)
                 {
-                    _retorno.Add(_model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault());
+                    var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
+                    DateTime date = porta.DtColeta.Value;
+                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                    if (difMin<ultColetaMinutos)
+                        _retorno.Add(porta);
                 }
 
                 return Ok(_retorno);

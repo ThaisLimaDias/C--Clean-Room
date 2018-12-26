@@ -34,12 +34,25 @@ namespace Embraer_Backend.Controllers
                     return StatusCode(505,"Não foi encontrado nenhuma coleta de temeperatura");
 
                 var valmax = list.Max( p=> p.Valor);
-                _retorno.Add(list.Where(p=>p.Valor==valmax).FirstOrDefault());
+                var maxTemp = list.Where(p=>p.Valor==valmax).FirstOrDefault();
+                _retorno.Add(maxTemp);
 
                 var valmin = list.Min( p=> p.Valor);
-                _retorno.Add(list.Where(p=>p.Valor==valmin).FirstOrDefault());
+                var minTemp = list.Where(p=>p.Valor==valmin).FirstOrDefault();
+                _retorno.Add(minTemp);
                 
-                return Ok(_retorno);
+                DateTime dateMin = maxTemp.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(dateMin)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                DateTime dateMax = maxTemp.DtColeta.Value;
+                double difMax = (DateTime.Now.Subtract(dateMin)).TotalMinutes;
+                
+
+                if (difMin<ultColetaMinutos ||difMax<ultColetaMinutos)
+                    return Ok();
+                else
+                    return Ok(_retorno);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -55,8 +68,14 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro umidade Sala Limpa !");            
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
-                                
-                return Ok(_retorno);
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                if (difMin<ultColetaMinutos)              
+                    return Ok(_retorno);
+                else
+                    return Ok();
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -72,8 +91,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Freezer Sala Limpa !");            
                 _retorno=_model.SelectTemperatura(_configuration, IdLocalColeta).FirstOrDefault();
-                                
-                return Ok(_retorno);
+
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                if (difMin<ultColetaMinutos)
+                    return Ok(_retorno);            
+                else
+                    return Ok();
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -178,7 +204,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Pressão Sala Limpa !");            
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
-                return Ok(_retorno);
+
+                DateTime date = _retorno.DtColeta.Value;
+                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                if (difMin<ultColetaMinutos)              
+                    return Ok(_retorno);
+                else
+                    return Ok();
                 
             }
             else
@@ -200,9 +234,15 @@ namespace Embraer_Backend.Controllers
 
                 foreach(var item in _sensores)
                 {
-                    _retorno.Add(_model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault());
-                }
+                    var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
 
+                    DateTime date = porta.DtColeta.Value;
+                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+
+                    if (difMin<ultColetaMinutos)   
+                        _retorno.Add(porta);
+                }                           
                 return Ok(_retorno);
                 
             }
