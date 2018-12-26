@@ -57,13 +57,13 @@ namespace Embraer_Backend.Controllers
         [HttpGet]      
         public IActionResult  Equipamentos()
         { 
-            log.Debug("Get Dos Locais de Apontamento");        
+            log.Debug("Get Dos Equipamentos");        
             _equips= _equipsModel.SelectEquipamentos(_configuration);
 
             if (_equips.Count()>0)
                 return Ok(_equips);
             else 
-                return StatusCode(505,"Não foi encotrado nenhum local de Apontamento verifique o log de erros do sistema!");
+                return StatusCode(505,"Não foi encotrado nenhum equipamento verifique o log de erros do sistema!");
         }
         
     }
