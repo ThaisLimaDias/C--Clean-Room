@@ -103,7 +103,7 @@ namespace Embraer_Backend.Controllers
                 var list=_model.SelectIParticulas(_configuration,IdLocalColeta);
                 if (list!=null)
                 {
-                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas).ToList();
+                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();
                     var vlMax1 =listMed.Where(p=>p.TamParticula=="> 1").Max(p=>p.ValorTamParticula);
                     var vlMax2 =listMed.Where(p=>p.TamParticula=="> 5").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula=="> 10").Max(p=>p.ValorTamParticula);

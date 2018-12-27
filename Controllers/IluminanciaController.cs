@@ -42,12 +42,12 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetIluminancia
         [HttpGet]      
-        public IActionResult  GetIluminancia(long id,string Ini, string Fim)
+        public IActionResult  GetIluminancia(long id,string Ini, string Fim,bool Ocorrencia)
         {
             if (id!=0 || (Ini!=null && Fim!=null))
             {                  
                 log.Debug("Get Dos Apontamentos de Iluminancia!");            
-                _iluminancias=_ilModel.SelectIluminancia(_configuration, id, Ini, Fim);
+                _iluminancias=_ilModel.SelectIluminancia(_configuration, id, Ini, Fim, Ocorrencia);
                               
                 return Ok(_iluminancias);
             }

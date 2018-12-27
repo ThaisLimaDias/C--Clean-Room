@@ -29,16 +29,12 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetParametros
         [HttpGet]       
-        public IActionResult  GetParametros(long IdLocalMedicao)
+        public IActionResult  GetParametros(long IdLocalMedicao, string DescParam)
         {
-            if (IdLocalMedicao!=0)
-            {
-                    log.Debug("Get Dos paramtros pelo IdLocalMedicao "+ IdLocalMedicao);            
-                    prtm=_prtmModel.SelectParametros(_configuration,IdLocalMedicao,null);
-                    return Json(prtm);
-            }
-            else
-                return StatusCode(505,"IdLocalMedicao de Parâmetro mandatório, não Informado!");
+            log.Debug("Get Dos paramtros pelo IdLocalMedicao "+ IdLocalMedicao + "E descrição:"+ DescParam);            
+            prtm=_prtmModel.SelectParametros(_configuration,IdLocalMedicao,DescParam);
+
+            return Json(prtm);           
             
         }
       

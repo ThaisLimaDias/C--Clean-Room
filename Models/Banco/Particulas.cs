@@ -11,7 +11,7 @@ namespace Embraer_Backend.Models
 {  
     public class Particulas
     {
-        public long IdApontParticulas { get; set; }
+        public long? IdApontParticulas { get; set; }
         public long IdUsuario { get; set; }
         public long  IdLocalMedicao {get;set;}
         public string Mes {get;set;}
@@ -23,7 +23,7 @@ namespace Embraer_Backend.Models
     }
    public class ParticulasMedicoes
     {
-        public long IdMedicaoParticulas {get;set;}
+        public long? IdMedicaoParticulas {get;set;}
         public long IdApontParticulas {get;set;}
         public string DescPonto {get;set;}
 
@@ -31,7 +31,7 @@ namespace Embraer_Backend.Models
 
     public class ParticulasTam
     {
-        public long IdTamParticulas {get;set;}
+        public long? IdTamParticulas {get;set;}
         public long IdMedicaoParticulas {get;set;}
         public string TamParticula{get;set;}
         public decimal ValorTamParticula {get;set;}

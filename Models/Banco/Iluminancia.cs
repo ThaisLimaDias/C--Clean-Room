@@ -13,7 +13,10 @@ namespace Embraer_Backend.Models
     {
         public long IdApontIluminancia { get; set; }
         public long IdUsuario { get; set; }
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
         public long  IdLocalMedicao {get;set;}
+        public string DescEquip { get; set; }
         public long  IdEquip {get;set;}
         public DateTime? DtMedicao{get;set;}
         public DateTime? DtOcorrencia{get;set;}
@@ -39,22 +42,27 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(IluminanciaModel));
         
-        public IEnumerable<Iluminancia> SelectIluminancia(IConfiguration _configuration, long id, string dtIni, string dtFim)
+        public IEnumerable<Iluminancia> SelectIluminancia(IConfiguration _configuration, long id, string dtIni, string dtFim, bool Ocorrencia)
         {            
             try
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdApontIluminancia,IdUsuario,IdLocalMedicao,IdEquip,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
-                sSql = sSql + " FROM TB_APONT_ILUMINANCIA";
+                sSql = "SELECT IdApontIluminancia,CodUsuario,A.IdUsuario,DescLocalMedicao,A.IdLocalMedicao,DescEquip,A.IdEquip,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
+                sSql = sSql + " FROM TB_APONT_ILUMINANCIA A";
+                sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
+                sSql = sSql + " INNER JOIN TB_EQUIPAMENTOS E ON A.IdEquip = E.IdEquip";
                 sSql = sSql + " WHERE 1=1";
                 
                 if (id!=0)
-                    sSql = sSql + " AND IdApontIluminancia=" + id;
+                    sSql = sSql + " AND A.IdApontIluminancia=" + id;
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
 
+                if (Ocorrencia)
+                    sSql=sSql + " AND DtOcorrencia IS NULL";
 
                 IEnumerable <Iluminancia> iluminancias;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
@@ -75,9 +83,12 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT TOP 1 IdApontIluminancia,IdUsuario,IdLocalMedicao,IdEquip,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
-                sSql = sSql + " FROM TB_APONT_ILUMINANCIA";
-                sSql = sSql + " WHERE IdLocalMedicao=" + IdLocalMedicao;
+                sSql = "SELECT TOP 1 IdApontIluminancia,CodUsuario,A.IdUsuario,DescLocalMedicao,A.IdLocalMedicao,DescEquip,A.IdEquip,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
+                sSql = sSql + " FROM TB_APONT_ILUMINANCIA A";
+                sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
+                sSql = sSql + " INNER JOIN TB_EQUIPAMENTOS E ON A.IdEquip = E.IdEquip";
+                sSql = sSql + " WHERE A.IdLocalMedicao=" + IdLocalMedicao;
                 sSql = sSql + " ORDER BY DtMedicao DESC";
 
                 
