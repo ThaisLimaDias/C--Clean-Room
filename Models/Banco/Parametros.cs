@@ -43,7 +43,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND P.IdLocalMedicao=" + IdLocalMedicao;
 
                 if(DescParametro!=null && DescParametro!="")
-                    sSql = sSql + " AND DescParametro LIKE '%" + DescParametro + "%'";
+                    sSql = sSql + " AND DescParametro LIKE '%" + DescParametro + "'";
 
                 IEnumerable <Parametros> _parametros;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
