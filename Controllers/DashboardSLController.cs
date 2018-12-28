@@ -10,12 +10,12 @@ namespace Embraer_Backend.Controllers
 {
     [Route("api/[controller]/[action]")]
     [EnableCors("CorsPolicy")]
-    public class DashoboardSLController : Controller
+    public class DashboardSLController : Controller
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashoboardSLController));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashboardSLController));
         private readonly IConfiguration _configuration;
 
-        public DashoboardSLController(IConfiguration configuration) 
+        public DashboardSLController(IConfiguration configuration) 
         {            
             _configuration = configuration;
         }
@@ -31,7 +31,7 @@ namespace Embraer_Backend.Controllers
                 log.Debug("Get Do Dashboard quadro Temperatura Sala Limpa !");            
                 var list=_model.SelectTemperatura(_configuration, IdLocalColeta,null,null);
                 if (list.Count()==0)
-                    return StatusCode(505,"Não foi encontrado nenhuma coleta de temeperatura");
+                    return StatusCode(505,"Não foi encontrado nenhuma coleta de temperatura");
 
                 var valmax = list.Max( p=> p.Valor);
                 var maxTemp = list.Where(p=>p.Valor==valmax).FirstOrDefault();

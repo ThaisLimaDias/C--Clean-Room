@@ -10,12 +10,12 @@ namespace Embraer_Backend.Controllers
 {
     [Route("api/[controller]/[action]")]
     [EnableCors("CorsPolicy")]
-    public class DashoboardPinturaController : Controller
+    public class DashboardPinturaController : Controller
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashoboardPinturaController));
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashboardPinturaController));
         private readonly IConfiguration _configuration;
 
-        public DashoboardPinturaController(IConfiguration configuration) 
+        public DashboardPinturaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
         }
