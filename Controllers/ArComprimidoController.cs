@@ -29,13 +29,33 @@ namespace Embraer_Backend.Controllers
         {
             if (IdApontArComprimido!=0 || (Ini!=null && Fim!=null) || IdLocalMedicao!=0)
             {                  
-                log.Debug("Get Dos Apontamentos de Iluminancia!");            
+                log.Debug("Get Dos Apontamentos de Ar Comprimido!");            
                 _ar=_arModel.SelectArComprimido(_configuration, IdApontArComprimido,IdLocalMedicao, Ini, Fim);                              
                 return Ok(_ar);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdApontArComprimido ou  IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
         }
+        [HttpPut]
+        public IActionResult PutAlarme([FromBody]ArComprimido _arComp)
+        {
+            if (ModelState.IsValid)            
+            {        
+                
+                var insert = _arModel.UpdateArComprimido(_configuration,_arComp);
+                
+                if(insert==true)
+                {
+                   
+                    log.Debug("Put do Apontamento Ar Comprimido com sucesso:" + _arComp);  
+                    return Ok();
+                }
+                return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
+            }
+            else 
+                log.Debug("Put Ar Comprimido não efetuado, Bad Request" + ModelState.ToString());  
+                return BadRequest(ModelState);
+        }       
 
         [HttpPost]
         public IActionResult PostArComprimido([FromBody]ArComprimido _ar)

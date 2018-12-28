@@ -13,10 +13,14 @@ namespace Embraer_Backend.Models
     {
         public long IdApontArComprimido { get; set; }
         public long IdLocalMedicao { get; set; }
-        public long IdUsuario{get;set;}
+        public long IdUsuario{get;set;}        
+        public string DescLocalMedicao { get; set; }
+        public string CodUsuario{get;set;}
         public DateTime? DtMedicao{get;set;}  
-
         public string Valor{get;set;}
+        public DateTime? DtOcorrencia{get;set;}
+        public string FatoOcorrencia{get;set;}
+        public string AcoesObservacoes{get;set;}
     }
 
    
@@ -30,8 +34,10 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdApontArComprimido,IdLocalMedicao,IdUsuario,DtMedicao,Valor";
-                sSql = sSql + " FROM TB_APONT_AR_COMPRIMIDO";
+                sSql = "SELECT IdApontArComprimido,A.IdLocalMedicao,DescLocalMedicao,A.IdUsuario,CodUsuario,DtMedicao,Valor";
+                sSql = sSql + " FROM TB_APONT_AR_COMPRIMIDO A";
+                sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
+                sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
                 sSql = sSql + " WHERE 1=1";
                
                 if(IdApontArComprimido!=0)                
@@ -81,7 +87,37 @@ namespace Embraer_Backend.Models
                 return null;
             }
         }
+        public bool UpdateArComprimido(IConfiguration _configuration,ArComprimido _ar)
+        {
+            try{
+                string sSql = string.Empty;
 
+                string dataOcorrencia = (_ar.DtOcorrencia==null) ? "NULL" : _ar.DtOcorrencia.Value.ToString("yyyy-MM-ddTHH:mm:ss");
+
+                sSql = "UPDATE TB_APONT_AR_COMPRIMIDO SET";                
+                sSql=sSql+ ((dataOcorrencia=="NULL")? "[DtOcorrencia]="+  dataOcorrencia + "" : "[DtOcorrencia]='"+  dataOcorrencia + "'");
+                sSql=sSql+ ",[FatoOcorrencia]='"+ _ar.FatoOcorrencia + "'";
+                sSql=sSql+ ",[AcoesObservacoes]='"+ _ar.AcoesObservacoes + "'";
+                sSql =sSql+ " WHERE IdApontArComprimido=" + _ar.IdApontArComprimido;
+
+                long update = 0;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    update = db.Execute(sSql,commandTimeout:0);
+                }
+                if(update>0)
+                {
+                    return true;
+                }
+                return false;
+
+            }
+            catch(Exception ex)
+            {
+                log.Error("Erro ArComprimidoModel-UpdateArComprimido:" + ex.Message.ToString());
+                return false;
+            }
+        }
 
         public bool InsertArComprimido(IConfiguration _configuration,ArComprimido _arcomp)
         {
