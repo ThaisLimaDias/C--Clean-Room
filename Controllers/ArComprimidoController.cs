@@ -37,7 +37,7 @@ namespace Embraer_Backend.Controllers
                 return StatusCode(505,"Não foi recebido o parametro IdApontArComprimido ou  IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
         }
         [HttpPut]
-        public IActionResult PutAlarme([FromBody]ArComprimido _arComp)
+        public IActionResult PutArComprimido([FromBody]ArComprimido _arComp)
         {
             if (ModelState.IsValid)            
             {        
