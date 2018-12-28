@@ -104,10 +104,10 @@ namespace Embraer_Backend.Controllers
                 if (list!=null)
                 {
                     var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();
-                    var vlMax1 =listMed.Where(p=>p.TamParticula=="> 1").Max(p=>p.ValorTamParticula);
-                    var vlMax2 =listMed.Where(p=>p.TamParticula=="> 5").Max(p=>p.ValorTamParticula);
-                    var vlMax3 =listMed.Where(p=>p.TamParticula=="> 10").Max(p=>p.ValorTamParticula);
-                    var vlMax4 =listMed.Where(p=>p.TamParticula=="> 25").Max(p=>p.ValorTamParticula);
+                    var vlMax1 =listMed.Where(p=>p.TamParticula==">1").Max(p=>p.ValorTamParticula);
+                    var vlMax2 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
+                    var vlMax3 =listMed.Where(p=>p.TamParticula==">10").Max(p=>p.ValorTamParticula);
+                    var vlMax4 =listMed.Where(p=>p.TamParticula==">25").Max(p=>p.ValorTamParticula);
                     _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1).FirstOrDefault());
                     _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2).FirstOrDefault());
                     _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3).FirstOrDefault());
