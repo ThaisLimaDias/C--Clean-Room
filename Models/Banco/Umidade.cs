@@ -26,6 +26,22 @@ namespace Embraer_Backend.Models
 
     }
 
+    public class UmidadeReport
+    {
+         
+        public long IdLocalColeta { get; set; }
+
+        public string DescLocalMedicao { get; set; }
+        public DateTime? DtColeta{get;set;}  
+        public long IdSensores{get;set;} 
+        public string DescSensor{get;set;}
+        public decimal Valor {get;set;}
+        public string UnidMedida {get;set;}
+        public decimal ControleMin {get;set;}
+        public decimal EspecificacaoMin {get;set;}
+        public decimal EspecificacaoMax {get;set;}
+        public decimal ControleMax {get;set;}
+    }
    
     public class UmidadeModel
     {
@@ -87,6 +103,40 @@ namespace Embraer_Backend.Models
             catch (Exception ex)
             {
                 log.Error("Erro UmidadeModel-SelectUmidade:" + ex.Message.ToString());
+                return null;
+            }
+        }
+        public IEnumerable<UmidadeReport> UmidadeReport(IConfiguration _configuration,long IdLocalColeta,string dtIni, string dtFim)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao";
+                sSql = sSql + ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
+	            sSql = sSql + ",ControleMax";
+                sSql = sSql + " FROM VW_REPORT_UMIDADE";
+                sSql = sSql + " WHERE 1=1";
+
+                if (IdLocalColeta!=0)
+                    sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
+
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                    sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+
+                sSql = sSql + " ORDER BY DtColeta ";                    
+                                
+
+                IEnumerable <UmidadeReport> report;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    report = db.Query<UmidadeReport>(sSql,commandTimeout:0);
+                }
+                return  report;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro UmidadeModel-UmidadeReport:" + ex.Message.ToString());
                 return null;
             }
         }

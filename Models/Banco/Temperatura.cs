@@ -26,7 +26,23 @@ namespace Embraer_Backend.Models
         public string Etapa{get;set;}
 
     }
+    public class TemperaturaReport
+    {
+         
+        public long IdLocalColeta { get; set; }
 
+        public string DescLocalMedicao { get; set; }
+        public DateTime? DtColeta{get;set;}  
+        public long IdSensores{get;set;} 
+        public string DescSensor{get;set;}
+        public decimal Valor {get;set;}
+        public string UnidMedida {get;set;}
+        public decimal ControleMin {get;set;}
+        public decimal EspecificacaoMin {get;set;}
+        public decimal EspecificacaoMax {get;set;}
+        public decimal ControleMax {get;set;}
+        public string Etapa{get;set;}
+    }
    
     public class TemperaturaModel
     {
@@ -88,6 +104,40 @@ namespace Embraer_Backend.Models
             catch (Exception ex)
             {
                 log.Error("Erro TemperaturaModel-SelectTemperatura:" + ex.Message.ToString());
+                return null;
+            }
+        }
+        public IEnumerable<TemperaturaReport> TemperaturaReport(IConfiguration _configuration,long IdLocalColeta,string dtIni, string dtFim)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao";
+                sSql = sSql + ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
+	            sSql = sSql + ",ControleMax,Etapa";
+                sSql = sSql + " FROM VW_REPORT_TEMPERATURA";
+                sSql = sSql + " WHERE 1=1";
+
+                if (IdLocalColeta!=0)
+                    sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
+
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                    sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+
+                sSql = sSql + " ORDER BY DtColeta ";                    
+                                
+
+                IEnumerable <TemperaturaReport> report;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    report = db.Query<TemperaturaReport>(sSql,commandTimeout:0);
+                }
+                return  report;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro TemperaturaModel-TemperaturaReport:" + ex.Message.ToString());
                 return null;
             }
         }

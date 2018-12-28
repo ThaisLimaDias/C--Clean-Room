@@ -23,6 +23,8 @@ namespace Embraer_Backend.Controllers
 
         IEnumerable<Parametros> _par;
 
+        IEnumerable<IluminanciaReport> _report;
+
         public IluminanciaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -42,22 +44,36 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetIluminancia
         [HttpGet]      
-        public IActionResult  GetIluminancia(long id,string Ini, string Fim,bool Ocorrencia)
+        public IActionResult  GetIluminancia(long id,long IdLocalMedicao,string Ini, string Fim,bool Ocorrencia)
         {
             if (id!=0 || (Ini!=null && Fim!=null))
             {                  
                 log.Debug("Get Dos Apontamentos de Iluminancia!");            
-                _iluminancias=_ilModel.SelectIluminancia(_configuration, id, Ini, Fim, Ocorrencia);
+                _iluminancias=_ilModel.SelectIluminancia(_configuration, id,Ini, Fim, IdLocalMedicao,Ocorrencia);
                               
                 return Ok(_iluminancias);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdIluminancia ou os parametros de Data Inicio e Data Fim");
         }
+         [HttpGet]      
+        public IActionResult  GetIluminanciaReport(long IdLocalMedicao,string Ini, string Fim)
+        {
+            if (Ini!=null && Fim!=null)
+            {                  
+                log.Debug("Get Dos Apontamentos de Iluminancia para Report!");            
+                _report=_ilModel.IluminanciaReport(_configuration, IdLocalMedicao,Ini, Fim);
+                              
+                return Ok(_report);
+            }
+            else
+                return StatusCode(505,"Não foi recebido o parametro IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
+        }
+
 
         //Get api/GetIMedicoes
         [HttpGet("{idLuminancia}")]       
-        public IActionResult  GetIMedicoes(long idLuminancia)
+        public IActionResult  GetMedicoes(long idLuminancia)
         {
             if (idLuminancia!=0)
             {

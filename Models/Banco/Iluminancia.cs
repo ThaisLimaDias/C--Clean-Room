@@ -37,12 +37,27 @@ namespace Embraer_Backend.Models
         public decimal ControleMax {get;set;}
 
     }
-    
+
+    public class IluminanciaReport
+    {
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
+        public string DescEquip { get; set; }
+         public DateTime? DtMedicao{get;set;}
+        public DateTime? DtOcorrencia{get;set;}
+        public string FatoOcorrencia{get;set;}
+        public string AcoesObservacoes{get;set;}
+        public string DescPonto {get;set;}
+        public decimal Valor {get;set;}        
+        public decimal EspecificacaoMin {get;set;}
+        public decimal EspecificacaoMax {get;set;}
+
+    }
     public class IluminanciaModel
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(IluminanciaModel));
         
-        public IEnumerable<Iluminancia> SelectIluminancia(IConfiguration _configuration, long id, string dtIni, string dtFim, bool Ocorrencia)
+        public IEnumerable<Iluminancia> SelectIluminancia(IConfiguration _configuration, long id, string dtIni, string dtFim,long IdLocalMedicao, bool?  Ocorrencia)
         {            
             try
             {
@@ -57,11 +72,14 @@ namespace Embraer_Backend.Models
                 
                 if (id!=0)
                     sSql = sSql + " AND A.IdApontIluminancia=" + id;
+                
+                if (IdLocalMedicao!=0)
+                    sSql = sSql + " AND A.IdLocalMedicao=" + IdLocalMedicao;
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
 
-                if (Ocorrencia)
+                if (Ocorrencia.Value)
                     sSql=sSql + " AND DtOcorrencia IS NULL";
 
                 IEnumerable <Iluminancia> iluminancias;
@@ -106,6 +124,40 @@ namespace Embraer_Backend.Models
             }
         }
 
+        public IEnumerable<IluminanciaReport> IluminanciaReport(IConfiguration _configuration,long IdLocalMedicao,string dtIni, string dtFim)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT CodUsuario,DescLocalMedicao,DescEquip,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes,DescPonto";
+                sSql = sSql + ",Valor,EspecificacaoMin,EspecificacaoMax";          
+                sSql = sSql + " FROM VW_REPORT_ILUMINANCIA";
+                sSql = sSql + " WHERE 1=1";
+
+                if (IdLocalMedicao!=0)
+                    sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
+
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                    sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
+
+
+                sSql = sSql + " ORDER BY DtMedicao";
+
+                
+                IEnumerable <IluminanciaReport> iluminancias;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    iluminancias = db.Query<IluminanciaReport>(sSql,commandTimeout:0);
+                }                 
+                return iluminancias;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro IluminanciaModel-IluminanciaReport:" + ex.Message.ToString());
+                return null;
+            }
+        }
 
         public bool InsertIluminancia(IConfiguration _configuration,Iluminancia _iluminancia)
         {
