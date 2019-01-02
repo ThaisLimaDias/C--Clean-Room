@@ -23,12 +23,22 @@ namespace C_Embraer_Clean_Room.Controllers
 
         [HttpGet]
 
+        public IActionResult IndexUsuario(string status)
+        {
+            
+            log.Debug("Get de Apontamento do Usuario");
+                IEnumerable<Usuario> _user = _userModel.SelectUsuario(_configuration, null,status);
+
+                return Ok(_user);            
+        }
+
+        [HttpGet]
         public IActionResult GetUsuario(string codUsuario)
         {
             if (codUsuario != null)
             {
                 log.Debug("Get de Apontamento do Usuario");
-                IEnumerable<Usuario> _user = _userModel.SelectUsuario(_configuration, codUsuario);
+                IEnumerable<Usuario> _user = _userModel.SelectUsuario(_configuration, codUsuario,null);
 
                 return Ok(_user);
             }
@@ -41,22 +51,20 @@ namespace C_Embraer_Clean_Room.Controllers
         {
             if (ModelState.IsValid)
             {
-                var insert = _userModel.UpdateUsuario(_configuration, _user);
+                var put = _userModel.UpdateUsuario(_configuration, _user);
 
-                if (insert == true)
+                if (put == true)
                 {
                     log.Debug("Post do Usuario OK" + _user);
-                    return Json(_user);
+                    return Ok();
 
                 }
-
                 return StatusCode(500, "Houve Um Erro, Verifique o Log!");
-
             }
 
             else
                 log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());
-            return BadRequest(ModelState);
+                return BadRequest(ModelState);
 
         }
 
@@ -73,8 +81,8 @@ namespace C_Embraer_Clean_Room.Controllers
 
                 if (put == true)
                 {
-                    log.Debug("Put Status alterado com sucesso");
-                    return Ok();
+                    log.Debug("Put Usuário desativado com sucesso");
+                    return Ok("Usuário desativado com sucesso!");
                 }
                 return StatusCode(500, "Houve um erro, verifique o Log do sistema!");
 
@@ -91,7 +99,7 @@ namespace C_Embraer_Clean_Room.Controllers
         {
             if (_user.CodUsuario != null)            
             {
-                var existis = _userModel.SelectUsuario(_configuration,_user.CodUsuario);
+                var existis = _userModel.SelectUsuario(_configuration,_user.CodUsuario,null);
                 if(existis.Count()>0)
                     return StatusCode(505,"Usuário não cadastrado! Já existe um usuário com o login "+ _user.CodUsuario);
 
@@ -100,7 +108,7 @@ namespace C_Embraer_Clean_Room.Controllers
                     var insert = _userModel.InsertUsuario(_configuration, _user);      
 
                     if (insert==true)
-                        return Ok();               
+                        return Ok("Usuário "+ _user.CodUsuario + " cadastrado com sucesso!");               
                     
                     else
                         return StatusCode(505,"Houve um erro, verifique o Log do sistema!");   

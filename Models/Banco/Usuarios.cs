@@ -22,13 +22,19 @@ namespace Embraer_Backend.Models
     public class UsuarioModel
     {        
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(UsuarioModel));
-        public IEnumerable<Usuario> SelectUsuario(IConfiguration _configuration, string codUsuario)
+        public IEnumerable<Usuario> SelectUsuario(IConfiguration _configuration, string codUsuario,string status)
         {            
                 try
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdUsuario,Nome,CodUsuario,Senha,Funcao FROM TB_USUARIO WHERE CodUsuario='"+ codUsuario+"'"; 
+                    sSql = "SELECT IdUsuario,Nome,CodUsuario,Senha,Funcao FROM TB_USUARIO WHERE 1=1";
+
+                    if (codUsuario!="" && codUsuario!=null)
+                        sSql += " AND CodUsuario='"+ codUsuario+"'"; 
+
+                    if (status!="" && status!=null)
+                        sSql += " AND Status='"+ status+"'"; 
                     
                     IEnumerable<Usuario> usuarios;
          
@@ -51,12 +57,12 @@ namespace Embraer_Backend.Models
             try{
                 string sSql = string.Empty;
 
-                sSql = "UPDATE SPI_DB_EMBRAER_COLETA SET";
+                sSql = "UPDATE TB_USUARIO SET";
                 sSql+="[Nome]='"+ _user.Nome + "'";
-                sSql+="[Senha]='"+ _user.Senha + "'";
-                sSql+="[Funcao]='" + _user.Funcao + "'";
-                sSql+="[NumChapa]='" + _user.NumChapa + "'";
-                sSql+="[Status]='" + _user.Status + "'";
+                sSql+=",[Senha]='"+ _user.Senha + "'";
+                sSql+=",[Funcao]='" + _user.Funcao + "'";
+                sSql+=",[NumChapa]='" + _user.NumChapa + "'";
+                sSql+=",[Status]='" + _user.Status + "'";
                 sSql+= "WHERE IdUsuario=" + _user.IdUsuario;
 
                 int update = 0;
@@ -83,7 +89,7 @@ namespace Embraer_Backend.Models
             string sSql = string.Empty;
             try
             {
-                sSql= "INSERT INTO TB_USUARIO ([Nome],[CodUsuario],[Senha],[Funcao],[Status])";
+                sSql= "INSERT INTO TB_USUARIO ([Nome],[CodUsuario],[Senha],[Funcao],[NumChapa],[Status])";
                 sSql += "VALUES";
                 sSql += "('" + _user.Nome + "'";
                 sSql += ",'" + _user.CodUsuario + "'";
@@ -96,9 +102,9 @@ namespace Embraer_Backend.Models
                 long insertId = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {
-                    insertId =db.Query<long>(sSql).GetEnumerator().Current;
+                   insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
-                if(insertId>=0)
+                if(insertId>0)
                 {
                     return (true);
                 }
@@ -119,25 +125,22 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "UPDATE TB_USUARIO SET";
-                sSql+="[Status]='Inativo'";
-                sSql+= " WHERE IdUsuario=" + IdUsuario;
+                sSql = "UPDATE TB_USUARIO SET [Status]='Inativo' WHERE IdUsuario=" + IdUsuario;
 
-                int update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("SPI_DB_EMBRAER_COLETA")))
+                long update = 0;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
-                if(update<=0)
+                if(update>0)
                 {
-                    return (false);
+                    return true;
                 }
-
-                    return(true);
+                return false;
             }
             catch(Exception ex)
             {
-                log.Error("Erro GruposModel-UpdateGrupos:" + ex.Message.ToString());
+                log.Error("Erro UsuarioModel-DeleteUsuario:" + ex.Message.ToString());
                 return (false);
             }      
 

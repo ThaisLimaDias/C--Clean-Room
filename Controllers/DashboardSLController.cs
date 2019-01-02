@@ -258,23 +258,17 @@ namespace Embraer_Backend.Controllers
         }
 
          [HttpGet]      
-        public IActionResult  GetAlarmes(long IdLocalColeta)
+        public IActionResult  GetAlarmes()
         {
             AlarmesModel _model= new AlarmesModel();
             IEnumerable <Alarmes> _retorno;
-
-            if (IdLocalColeta!=0)
-            {                 
+                
                 log.Debug("Get Do Dashboard quadro Alarmes Sala Limpa !");            
-                _retorno=_model.SelectAlarmesAbertos(_configuration,IdLocalColeta);
+                _retorno=_model.SelectAlarmesAbertos(_configuration,99);
                 if(_retorno!=null)
                     return Ok(_retorno);
                 else
                     return Ok();
-                
-            }
-            else
-                return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
         }
 
 

@@ -87,15 +87,19 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,USR.CodUsuario AS CodUsuarioReconhecimento,IdUsuarioReconhecimento";
-                sSql = sSql + ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
-                sSql = sSql + ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
-                sSql = sSql + " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
-                sSql = sSql + " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
-                sSql = sSql + " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
-                sSql = sSql + " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
+                sSql += ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
+                sSql += ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
+                sSql += " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
+                sSql += " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
+                sSql += " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
+                sSql += " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
 
-                if (IdLocalMedicao>0)
-                    sSql = sSql + " AND A.IdLocalMedicao=" +IdLocalMedicao +"";
+                if (IdLocalMedicao==98)
+                    sSql = sSql + " AND A.IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%PINTURA%')";
+
+                if (IdLocalMedicao==99)
+                    sSql = sSql + " AND A.IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%SALA%')";
+
 
                 IEnumerable <Alarmes> Alarmes;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

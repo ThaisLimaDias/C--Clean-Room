@@ -21,7 +21,7 @@ namespace Embraer_Backend.Controllers
         LocalMedicaoModel _localMedicaoModel = new LocalMedicaoModel();
 
         IEnumerable<LimpezaApontamento> _apontamentos;
-        LimpezaApontamento _apontamento;
+        LimpezaApontamento _apontamento = new LimpezaApontamento();
 
         IEnumerable<LimpezaParametros> _parametrosLimpeza;
         
