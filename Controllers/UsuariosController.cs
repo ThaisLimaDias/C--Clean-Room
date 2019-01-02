@@ -69,15 +69,14 @@ namespace C_Embraer_Clean_Room.Controllers
         }
 
         [HttpPut]
-        public IActionResult PutDesativarUsuario(long IdUsuario)
-        {
-            var put = false;
+        public IActionResult PutDesativarUsuario(string CodUsuario)
+        {           
 
-            if (IdUsuario != 0)
+            if (CodUsuario != null && CodUsuario!="")
             {
                 log.Debug("Put Edit Status!");
 
-                put = _userModel.DeleteUsuario(_configuration, IdUsuario);
+                var put = _userModel.DeleteUsuario(_configuration, CodUsuario);
 
                 if (put == true)
                 {
@@ -89,7 +88,7 @@ namespace C_Embraer_Clean_Room.Controllers
             }
             else
             {
-                return StatusCode(505, "Não foi recebido o parametro IdUsuario");
+                return StatusCode(505, "Não foi recebido o parametro CodUsuario");
             }
 
         }

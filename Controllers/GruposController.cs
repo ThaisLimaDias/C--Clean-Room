@@ -17,80 +17,75 @@ namespace Embraer_Backend.Controllers
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(GruposController));
         private readonly IConfiguration _configuration; 
         GruposModel _gruposModel = new GruposModel(); 
-        IEnumerable <Grupos> _grupos;
+        IEnumerable <GruposAcesso> _grupos;
+        IEnumerable <FuncoesSistema> _funcoes;
+        IEnumerable <FuncoesUsuario> _funcUser;
+        IEnumerable <FuncoesSistema> _funcSist;
+
 
         public GruposController(IConfiguration configuration) 
         {            
             _configuration = configuration;
         }
-
         [HttpGet]      
-        public IActionResult  GetTelasSistema()
-        {              
-                log.Debug("Get Dos Grupos!");            
-                _grupos=_gruposModel.SelectTelasSistema(_configuration);
-
-                return Ok(_grupos);
-        }
-
-     [HttpGet]      
-        public IActionResult  GetGruposLiberados(long IdGrupos)
+        public IActionResult  GetPermissoesUsuario(string codUsuario)
         {
-            if (IdGrupos!=0)
-            {                 
-                log.Debug("Get Dos Grupos Liberados!");            
-               IEnumerable<Grupos> _grupos=_gruposModel.SelectGruposLiberados(_configuration,IdGrupos);
-
-                return Ok(_grupos);
+            if (codUsuario!=null && codUsuario!=null)
+            {                  
+                log.Debug("Get das permissões por usuario de acordo com seu nível de acesso!");            
+                _funcUser=_gruposModel.SelectFuncoesUsuario(_configuration,codUsuario);
+                              
+                return Ok(_funcUser);
             }
             else
-                return StatusCode(505,"Não foi recebido o parametro Grupos");
+                return StatusCode(505,"Não foi recebido o parametro codUsuario!");
         }
 
-        [HttpPut]
-        public IActionResult PutGrupos(long IdAcesso, String DescFunc)
+        [HttpGet]      
+        public IActionResult  GetPermissoes()
+        {                        
+            log.Debug("Get das Funções Existentes no sistema que podem ter seu acesso liberado!");            
+            _funcSist=_gruposModel.SelectFuncoesSistema(_configuration);
+                            
+            return Ok(_funcSist);           
+        }
+
+        [HttpPost]
+        public IActionResult PutGrupoFuncoes([FromBody]List<GrupoFuncoes> _grupo)
         {       
-                var insert = false;
-
-                if(IdAcesso!=0 && DescFunc!=null){
-                log.Debug("Put Dos Grupos Liberados!");            
-
-                insert = _gruposModel.UpdateGrupos(_configuration,IdAcesso,DescFunc);
-
-                if(insert==true)
+               if (ModelState.IsValid)            
+            {
+                foreach(var item in _grupo)
                 {
-                    log.Debug("Put Grupos alterado com sucesso");  
-                    return Ok();
-                }
-                return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
-
-                }else{
-                    return StatusCode(505,"Não foi recebido o parametro IdAcesso ou DescFunc");
-                }
+                    _gruposModel.InsertGrupoFuncoes(_configuration,item); 
+                }                                                                
+                return Ok();    
+            }
+            else 
+                log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
+                return BadRequest(ModelState);
 
         } 
 
         [HttpPut]
-        public IActionResult PutDesativarGrupo(long IdAcesso, String Status)
-        {       
-                var insert = false;
+        public IActionResult PutDesativarGrupo(GruposAcesso _grupo)
+        {   
+            _grupo.Status = "Inativo";
+            var inativo = _gruposModel.UpdateGrupos(_configuration,_grupo);
 
-                if(IdAcesso!=0 && Status!=null){
-                log.Debug("Put Dos Grupos Liberados!");            
+            var users = _gruposModel.SelectFuncoesUsuario(_configuration,null);
 
-                insert = _gruposModel.DeleteGrupos(_configuration,IdAcesso,Status);
+            var usuariosDesativar = users.Select(p=>p.CodUsuario).Distinct();
 
-                if(insert==true)
-                {
-                    log.Debug("Put Grupos alterado com sucesso");  
-                    return Ok();
-                }
-                return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
+            UsuarioModel _userModel = new UsuarioModel();
 
-                }else{
-                    return StatusCode(505,"Não foi recebido o parametro IdAcesso ou DescFunc");
-                }
-                     
+            foreach(var item in usuariosDesativar)
+            {
+                var delete = _userModel.DeleteUsuario(_configuration,item);
+            }
+
+            return Ok("O grupo e os usuários pertencentes a este grupo foram desativados com sucesso!");
+                             
         }
 
         [HttpPut]

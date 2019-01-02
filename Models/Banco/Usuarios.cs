@@ -119,13 +119,13 @@ namespace Embraer_Backend.Models
 
 
         }
-        public bool DeleteUsuario (IConfiguration _configuration,long IdUsuario)
+        public bool DeleteUsuario (IConfiguration _configuration,string CodUsuario)
         {            
             try
             {
                 string sSql = string.Empty;
 
-                sSql = "UPDATE TB_USUARIO SET [Status]='Inativo' WHERE IdUsuario=" + IdUsuario;
+                sSql = "UPDATE TB_USUARIO SET [Status]='Inativo' WHERE CodUsuario=" + CodUsuario;
 
                 long update = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
