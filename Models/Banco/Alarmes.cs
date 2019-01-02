@@ -76,7 +76,7 @@ namespace Embraer_Backend.Models
             }
         }
 
-        public IEnumerable<Alarmes> SelectAlarmesAbertos(IConfiguration _configuration)
+        public IEnumerable<Alarmes> SelectAlarmesAbertos(IConfiguration _configuration,long IdLocalMedicao)
         {            
             try
             {
@@ -87,6 +87,9 @@ namespace Embraer_Backend.Models
                 sSql = sSql + ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
                 sSql = sSql + " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
                 sSql = sSql + " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
+
+                if (IdLocalMedicao>0)
+                    sSql = sSql + " AND A.IdLocalMedicao=" +IdLocalMedicao +"";
 
                 IEnumerable <Alarmes> Alarmes;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

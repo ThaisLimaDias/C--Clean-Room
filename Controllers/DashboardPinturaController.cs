@@ -219,8 +219,11 @@ namespace Embraer_Backend.Controllers
             if (IdLocalColeta!=0)
             {                 
                 log.Debug("Get Do Dashboard quadro Portas Sala Limpa !");            
-                _retorno=_model.SelectAlarmesAbertos(_configuration);
-                return Ok(_retorno);
+                _retorno=_model.SelectAlarmesAbertos(_configuration,IdLocalColeta);
+                if(_retorno!=null)
+                    return Ok(_retorno);
+                else
+                    return Ok();
                 
             }
             else
