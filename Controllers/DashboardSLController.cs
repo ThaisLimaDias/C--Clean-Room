@@ -68,13 +68,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro umidade Sala Limpa !");            
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
-                DateTime date = _retorno.DtColeta.Value;
-                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
-                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+                if (_retorno!=null)
+                {
+                    DateTime date = _retorno.DtColeta.Value;
+                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
 
-                if (difMin<ultColetaMinutos)              
-                    return Ok(_retorno);
-                else
+                    if (difMin<ultColetaMinutos)              
+                        return Ok(_retorno);
+                }
                     return Ok();
             }
             else
@@ -91,14 +93,15 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Freezer Sala Limpa !");            
                 _retorno=_model.SelectTemperatura(_configuration, IdLocalColeta).FirstOrDefault();
+                if (_retorno!=null)
+                {
+                    DateTime date = _retorno.DtColeta.Value;
+                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
 
-                DateTime date = _retorno.DtColeta.Value;
-                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
-                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
-
-                if (difMin<ultColetaMinutos)
-                    return Ok(_retorno);            
-                else
+                    if (difMin<ultColetaMinutos)
+                        return Ok(_retorno);            
+                }
                     return Ok();
             }
             else
@@ -115,26 +118,28 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Limpeza Sala Limpa !");            
                 var list=_model.SelectLimpezaDashboard(_configuration,IdLocalColeta);
-                //Pegando o Ultima limpeza DIARIO
-                var vldiario = list.Where(p=>p.TipoControle=="DIARIO").Max(p=>p.DtMedicao); 
-                _retorno.Add(list.Where(p=> p.DtMedicao==vldiario.Value).FirstOrDefault());
+                if (list.Count()!=0)
+                {
+                    //Pegando o Ultima limpeza DIARIO
+                    var vldiario = list.Where(p=>p.TipoControle=="DIARIO").Max(p=>p.DtMedicao); 
+                    _retorno.Add(list.Where(p=> p.DtMedicao==vldiario.Value).FirstOrDefault());
 
-                //Pegando o Ultima limpeza SEMANAL
-                var vlsema = list.Where(p=>p.TipoControle=="SEMANAL").Max(p=>p.DtMedicao); 
-                _retorno.Add(list.Where(p=> p.DtMedicao==vlsema.Value).FirstOrDefault());
+                    //Pegando o Ultima limpeza SEMANAL
+                    var vlsema = list.Where(p=>p.TipoControle=="SEMANAL").Max(p=>p.DtMedicao); 
+                    _retorno.Add(list.Where(p=> p.DtMedicao==vlsema.Value).FirstOrDefault());
 
-                //Pegando o Ultima limpeza QUINZENAL
-                var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL").Max(p=>p.DtMedicao);  
-                _retorno.Add(list.Where(p=> p.DtMedicao==vlQz.Value).FirstOrDefault());
+                    //Pegando o Ultima limpeza QUINZENAL
+                    var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL").Max(p=>p.DtMedicao);  
+                    _retorno.Add(list.Where(p=> p.DtMedicao==vlQz.Value).FirstOrDefault());
 
-                //Pegando o Ultima limpeza MENSAL
-                var vlMen = list.Where(p=>p.TipoControle=="MENSAL").Max(p=>p.DtMedicao); 
-                _retorno.Add(list.Where(p=> p.DtMedicao==vlMen.Value).FirstOrDefault());
+                    //Pegando o Ultima limpeza MENSAL
+                    var vlMen = list.Where(p=>p.TipoControle=="MENSAL").Max(p=>p.DtMedicao); 
+                    _retorno.Add(list.Where(p=> p.DtMedicao==vlMen.Value).FirstOrDefault());
 
-                //Pegando o Ultima limpeza SEMESTRAL
-                var vlSem = list.Where(p=>p.TipoControle=="SEMESTRAL").Max(p=>p.DtMedicao);
-                _retorno.Add(list.Where(p=> p.DtMedicao==vlSem.Value).FirstOrDefault());
-
+                    //Pegando o Ultima limpeza SEMESTRAL
+                    var vlSem = list.Where(p=>p.TipoControle=="SEMESTRAL").Max(p=>p.DtMedicao);
+                    _retorno.Add(list.Where(p=> p.DtMedicao==vlSem.Value).FirstOrDefault());
+                }
                 return Ok(_retorno);
             }
             else
@@ -151,7 +156,7 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Iluminância Sala Limpa !");            
                 var list=_model.SelectIluminancia(_configuration,IdLocalColeta);
-                if (list!=null)
+                if (list.Count()!=0)
                 {
                     _retorno = _model.SelectMedicaoIluminancia(_configuration,list.FirstOrDefault().IdApontIluminancia).ToList();
                     return Ok(_retorno);
@@ -173,7 +178,7 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Particulas Sala Limpa !");            
                 var list=_model.SelectIParticulas(_configuration,IdLocalColeta);
-                if (list!=null)
+                if (list.Count()!=0)
                 {
                     var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();
                     var vlMax1 =listMed.Where(p=>p.TamParticula==">0,5").Max(p=>p.ValorTamParticula);
@@ -204,16 +209,16 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Pressão Sala Limpa !");            
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
+                if (_retorno!=null)
+                {         
+                    DateTime date = _retorno.DtColeta.Value;
+                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
 
-                DateTime date = _retorno.DtColeta.Value;
-                double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
-                double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
-
-                if (difMin<ultColetaMinutos)              
+                    if (difMin<ultColetaMinutos)              
                     return Ok(_retorno);
-                else
-                    return Ok();
-                
+                }                                
+                    return Ok();                                
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -235,13 +240,15 @@ namespace Embraer_Backend.Controllers
                 foreach(var item in _sensores)
                 {
                     var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
+                    if (porta!=null)
+                    { 
+                        DateTime date = porta.DtColeta.Value;
+                        double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
+                        double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
 
-                    DateTime date = porta.DtColeta.Value;
-                    double difMin = (DateTime.Now.Subtract(date)).TotalMinutes;
-                    double ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
-
-                    if (difMin<ultColetaMinutos)   
-                        _retorno.Add(porta);
+                        if (difMin<ultColetaMinutos)   
+                            _retorno.Add(porta);
+                    }
                 }                           
                 return Ok(_retorno);
                 
