@@ -45,7 +45,7 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ParticulasModel));
         
-        public IEnumerable<Particulas> SelectIParticulas(IConfiguration _configuration, long id, string dtIni, string dtFim)
+        public IEnumerable<Particulas> SelectParticulas(IConfiguration _configuration, long id, string dtIni, string dtFim)
         {            
             try
             {
@@ -71,11 +71,11 @@ namespace Embraer_Backend.Models
             }
             catch (Exception ex)
             {
-                log.Error("Erro ParticulasModel-SelectIParticulas:" + ex.Message.ToString());
+                log.Error("Erro ParticulasModel-SelectParticulas:" + ex.Message.ToString());
                 return null;
             }
         }
-        public IEnumerable<Particulas> SelectIParticulas(IConfiguration _configuration, long IdLocalMedicao)
+        public IEnumerable<Particulas> SelectParticulas(IConfiguration _configuration, long IdLocalMedicao)
         {            
             try
             {

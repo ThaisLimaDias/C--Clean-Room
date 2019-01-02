@@ -18,9 +18,11 @@ namespace Embraer_Backend.Models
         public DateTime? DtFim{get;set;} 
         public string  Mensagem {get;set;}
         public long? IdUsuarioReconhecimento { get; set; }
+        public string CodUsuarioReconhecimento { get; set; }
         public string  DescReconhecimento {get;set;}
         public DateTime? DtReconhecimento{get;set;} 
         public long? IdUsuarioJustificativa { get; set; }
+        public string CodUsuarioJustificativa { get; set; }
         public string  DescJustificativa {get;set;}
         public DateTime? DtJustificativa{get;set;}    
         public long IdCadParametroSistema {get;set;}
@@ -43,10 +45,12 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,IdUsuarioReconhecimento";
-                sSql = sSql + ",DescReconhecimento,DtReconhecimento,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
+                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,USR.CodUsuario AS CodUsuarioReconhecimento,IdUsuarioReconhecimento";
+                sSql = sSql + ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
                 sSql = sSql + ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
                 sSql = sSql + " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
+                sSql = sSql + " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
+                sSql = sSql + " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
                 sSql = sSql + " WHERE 1=1";
 
                 if(id!=0)                
@@ -82,10 +86,12 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,IdUsuarioReconhecimento";
-                sSql = sSql + ",DescReconhecimento,DtReconhecimento,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
+                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,USR.CodUsuario AS CodUsuarioReconhecimento,IdUsuarioReconhecimento";
+                sSql = sSql + ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
                 sSql = sSql + ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
                 sSql = sSql + " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
+                sSql = sSql + " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
+                sSql = sSql + " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
                 sSql = sSql + " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
 
                 if (IdLocalMedicao>0)

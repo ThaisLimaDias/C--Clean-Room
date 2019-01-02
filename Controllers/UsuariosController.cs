@@ -27,13 +27,13 @@ namespace C_Embraer_Clean_Room.Controllers
         {
             if (codUsuario != null)
             {
-                log.Debug("Get de Apontamento do Usu�rio");
+                log.Debug("Get de Apontamento do Usuario");
                 IEnumerable<Usuario> _user = _userModel.SelectUsuario(_configuration, codUsuario);
 
                 return Ok(_user);
             }
             else
-                return StatusCode(505, "N�o Foi Recebido os Dados do Usu�rio!");
+                return StatusCode(505, "Não Foi Recebido os Dados do Usuário!");
         }
 
         [HttpPut]
@@ -55,7 +55,7 @@ namespace C_Embraer_Clean_Room.Controllers
             }
 
             else
-                log.Debug("Post n�o efetuado, Bad Request" + ModelState.ToString());
+                log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());
             return BadRequest(ModelState);
 
         }
@@ -63,15 +63,15 @@ namespace C_Embraer_Clean_Room.Controllers
         [HttpPut]
         public IActionResult PutDesativarUsuario(long IdUsuario)
         {
-            var insert = false;
+            var put = false;
 
             if (IdUsuario != 0)
             {
                 log.Debug("Put Edit Status!");
 
-                insert = _userModel.DeleteUsuario(_configuration, IdUsuario);
+                put = _userModel.DeleteUsuario(_configuration, IdUsuario);
 
-                if (insert == true)
+                if (put == true)
                 {
                     log.Debug("Put Status alterado com sucesso");
                     return Ok();
@@ -81,24 +81,30 @@ namespace C_Embraer_Clean_Room.Controllers
             }
             else
             {
-                return StatusCode(505, "N�o foi recebido o parametro IdUsuario");
+                return StatusCode(505, "Não foi recebido o parametro IdUsuario");
             }
 
         }
 
          [HttpPost]
-        public IActionResult PostUsuario(string codUsuario, string Senha,string Funcao, string Nome, string Status)
+        public IActionResult PostUsuario([FromBody]Usuario _user)
         {
-            if (codUsuario != null)            
+            if (_user.CodUsuario != null)            
             {
-               
-                var insert = _userModel.InsertUsuario(_configuration, Nome, codUsuario, Senha, Funcao );      
+                var existis = _userModel.SelectUsuario(_configuration,_user.CodUsuario);
+                if(existis.Count()>0)
+                    return StatusCode(505,"Usuário não cadastrado! Já existe um usuário com o login "+ _user.CodUsuario);
 
-                if (insert==true){
-                    return Ok();               
-                }else{
-                    return StatusCode(505,"Houve um erro, verifique o Log do sistema!");
-                }                                                
+                else
+                {
+                    var insert = _userModel.InsertUsuario(_configuration, _user);      
+
+                    if (insert==true)
+                        return Ok();               
+                    
+                    else
+                        return StatusCode(505,"Houve um erro, verifique o Log do sistema!");   
+                }                                             
             }
             else 
                 log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  

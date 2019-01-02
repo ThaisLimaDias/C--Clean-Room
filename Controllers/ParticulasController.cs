@@ -47,7 +47,7 @@ namespace Embraer_Backend.Controllers
             {
                     
                 log.Debug("Get Dos Apontamentos de Particulas!");            
-                _particulas=_prtModel.SelectIParticulas(_configuration, id, Ini, Fim);
+                _particulas=_prtModel.SelectParticulas(_configuration, id, Ini, Fim);
                 
                 return Ok(_particulas);
             }

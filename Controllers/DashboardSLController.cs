@@ -177,7 +177,7 @@ namespace Embraer_Backend.Controllers
             if (IdLocalColeta!=0)
             {                 
                 log.Debug("Get Do Dashboard quadro Particulas Sala Limpa !");            
-                var list=_model.SelectIParticulas(_configuration,IdLocalColeta);
+                var list=_model.SelectParticulas(_configuration,IdLocalColeta);
                 if (list.Count()!=0)
                 {
                     var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();

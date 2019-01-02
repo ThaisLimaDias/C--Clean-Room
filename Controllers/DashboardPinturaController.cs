@@ -81,7 +81,7 @@ namespace Embraer_Backend.Controllers
             {                 
                 log.Debug("Get Do Dashboard quadro Iluminância Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);    
                 var list=_model.SelectIluminancia(_configuration,IdLocalColeta);
-                if (list!=null)
+                if (list.Count()!=0)
                 {
                     _retorno = _model.SelectMedicaoIluminancia(_configuration,list.FirstOrDefault().IdApontIluminancia).ToList();
                     return Ok(_retorno);
@@ -102,7 +102,7 @@ namespace Embraer_Backend.Controllers
             if (IdLocalColeta!=0)
             {                 
                 log.Debug("Get Do Dashboard quadro Iluminância Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);            
-                var list=_model.SelectIParticulas(_configuration,IdLocalColeta);
+                var list=_model.SelectParticulas(_configuration,IdLocalColeta);
                 if (list.Count()!=0)
                 {
                     var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();

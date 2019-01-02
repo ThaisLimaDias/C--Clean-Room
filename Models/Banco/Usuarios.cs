@@ -15,6 +15,7 @@ namespace Embraer_Backend.Models
         public string CodUsuario { get; set; }
         public string Senha {get; set;}
         public string Funcao {get; set;}
+        public string NumChapa {get;set;}
         public string Status {get; set;}
     }
     
@@ -52,9 +53,9 @@ namespace Embraer_Backend.Models
 
                 sSql = "UPDATE SPI_DB_EMBRAER_COLETA SET";
                 sSql+="[Nome]='"+ _user.Nome + "'";
-                sSql+="[CodUsuario]='" + _user.CodUsuario + "'";
                 sSql+="[Senha]='"+ _user.Senha + "'";
                 sSql+="[Funcao]='" + _user.Funcao + "'";
+                sSql+="[NumChapa]='" + _user.NumChapa + "'";
                 sSql+="[Status]='" + _user.Status + "'";
                 sSql+= "WHERE IdUsuario=" + _user.IdUsuario;
 
@@ -76,7 +77,7 @@ namespace Embraer_Backend.Models
                 return (false);
             }
         }
-        public bool InsertUsuario(IConfiguration _configuration, string Nome,string codUsuario, string Senha,string Funcao )
+        public bool InsertUsuario(IConfiguration _configuration, Usuario _user)
         {
             
             string sSql = string.Empty;
@@ -84,10 +85,11 @@ namespace Embraer_Backend.Models
             {
                 sSql= "INSERT INTO TB_USUARIO ([Nome],[CodUsuario],[Senha],[Funcao],[Status])";
                 sSql += "VALUES";
-                sSql += "('" + Nome + "'";
-                sSql += ",'" + codUsuario + "'";
-                sSql += ",'" +  Senha + "'";
-                sSql += ",'" +  Funcao + "'";
+                sSql += "('" + _user.Nome + "'";
+                sSql += ",'" + _user.CodUsuario + "'";
+                sSql += ",'" +  _user.Senha + "'";
+                sSql += ",'" + _user.Funcao + "'";
+                sSql += ",'" + _user.NumChapa + "'";
                 sSql += ",'Bloqueado')";
                 sSql += "SELECT @@IDENTITY";
 
@@ -113,11 +115,12 @@ namespace Embraer_Backend.Models
         }
         public bool DeleteUsuario (IConfiguration _configuration,long IdUsuario)
         {            
-                try{
+            try
+            {
                 string sSql = string.Empty;
 
                 sSql = "UPDATE TB_USUARIO SET";
-                sSql+="[Status]='Bloqueado'";
+                sSql+="[Status]='Inativo'";
                 sSql+= " WHERE IdUsuario=" + IdUsuario;
 
                 int update = 0;
@@ -130,17 +133,13 @@ namespace Embraer_Backend.Models
                     return (false);
                 }
 
-                
-
                     return(true);
             }
             catch(Exception ex)
             {
                 log.Error("Erro GruposModel-UpdateGrupos:" + ex.Message.ToString());
                 return (false);
-            }
-
-        
+            }      
 
     }
 }
