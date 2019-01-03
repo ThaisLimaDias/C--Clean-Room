@@ -46,8 +46,7 @@ namespace Embraer_Backend.Controllers
                         return StatusCode(505,"Este usuário está com acesso " + _funcUser.FirstOrDefault().Status + ", consulte um Admnistrador de Sistema!");
                     else
                         return Ok(_funcUser);
-                }             
-                
+                }     
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro codUsuario ou a senha!");
