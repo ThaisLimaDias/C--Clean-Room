@@ -106,7 +106,7 @@ namespace Embraer_Backend.Models
             }
         }
 
-        public IEnumerable<PressaoReport> PressaoReport(IConfiguration _configuration,long IdLocalColeta,string dtIni, string dtFim)
+        public IEnumerable<PressaoReport> PressaoReport(IConfiguration _configuration,long? IdLocalColeta,string dtIni, string dtFim,decimal? Pressao,long? IdSensores )
         {            
             try
             {
@@ -118,11 +118,17 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " FROM VW_REPORT_PRESSAO";
                 sSql = sSql + " WHERE 1=1";
 
-                if (IdLocalColeta!=0)
+                if (IdSensores!=null && IdSensores!=0)
+                    sSql += " AND IdSensores=" + IdSensores;
+
+                if (IdLocalColeta!=null && IdLocalColeta!=0)
                     sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
 
-                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                if (dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+
+                if (Pressao!=null)
+                    sSql += " AND Valor ='" + Pressao.ToString().Replace(",",".") + "'";
 
                 sSql = sSql + " ORDER BY DtColeta ";                    
                                 

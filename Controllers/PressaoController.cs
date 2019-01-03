@@ -24,12 +24,12 @@ namespace Embraer_Backend.Controllers
 
     
         [HttpGet]      
-        public IActionResult  GetPressaoReport(long IdLocalMedicao,string Ini, string Fim)
+        public IActionResult  GetPressaoReport(long? IdLocalMedicao,string Ini, string Fim,decimal? Pressao,long? IdSensores)
         {
             if (Ini!=null && Fim!=null)
             {                  
                 log.Debug("Get Dos Apontamentos de Pressao para Report!");            
-                _report=_umModel.PressaoReport(_configuration, IdLocalMedicao,Ini, Fim);
+                _report=_umModel.PressaoReport(_configuration, IdLocalMedicao,Ini, Fim,Pressao,IdSensores);
                               
                 return Ok(_report);
             }

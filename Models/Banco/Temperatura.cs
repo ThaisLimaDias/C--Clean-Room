@@ -107,25 +107,34 @@ namespace Embraer_Backend.Models
                 return null;
             }
         }
-        public IEnumerable<TemperaturaReport> TemperaturaReport(IConfiguration _configuration,long IdLocalColeta,string dtIni, string dtFim)
+        public IEnumerable<TemperaturaReport> TemperaturaReport(IConfiguration _configuration,long? IdLocalColeta,string dtIni, string dtFim,decimal? Temperatura,string Etapa,long? IdSensores)
         {            
             try
             {
                 string sSql = string.Empty;
 
                 sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao";
-                sSql = sSql + ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
-	            sSql = sSql + ",ControleMax,Etapa";
-                sSql = sSql + " FROM VW_REPORT_TEMPERATURA";
-                sSql = sSql + " WHERE 1=1";
+                sSql +=  ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
+	            sSql +=  ",ControleMax,Etapa";
+                sSql +=  " FROM VW_REPORT_TEMPERATURA";
+                sSql +=  " WHERE 1=1";
 
-                if (IdLocalColeta!=0)
-                    sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
+                if (IdSensores!=null && IdSensores!=0)
+                    sSql += " AND IdSensores=" + IdSensores;
 
-                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+                if (IdLocalColeta!=null && IdLocalColeta!=0)
+                    sSql += " AND IdLocalColeta=" + IdLocalColeta;
 
-                sSql = sSql + " ORDER BY DtColeta ";                    
+                if (dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                    sSql += " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+                
+                if (Etapa !=null && Etapa!="")
+                    sSql += " AND Etapa ='" + Etapa + "'"; 
+
+                if(Temperatura!=null)
+                    sSql += " AND Valor ='" + Temperatura.ToString().Replace(",",".") + "'";
+
+                sSql += " ORDER BY DtColeta ";                    
                                 
 
                 IEnumerable <TemperaturaReport> report;

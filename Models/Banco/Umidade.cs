@@ -106,7 +106,7 @@ namespace Embraer_Backend.Models
                 return null;
             }
         }
-        public IEnumerable<UmidadeReport> UmidadeReport(IConfiguration _configuration,long IdLocalColeta,string dtIni, string dtFim)
+        public IEnumerable<UmidadeReport> UmidadeReport(IConfiguration _configuration,long? IdLocalColeta,string dtIni, string dtFim,decimal? Umidade,long? IdSensores)
         {            
             try
             {
@@ -117,12 +117,18 @@ namespace Embraer_Backend.Models
 	            sSql = sSql + ",ControleMax";
                 sSql = sSql + " FROM VW_REPORT_UMIDADE";
                 sSql = sSql + " WHERE 1=1";
+                
+                if (IdSensores!=null && IdSensores!=0)
+                    sSql += " AND IdSensores=" + IdSensores;
 
-                if (IdLocalColeta!=0)
+                if (IdLocalColeta!=null && IdLocalColeta!=0)
                     sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
 
-                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                if (dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+
+                if (Umidade!=null)
+                    sSql += " AND Valor ='" + Umidade.ToString().Replace(",",".") + "'";
 
                 sSql = sSql + " ORDER BY DtColeta ";                    
                                 

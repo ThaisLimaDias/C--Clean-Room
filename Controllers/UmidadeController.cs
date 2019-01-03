@@ -24,12 +24,12 @@ namespace Embraer_Backend.Controllers
 
     
         [HttpGet]      
-        public IActionResult  GetUmidadeReport(long IdLocalMedicao,string Ini, string Fim)
+        public IActionResult  GetUmidadeReport(long? IdLocalMedicao,string Ini, string Fim,decimal? Umidade,long? IdSensores)
         {
             if (Ini!=null && Fim!=null)
             {                  
                 log.Debug("Get Dos Apontamentos de Umidade para Report!");            
-                _report=_umModel.UmidadeReport(_configuration, IdLocalMedicao,Ini, Fim);
+                _report=_umModel.UmidadeReport(_configuration, IdLocalMedicao,Ini, Fim,Umidade,IdSensores);
                               
                 return Ok(_report);
             }

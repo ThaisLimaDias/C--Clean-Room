@@ -24,12 +24,12 @@ namespace Embraer_Backend.Controllers
 
     
         [HttpGet]      
-        public IActionResult  GetTemperaturaReport(long IdLocalMedicao,string Ini, string Fim)
+        public IActionResult  GetTemperaturaReport(long? IdLocalMedicao,string Ini, string Fim,decimal? Temperatura,string Etapa,long? IdSensores)
         {
             if (Ini!=null && Fim!=null)
             {                  
                 log.Debug("Get Dos Apontamentos de Temperatura para Report!");            
-                _report=_tpModel.TemperaturaReport(_configuration, IdLocalMedicao,Ini, Fim);
+                _report=_tpModel.TemperaturaReport(_configuration, IdLocalMedicao,Ini, Fim,Temperatura,Etapa,IdSensores);
                               
                 return Ok(_report);
             }
