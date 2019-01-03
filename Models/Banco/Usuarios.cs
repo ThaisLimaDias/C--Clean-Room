@@ -125,7 +125,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "UPDATE TB_USUARIO SET [Status]='Inativo' WHERE CodUsuario=" + CodUsuario;
+                sSql = "UPDATE TB_USUARIO SET [Status]='Inativo', IdNivelAcesso=NULL WHERE CodUsuario='" + CodUsuario + "'";
 
                 long update = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

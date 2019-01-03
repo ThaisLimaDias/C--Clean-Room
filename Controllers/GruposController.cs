@@ -27,18 +27,39 @@ namespace Embraer_Backend.Controllers
         {            
             _configuration = configuration;
         }
+
         [HttpGet]      
-        public IActionResult  GetPermissoesUsuario(string codUsuario)
+        public IActionResult  GetLogin(string codUsuario,string senha)
         {
-            if (codUsuario!=null && codUsuario!=null)
+            if (codUsuario!=null && codUsuario!=null && senha!=null && senha!=null)
             {                  
                 log.Debug("Get das permissões por usuario de acordo com seu nível de acesso!");            
-                _funcUser=_gruposModel.SelectFuncoesUsuario(_configuration,codUsuario);
-                              
-                return Ok(_funcUser);
+                _funcUser=_gruposModel.SelectFuncoesUsuario(_configuration,codUsuario,null);
+
+                if(_funcUser.Count()==0)
+                    return StatusCode(505,"O usuário não possui cadastro no sistema verifique!");
+                else 
+                {
+                    if(_funcUser.FirstOrDefault().Senha!=senha)
+                        return StatusCode(505,"A senha digitada não confere com a senha cadastrada, digite novamente ou solicite a um admnistrador o reset de sua senha!");
+                    else if(_funcUser.FirstOrDefault().Status!="Ativo")
+                        return StatusCode(505,"Este usuário está com acesso " + _funcUser.FirstOrDefault().Status + ", consulte um Admnistrador de Sistema!");
+                    else
+                        return Ok(_funcUser);
+                }             
+                
             }
             else
-                return StatusCode(505,"Não foi recebido o parametro codUsuario!");
+                return StatusCode(505,"Não foi recebido o parametro codUsuario ou a senha!");
+        }
+
+        [HttpGet]      
+        public IActionResult  GetGrupos(long? IdNivelAcesso,string descNivelAcesso)
+        {                        
+            log.Debug("Get dos Grupos Existentes no sistema que podem ser editáveis!");            
+            _grupos=_gruposModel.SelectGrupos(_configuration,IdNivelAcesso,"Ativo",descNivelAcesso);
+                            
+            return Ok(_grupos);           
         }
 
         [HttpGet]      
@@ -50,16 +71,47 @@ namespace Embraer_Backend.Controllers
             return Ok(_funcSist);           
         }
 
-        [HttpPost]
-        public IActionResult PutGrupoFuncoes([FromBody]List<GrupoFuncoes> _grupo)
-        {       
-               if (ModelState.IsValid)            
+               [HttpPost]
+        public IActionResult PostGrupos([FromBody]GruposAcesso _grupo)
+        {
+            if (ModelState.IsValid)            
             {
-                foreach(var item in _grupo)
+                var existis = _gruposModel.SelectGrupos(_configuration,null,null,_grupo.DescNivelAcesso);
+                if(existis.Count()>0)
+                    return StatusCode(505,"Cadastro não efetuado! Já existe um Grupo de Acesso com esta Descrição!");
+                else
+                {                    
+                    var insert = _gruposModel.InsertGrupoAcesso(_configuration,_grupo);      
+
+                    if (insert==true){
+                        foreach(var item in _grupo.PermissoesLiberadas)
+                        {
+                            item.IdNivelAcesso = _grupo.IdNivelAcesso;
+                            _gruposModel.InsertGrupoFuncoes(_configuration,item);
+
+                        }
+                        return Ok(_grupo);               
+                    }
+                    else
+                        return StatusCode(505,"Houve um erro, verifique o Log do sistema!");
+                }
+                                                                
+            }
+            else 
+                log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
+                return BadRequest(ModelState);
+        } 
+
+        [HttpPost]
+        public IActionResult PostGrupoFuncoes([FromBody]List<GrupoFuncoes> _func)
+        {       
+            if (ModelState.IsValid)            
+            {
+                foreach(var item in _func)
                 {
                     _gruposModel.InsertGrupoFuncoes(_configuration,item); 
                 }                                                                
-                return Ok();    
+                return Ok(_func);    
             }
             else 
                 log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
@@ -68,67 +120,47 @@ namespace Embraer_Backend.Controllers
         } 
 
         [HttpPut]
-        public IActionResult PutDesativarGrupo(GruposAcesso _grupo)
+        public IActionResult PutDesativarGrupo([FromBody]GruposAcesso _grupo)
         {   
             _grupo.Status = "Inativo";
             var inativo = _gruposModel.UpdateGrupos(_configuration,_grupo);
 
-            var users = _gruposModel.SelectFuncoesUsuario(_configuration,null);
+            var users = _gruposModel.SelectFuncoesUsuario(_configuration,null,_grupo.IdNivelAcesso);
+            if(users.Count()>0){
+                var usuariosDesativar = users.Select(p=>p.CodUsuario).Distinct();
 
-            var usuariosDesativar = users.Select(p=>p.CodUsuario).Distinct();
+                UsuarioModel _userModel = new UsuarioModel();
 
-            UsuarioModel _userModel = new UsuarioModel();
-
-            foreach(var item in usuariosDesativar)
-            {
-                var delete = _userModel.DeleteUsuario(_configuration,item);
+                foreach(var item in usuariosDesativar)
+                {
+                    _userModel.DeleteUsuario(_configuration,item);
+                }
             }
-
             return Ok("O grupo e os usuários pertencentes a este grupo foram desativados com sucesso!");
                              
         }
 
         [HttpPut]
-        public IActionResult PutDeletarFuncao(long IdFuncaoLiberada)
+        public IActionResult PutDeletarFuncao([FromBody]List<GrupoFuncoes> _func)
         {       
-
-                if(IdFuncaoLiberada!=0)
-                {
-                    log.Debug("Put De Deletar Função!");            
-
-                    var del = _gruposModel.DeleteFuncao(_configuration,IdFuncaoLiberada);
+            if (ModelState.IsValid)            
+            {    
+                foreach(var item in _func)
+                {    
+                    var del = _gruposModel.DeleteGrupoFuncoes(_configuration,item);
                     if (del == true)
                     {
-                        log.Debug("Put De Deletar Função Deletou Com Sucesso");  
-                        return Ok();
+                        log.Debug("Put De Deletar Função Com Sucesso  "+ item);  
+                        
                     }
-
-                    else
-                        return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
                 }
-                else
-                    return StatusCode(505,"Não foi recebido o parametro IdFuncaoLiberada");
+                return Ok();
+            }
+            else
+                log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
+                return BadRequest(ModelState);;
                      
         }
-
-        [HttpPost]
-        public IActionResult PostGrupos(long IdFuncao, long IdAcesso)
-        {
-            if (IdFuncao!=0 && IdAcesso!=0)            
-            {
-               
-                var insert = _gruposModel.InsertGrupos(_configuration,IdFuncao, IdAcesso);      
-
-                if (insert==true){
-                    return Ok();               
-                }else{
-                    return StatusCode(505,"Houve um erro, verifique o Log do sistema!");
-                }                                                
-            }
-            else 
-                log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
-                return BadRequest(ModelState);
-        } 
 
     }
 }
