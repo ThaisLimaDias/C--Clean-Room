@@ -105,13 +105,12 @@ namespace Embraer_Backend.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
-        public IActionResult PutLimpeza([FromBody]List<Limpeza> _limpeza)
+        [HttpPut]
+        public IActionResult PutLimpeza([FromBody]Limpeza _limpeza)
         {
             if (ModelState.IsValid)  
-            {     
-                foreach(Limpeza item in _limpeza)      
-                    _lpzModel.UpdateLimpeza(_configuration,item);                  
+            {        
+                _lpzModel.UpdateLimpeza(_configuration,_limpeza);                  
                 
                log.Debug("Put com sucesso");  
                 return Ok();
@@ -122,7 +121,7 @@ namespace Embraer_Backend.Controllers
         }
 
         // PUT api/values/5
-        [HttpPut("{id}")]
+        [HttpPut]
         public IActionResult PutMedicaoLimpeza([FromBody]List<LimpezaMedicoes> _medicoes)
         {
             if (ModelState.IsValid)  

@@ -22,6 +22,9 @@ namespace Embraer_Backend.Controllers
 
         IEnumerable<ControleApontamento> _ctrl;
         ControleApontamentoModel _ctrlModel= new ControleApontamentoModel();
+    
+        IEnumerable<Sensores> _senso;
+        SensoresModel _senModel= new SensoresModel();
 
         public GeralController(IConfiguration configuration) 
         {            
@@ -64,6 +67,18 @@ namespace Embraer_Backend.Controllers
                 return Ok(_equips);
             else 
                 return StatusCode(505,"Não foi encotrado nenhum equipamento verifique o log de erros do sistema!");
+        }
+        
+        [HttpGet]      
+        public IActionResult  Sensores()
+        { 
+            log.Debug("Get Dos Sensores");        
+            _senso= _senModel.SelectSensor(_configuration,0,0,"Temperatura");
+
+            if (_senso.Count()>0)
+                return Ok(_senso);
+            else 
+                return StatusCode(505,"Não foi encotrado nenhum sensor verifique o log de erros do sistema!");
         }
         
     }
