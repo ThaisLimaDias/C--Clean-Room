@@ -112,7 +112,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao";
+                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao AS DescSensor";
                 sSql = sSql + ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
 	            sSql = sSql + ",ControleMax";
                 sSql = sSql + " FROM VW_REPORT_UMIDADE";
