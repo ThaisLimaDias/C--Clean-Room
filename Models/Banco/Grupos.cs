@@ -28,6 +28,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
     }
     public class FuncoesUsuario
     {
+        public long IdUsuario {get;set;}
         public string CodUsuario {get;set;}   
         public string Funcao {get;set;}
         public string NumChapa {get;set;}
@@ -53,7 +54,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT CodUsuario,Funcao,NumChapa,Nome,Status,Senha,IdFuncaoSistema,DescFuncaoSistema";
+                sSql = "SELECT  IdUsuario,CodUsuario,Funcao,NumChapa,Nome,Status,Senha,IdFuncaoSistema,DescFuncaoSistema";
                 sSql += " FROM VW_PERMISSOES_USUARIO";
                 sSql += " WHERE 1=1";
 
