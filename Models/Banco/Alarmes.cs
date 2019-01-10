@@ -94,12 +94,17 @@ namespace Embraer_Backend.Models
                 sSql += " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
                 sSql += " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
 
+                if (IdLocalMedicao==97)
+                    sSql = sSql + " AND A.IdLocalMedicao IN(2,3,4,5)";
+                
                 if (IdLocalMedicao==98)
-                    sSql = sSql + " AND A.IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%PINTURA%')";
+                    sSql = sSql + " AND A.IdLocalMedicao IN(6,7,8,9,13)";
+
 
                 if (IdLocalMedicao==99)
                     sSql = sSql + " AND A.IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%SALA%')";
 
+                log.Debug("Alarmes!" + sSql);
 
                 IEnumerable <Alarmes> Alarmes;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

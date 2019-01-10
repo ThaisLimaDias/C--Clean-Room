@@ -42,7 +42,7 @@ namespace Embraer_Backend.Models
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + "";
                                 
-
+                log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {
@@ -67,7 +67,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA ";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta + " AND IdSensores =" + IdSensores + " ORDER BY DtColeta DESC)";                                
                                 
-
+                log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {

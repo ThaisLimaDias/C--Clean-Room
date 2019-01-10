@@ -58,7 +58,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + ",EspecificacaoMax,ControleMax";
                 sSql = sSql + " FROM TB_COLETA_UMIDADE U INNER JOIN TB_SENSORES S ON U.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
-
+                log.Debug(sSql);  
                 if(IdLocalColeta !=null)
                     sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;                                   
 

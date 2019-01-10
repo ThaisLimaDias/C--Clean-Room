@@ -90,7 +90,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  
                 sSql = sSql + " ORDER BY DtColeta DESC";               
 
-                                
+                log.Debug(sSql);                  
 
                 IEnumerable <Pressao> pressao;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

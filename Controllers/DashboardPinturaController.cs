@@ -14,7 +14,7 @@ namespace Embraer_Backend.Controllers
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashboardPinturaController));
         private readonly IConfiguration _configuration;
-
+        public  DateDiferenceModel _funcDate = new DateDiferenceModel();
         public DashboardPinturaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -32,17 +32,18 @@ namespace Embraer_Backend.Controllers
                 log.Debug("Get Do Dashboard quadro Temperatura Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);          
                 _retorno = _model.SelectTemperatura(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
-                {                    
-                    TimeSpan dateNow = DateTime.Now.TimeOfDay;
-                    TimeSpan dateColeta = _retorno.DtColeta.Value.TimeOfDay;                    
-                    TimeSpan difMin =(dateNow - dateColeta);
-                    int minutosDif = difMin.Minutes;
-                    int ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+                {      
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);   
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);
+                                        
 
-                    if (minutosDif<ultColetaMinutos)
+                    if (difMinutes)                    
+                        log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Json(_retorno);
                 }    
+                log.Debug("Retorno nulo!" );
                 return Ok();
+                
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -59,14 +60,13 @@ namespace Embraer_Backend.Controllers
                 log.Debug("Get Do Dashboard quadro umidade Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);            
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
-                {                   
-                    TimeSpan dateNow = DateTime.Now.TimeOfDay;
-                    TimeSpan dateColeta = _retorno.DtColeta.Value.TimeOfDay;                    
-                    TimeSpan difMin =(dateNow - dateColeta);
-                    int minutosDif = difMin.Minutes;
-                    int ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+                { 
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);                   
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);
+                                        
 
-                    if (minutosDif<ultColetaMinutos)
+                    if (difMinutes)
+                        log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
                 }
                 return Ok();
@@ -140,13 +140,11 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {
-                    TimeSpan dateNow = DateTime.Now.TimeOfDay;
-                    TimeSpan dateColeta = _retorno.DtColeta.Value.TimeOfDay;                    
-                    TimeSpan difMin =(dateNow - dateColeta);
-                    int minutosDif = difMin.Minutes;
-                    int ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);  
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                        
 
-                    if (minutosDif<ultColetaMinutos)
+                    if (difMinutes)
+                        log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
                 }
                 return Ok();
@@ -168,15 +166,13 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectArComprimido(_configuration,IdLocalColeta).FirstOrDefault();
                 if(_retorno!=null)
                 {
-                    
-                    TimeSpan dateNow = DateTime.Now.TimeOfDay;
-                    TimeSpan dateColeta = _retorno.DtMedicao.Value.TimeOfDay;                    
-                    TimeSpan difMin =(dateNow - dateColeta);
-                    int diasDiff = difMin.Days;
-                    int ultColetaDias= Convert.ToInt16(_configuration.GetSection("Settings:DiasUltimoApontamento").Value);
+                     log.Debug("Retorno não nulo!" + _retorno.Valor);
+                    var difMinutes= _funcDate.Dias(_configuration,_retorno.DtMedicao.Value.TimeOfDay);
+                                        
 
-                    if (diasDiff<ultColetaDias)
+                    if (difMinutes)
                     {
+                         log.Debug("Retorno Json!" + _retorno.Valor);
                         return Ok(_retorno);
                     }
                     return Ok();
@@ -202,15 +198,13 @@ namespace Embraer_Backend.Controllers
                 _sensores = _senModel.SelectSensor(_configuration,0,IdLocalColeta,"Porta");
 
                 foreach(var item in _sensores)
-                {
+                {                   
                     var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
-                    TimeSpan dateNow = DateTime.Now.TimeOfDay;
-                    TimeSpan dateColeta = porta.DtColeta.Value.TimeOfDay;                    
-                    TimeSpan difMin =(dateNow - dateColeta);
-                    int minutosDif = difMin.Minutes;
-                    int ultColetaMinutos = Convert.ToInt16(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
+                    log.Debug("Retorno não nulo!" + porta.Valor);
+                    var difMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value.TimeOfDay);                                        
 
-                    if (minutosDif<ultColetaMinutos)
+                    if (difMinutes)
+                        log.Debug("retorna Json!" + porta.DescPorta);  
                         _retorno.Add(porta);
                 }
 
@@ -222,16 +216,19 @@ namespace Embraer_Backend.Controllers
         }
 
          [HttpGet]      
-        public IActionResult  GetAlarmes()
+        public IActionResult  GetAlarmes(int cabines)
         {
             AlarmesModel _model= new AlarmesModel();
             IEnumerable <Alarmes> _retorno;                       
-                log.Debug("Get Do Dashboard quadro Portas Sala Limpa !");            
-                _retorno=_model.SelectAlarmesAbertos(_configuration,98);
-                if(_retorno!=null)
-                    return Ok(_retorno);
-                else
-                    return Ok();
+            log.Debug("Get Do Dashboard quadro Portas Sala Limpa !");            
+            _retorno=_model.SelectAlarmesAbertos(_configuration,cabines);
+            if(_retorno.Count()>0)
+            {
+                log.Debug("Retorno não nulo,tem alarmes!" + _retorno.FirstOrDefault().Mensagem);
+                return Ok(_retorno);
+            }
+            else
+                return Ok();
         }
 
     }

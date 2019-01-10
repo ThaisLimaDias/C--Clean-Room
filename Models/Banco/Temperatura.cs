@@ -92,13 +92,14 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " FROM TB_COLETA_TEMPERATURA T INNER JOIN TB_SENSORES S ON T.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  
                 sSql = sSql + " ORDER BY DtColeta DESC";                    
-                                
+
+                log.Debug(sSql);                
 
                 IEnumerable <Temperatura> temperaturas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {
                     temperaturas = db.Query<Temperatura>(sSql,commandTimeout:0);
-                }
+                } 
                 return  temperaturas;
             }
             catch (Exception ex)

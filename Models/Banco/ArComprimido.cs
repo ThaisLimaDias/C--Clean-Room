@@ -73,7 +73,10 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " FROM TB_APONT_AR_COMPRIMIDO";
                 sSql = sSql + " WHERE IdLocalMedicao=" + IdLocalMedicao;
                 sSql = sSql + " ORDER BY DtMedicao DESC";
-                                         
+                
+                log.Debug(sSql);
+
+
                 IEnumerable <ArComprimido> _arcomp;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {
