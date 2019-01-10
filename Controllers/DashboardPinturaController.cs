@@ -33,9 +33,9 @@ namespace Embraer_Backend.Controllers
                 _retorno = _model.SelectTemperatura(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {      
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);   
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);
-                                        
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                        
 
                     if (difMinutes)                    
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
@@ -61,6 +61,7 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 { 
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);                   
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);
                                         
@@ -114,10 +115,10 @@ namespace Embraer_Backend.Controllers
                     var vlMax2 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula==">10").Max(p=>p.ValorTamParticula);
                     var vlMax4 =listMed.Where(p=>p.TamParticula==">25").Max(p=>p.ValorTamParticula);
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4).FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">1").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">5").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">10").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">25").FirstOrDefault());
                     return Ok(_particulas);
                 }
                 else
@@ -140,7 +141,8 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {
-                    log.Debug("Retorno não nulo!" + _retorno.Valor);  
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));  
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                        
 
                     if (difMinutes)

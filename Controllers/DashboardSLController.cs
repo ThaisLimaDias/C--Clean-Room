@@ -36,10 +36,12 @@ namespace Embraer_Backend.Controllers
 
                 var valmax = list.Max( p=> p.Valor);
                 var maxTemp = list.Where(p=>p.Valor==valmax).FirstOrDefault();
+                maxTemp.Valor=Convert.ToDecimal(maxTemp.Valor.ToString().Substring(0,4));
                 _retorno.Add(maxTemp);
 
                 var valmin = list.Min( p=> p.Valor);
                 var minTemp = list.Where(p=>p.Valor==valmin).FirstOrDefault();
+                minTemp.Valor=Convert.ToDecimal(minTemp.Valor.ToString().Substring(0,4));
                 _retorno.Add(minTemp);
                 
                 var difMinMinutes= _funcDate.Minutos(_configuration,maxTemp.DtColeta.Value.TimeOfDay);
@@ -67,6 +69,7 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectUmidade(_configuration, IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
 
                     if (difMinMinutes)
@@ -90,6 +93,7 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectTemperatura(_configuration, IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
 
                     if (difMinMinutes)
@@ -178,11 +182,11 @@ namespace Embraer_Backend.Controllers
                     var vlMax2 =listMed.Where(p=>p.TamParticula==">1").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
                     var vlMax4 =listMed.Where(p=>p.TamParticula==">10").Max(p=>p.ValorTamParticula);
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3).FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4).FirstOrDefault());
-                    return Ok(_particulas);
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">0,5").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">1").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">5").FirstOrDefault());
+                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">10").FirstOrDefault());
+                    return Ok(_particulas);                
                 }
                 else
                     return StatusCode(505,"Não foi encontrado nenhum apontamento para o IdLocalColeta!");
@@ -204,6 +208,7 @@ namespace Embraer_Backend.Controllers
                 _retorno=_model.SelectPressao(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_retorno!=null)
                 {         
+                    _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
 
                     if (difMinMinutes)        
