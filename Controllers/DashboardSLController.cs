@@ -44,8 +44,8 @@ namespace Embraer_Backend.Controllers
                 minTemp.Valor=Convert.ToDecimal(minTemp.Valor.ToString().Substring(0,4));
                 _retorno.Add(minTemp);
                 
-                var difMinMinutes= _funcDate.Minutos(_configuration,maxTemp.DtColeta.Value.TimeOfDay);
-                var difMaxMinutes= _funcDate.Minutos(_configuration,minTemp.DtColeta.Value.TimeOfDay); 
+                var difMinMinutes= _funcDate.Minutos(_configuration,maxTemp.DtColeta.Value);
+                var difMaxMinutes= _funcDate.Minutos(_configuration,minTemp.DtColeta.Value); 
                                         
 
                 if (difMinMinutes==false || difMaxMinutes==false)
@@ -70,7 +70,7 @@ namespace Embraer_Backend.Controllers
                 if (_retorno!=null)
                 {
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
-                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
+                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                
 
                     if (difMinMinutes)
                         return Ok(_retorno);
@@ -94,7 +94,7 @@ namespace Embraer_Backend.Controllers
                 if (_retorno!=null)
                 {
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
-                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
+                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                
 
                     if (difMinMinutes)
                         return Ok(_retorno);          
@@ -209,7 +209,7 @@ namespace Embraer_Backend.Controllers
                 if (_retorno!=null)
                 {         
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
-                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                
+                    var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                
 
                     if (difMinMinutes)        
                         return Ok(_retorno);
@@ -238,7 +238,7 @@ namespace Embraer_Backend.Controllers
                     var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
                     if (porta!=null)
                     {                   
-                        var difMinMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value.TimeOfDay);                                
+                        var difMinMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                
 
                         if (difMinMinutes) 
                                 _retorno.Add(porta);

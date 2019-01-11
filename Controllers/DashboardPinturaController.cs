@@ -35,7 +35,7 @@ namespace Embraer_Backend.Controllers
                 {      
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);   
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                        
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
 
                     if (difMinutes)                    
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
@@ -63,7 +63,7 @@ namespace Embraer_Backend.Controllers
                 { 
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);                   
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);
                                         
 
                     if (difMinutes)
@@ -92,7 +92,7 @@ namespace Embraer_Backend.Controllers
                     return Ok(_retorno);
                 }
                 else
-                    return Ok();
+                    return Ok(_retorno);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -122,7 +122,7 @@ namespace Embraer_Backend.Controllers
                     return Ok(_particulas);
                 }
                 else
-                    return Ok();
+                    return Ok(_particulas);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -143,7 +143,7 @@ namespace Embraer_Backend.Controllers
                 {
                     log.Debug("Retorno não nulo!" + _retorno.Valor);
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));  
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value.TimeOfDay);                                        
+                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
 
                     if (difMinutes)
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
@@ -169,15 +169,16 @@ namespace Embraer_Backend.Controllers
                 if(_retorno!=null)
                 {
                      log.Debug("Retorno não nulo!" + _retorno.Valor);
-                    var difMinutes= _funcDate.Dias(_configuration,_retorno.DtMedicao.Value.TimeOfDay);
-                                        
+                    var difMinutes= _funcDate.Dias(_configuration,_retorno.DtMedicao.Value);                                        
 
+                    log.Debug("difMinutes" + difMinutes);
                     if (difMinutes)
                     {
-                         log.Debug("Retorno Json!" + _retorno.Valor);
+                        log.Debug("Retorno Json!" + _retorno.Valor);
                         return Ok(_retorno);
                     }
-                    return Ok();
+                    else
+                        return Ok();
                 }
                 else
                     return Ok();
@@ -203,7 +204,7 @@ namespace Embraer_Backend.Controllers
                 {                   
                     var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
                     log.Debug("Retorno não nulo!" + porta.Valor);
-                    var difMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value.TimeOfDay);                                        
+                    var difMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                        
 
                     if (difMinutes)
                         log.Debug("retorna Json!" + porta.DescPorta);  
