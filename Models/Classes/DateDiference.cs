@@ -50,7 +50,7 @@ namespace Embraer_Backend.Models
                 return true;
             }
             else
-                log.Debug("true"); 
+                log.Debug("false"); 
                 return false;
         }
     }
