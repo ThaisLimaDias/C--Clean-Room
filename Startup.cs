@@ -38,7 +38,8 @@ namespace Embraer_Backend
                     builder => {
                         builder.AllowAnyOrigin()
                         .AllowAnyMethod()
-                        .AllowAnyHeader();
+                        .AllowAnyHeader()
+                        .AllowCredentials();
                         
                     }
                 ));                          
