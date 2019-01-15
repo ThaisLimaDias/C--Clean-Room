@@ -45,7 +45,7 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ParticulasModel));
         
-        public IEnumerable<Particulas> SelectParticulas(IConfiguration _configuration, long id, string dtIni, string dtFim)
+        public IEnumerable<Particulas> SelectParticulas(IConfiguration _configuration, long id, string dtIni, string dtFim,bool?  Ocorrencia)
         {            
             try
             {
@@ -61,7 +61,9 @@ namespace Embraer_Backend.Models
                 if(dtIni !=null && dtFim!=null)
                     sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
 
-
+                if (Ocorrencia.Value)
+                    sSql=sSql + " AND DtOcorrencia IS NULL";
+                    
                 IEnumerable <Particulas> particulas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
                 {

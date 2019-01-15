@@ -41,13 +41,13 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetParticulas
         [HttpGet]       
-        public IActionResult  GetParticulas(long id, string Ini, string Fim)
+        public IActionResult  GetParticulas(long id, string Ini, string Fim,bool Ocorrencias)
         {
             if (id!=0 || (Ini!=null && Fim!=null))
             {
                     
                 log.Debug("Get Dos Apontamentos de Particulas!");            
-                _particulas=_prtModel.SelectParticulas(_configuration, id, Ini, Fim);
+                _particulas=_prtModel.SelectParticulas(_configuration, id, Ini, Fim,Ocorrencias);
                 
                 return Ok(_particulas);
             }
