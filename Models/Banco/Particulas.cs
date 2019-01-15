@@ -14,6 +14,8 @@ namespace Embraer_Backend.Models
         public long? IdApontParticulas { get; set; }
         public long IdUsuario { get; set; }
         public long  IdLocalMedicao {get;set;}
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
         public string Mes {get;set;}
         public int Ano {get;set;}
         public DateTime? DtMedicao{get;set;}
@@ -33,6 +35,8 @@ namespace Embraer_Backend.Models
     {
         public long? IdTamParticulas {get;set;}
         public long IdMedicaoParticulas {get;set;}
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
         public string TamParticula{get;set;}
         public decimal ValorTamParticula {get;set;}
         public long IdCadParametroSistema {get;set;}
@@ -51,9 +55,11 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdApontParticulas,IdUsuario,IdLocalMedicao,Mes,Ano,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
-                sSql = sSql + " FROM TB_APONT_PARTICULAS";
-                sSql = sSql + " WHERE 1=1";
+                sSql = "SELECT IdApontParticulas,CodUsuario,A.IdUsuario,DescLocalMedicao,A.IdLocalMedicao,Mes,Ano,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
+                sSql += " FROM TB_APONT_PARTICULAS A";
+                sSql +=  " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                sSql +=  " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
+                sSql +=  " WHERE 1=1";
                 
                 if (id!=0)
                     sSql = sSql + " AND IdApontParticulas=" + id;
@@ -83,10 +89,12 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT TOP 1 IdApontParticulas,IdUsuario,IdLocalMedicao,Mes,Ano,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
-                sSql = sSql + " FROM TB_APONT_PARTICULAS";
-                sSql = sSql + " WHERE IdLocalMedicao=" + IdLocalMedicao;
-                sSql = sSql + " ORDER BY DtMedicao DESC";
+                sSql = "SELECT TOP 1 IdApontParticulas,CodUsuario,A.IdUsuario,DescLocalMedicao,A.IdLocalMedicao,Mes,Ano,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes";
+                sSql += " FROM TB_APONT_PARTICULAS A";
+                sSql +=  " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                sSql +=  " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
+                sSql += " WHERE IdLocalMedicao=" + IdLocalMedicao;
+                sSql += " ORDER BY DtMedicao DESC";
                 
                 IEnumerable <Particulas> particulas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
