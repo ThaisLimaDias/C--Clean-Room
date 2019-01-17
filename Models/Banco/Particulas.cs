@@ -93,7 +93,7 @@ namespace Embraer_Backend.Models
                 sSql += " FROM TB_APONT_PARTICULAS A";
                 sSql +=  " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
                 sSql +=  " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
-                sSql += " WHERE IdLocalMedicao=" + IdLocalMedicao;
+                sSql += " WHERE A.IdLocalMedicao=" + IdLocalMedicao;
                 sSql += " ORDER BY DtMedicao DESC";
                 
                 IEnumerable <Particulas> particulas;
