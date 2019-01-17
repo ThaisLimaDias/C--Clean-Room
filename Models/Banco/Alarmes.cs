@@ -25,11 +25,11 @@ namespace Embraer_Backend.Models
         public string CodUsuarioJustificativa { get; set; }
         public string  DescJustificativa {get;set;}
         public DateTime? DtJustificativa{get;set;}    
-        public long IdCadParametroSistema {get;set;}
-        public decimal ControleMin {get;set;}
-        public decimal EspecificacaoMin {get;set;}
-        public decimal EspecificacaoMax {get;set;}
-        public decimal ControleMax {get;set;}
+        public long? IdCadParametroSistema {get;set;}
+        public decimal? ControleMin {get;set;}
+        public decimal? EspecificacaoMin {get;set;}
+        public decimal? EspecificacaoMax {get;set;}
+        public decimal? ControleMax {get;set;}
         public string StatusAlarme  {get;set;} 
 
     }

@@ -156,10 +156,10 @@ namespace Embraer_Backend.Models
                 string dataOcorrencia = (_particulas.DtOcorrencia==null) ? "NULL" : _particulas.DtOcorrencia.Value.ToString("yyyy-MM-ddTHH:mm:ss");
 
                 sSql = "UPDATE TB_APONT_PARTICULAS SET";                
-                sSql=sSql+ ((dataOcorrencia=="NULL")? "[DtOcorrencia]="+  dataOcorrencia + "" : "[DtOcorrencia]='"+  dataOcorrencia + "'");
-                sSql=sSql+ ",[FatoOcorrencia]='"+ _particulas.FatoOcorrencia + "'";
-                sSql=sSql+ ",[AcoesObservacoes]='"+ _particulas.AcoesObservacoes + "'";
-                sSql =sSql+ " WHERE IdApontParticulas=" + _particulas.IdApontParticulas;
+                sSql+= ((dataOcorrencia=="NULL")? "[DtOcorrencia]="+  dataOcorrencia + "" : "[DtOcorrencia]='"+  dataOcorrencia + "'");
+                sSql+= ",[FatoOcorrencia]='"+ _particulas.FatoOcorrencia + "'";
+                sSql+= ",[AcoesObservacoes]='"+ _particulas.AcoesObservacoes + "'";
+                sSql += " WHERE IdApontParticulas=" + _particulas.IdApontParticulas;
 
                 long update = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
