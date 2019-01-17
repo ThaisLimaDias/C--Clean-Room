@@ -20,11 +20,11 @@ namespace Embraer_Backend.Models
         public long? IdUsuarioReconhecimento { get; set; }
         public string CodUsuarioReconhecimento { get; set; }
         public string  DescReconhecimento {get;set;}
-        public DateTime? DtReconhecimento{get;set;} 
+        public string DtReconhecimento{get;set;} 
         public long? IdUsuarioJustificativa { get; set; }
         public string CodUsuarioJustificativa { get; set; }
         public string  DescJustificativa {get;set;}
-        public DateTime? DtJustificativa{get;set;}    
+        public string DtJustificativa{get;set;}    
         public long? IdCadParametroSistema {get;set;}
         public decimal? ControleMin {get;set;}
         public decimal? EspecificacaoMin {get;set;}
@@ -131,10 +131,10 @@ namespace Embraer_Backend.Models
                 sSql = "UPDATE TB_ALARMES SET";  
                 sSql = sSql + " IdUsuarioReconhecimento=" + usRec;  
                 sSql = sSql + ",DescReconhecimento=" + ((_alarmes.DescReconhecimento==null) ? "NULL" : "'" + _alarmes.DescReconhecimento +"'") + "";
-                sSql = sSql + ",DtReconhecimento=" + ((_alarmes.DtReconhecimento==null) ? "NULL" :  "'" + _alarmes.DtReconhecimento.Value.ToString("yyyy-MM-ddTHH:mm:ss") +"'") + "";
+                sSql = sSql + ",DtReconhecimento=" + ((_alarmes.DtReconhecimento==null) ? "NULL" :  "'" + _alarmes.DtReconhecimento +"'") + "";
                 sSql = sSql + ",IdUsuarioJustificativa=" + usJus;
                 sSql = sSql + ",DescJustificativa=" + ((_alarmes.DescJustificativa==null) ? "NULL" : "'" + _alarmes.DescJustificativa +"'") + "";
-                sSql = sSql + ",DtJustificativa="+ ((_alarmes.DtJustificativa==null) ? "NULL" : "'" +  _alarmes.DtJustificativa.Value.ToString("yyyy-MM-ddTHH:mm:ss") +"'") + "";  
+                sSql = sSql + ",DtJustificativa="+ ((_alarmes.DtJustificativa==null) ? "NULL" : "'" +  _alarmes.DtJustificativa +"'") + "";  
                 sSql = sSql + ",StatusAlarme='"  + _alarmes.StatusAlarme + "'"; 
                 sSql = sSql + " WHERE IdAlarme=" + _alarmes.IdAlarme;
 
