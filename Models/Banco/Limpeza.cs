@@ -30,8 +30,8 @@ namespace Embraer_Backend.Models
         public long  IdLocalMedicao {get;set;}
         public string TipoControle { get; set; }
         public string MesControle {get;set;}
-        public DateTime DtMedicao{get;set;}
-        public DateTime DtOcorrencia{get;set;}
+        public DateTime? DtMedicao{get;set;}
+        public DateTime? DtOcorrencia{get;set;}
         public string FatoOcorrencia{get;set;}
         public string AcoesObservacoes{get;set;}
         public string Status {get;set;}
