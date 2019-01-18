@@ -44,7 +44,7 @@ namespace Embraer_Backend.Models
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LimpezaModel));
 
         LimpezaMedicoesModel _lm = new LimpezaMedicoesModel();
-        public IEnumerable<LimpezaApontamento> SelectLimpeza(IConfiguration _configuration, long? id, string dtIni, string dtFim,string Status)
+        public IEnumerable<LimpezaApontamento> SelectLimpeza(IConfiguration _configuration, long? id, string dtIni, string dtFim,string Status,bool? Ocorrencia)
         {            
                 try
                 {
@@ -62,6 +62,9 @@ namespace Embraer_Backend.Models
 
                     if(Status!=null && Status!="")
                         sSql = sSql + " AND Status='" + Status + "'";
+                    
+                    if (Ocorrencia.Value)
+                        sSql=sSql + " AND DtOcorrencia IS NULL";
 
                     IEnumerable <LimpezaApontamento> Apontamentos;
                     using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

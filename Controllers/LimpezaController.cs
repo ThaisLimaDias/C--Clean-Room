@@ -36,7 +36,7 @@ namespace Embraer_Backend.Controllers
         public IActionResult Index()
         {
             //Verifica se existe um apontamento pendente caso contrário carrega a tela para iniciar um novo apontamento.
-            _apontamentos=_lpzModel.SelectLimpeza(_configuration, null, null, null,"Apontado");
+            _apontamentos=_lpzModel.SelectLimpeza(_configuration, null, null, null,"Apontado",true);
             if(_apontamentos.Count()>0)
             {
                 return Ok(_apontamentos);
@@ -59,13 +59,13 @@ namespace Embraer_Backend.Controllers
 
         //Get api/Limpeza
         [HttpGet]       
-        public IEnumerable<LimpezaApontamento>  GetLimpeza(long id,string status,string Ini, string Fim)
+        public IEnumerable<LimpezaApontamento>  GetLimpeza(long id,string status,string Ini, string Fim,bool? Ocorrencia)
         {
             if (id!=0 || (Ini!=null & Fim!=null) || status!=null )
             {
 
                 log.Debug("Get Dos Apontamentos de Limpeza!");            
-                _apontamentos=_lpzModel.SelectLimpeza(_configuration, id, Ini, Fim,status);
+                _apontamentos=_lpzModel.SelectLimpeza(_configuration, id, Ini, Fim,status,Ocorrencia);
             }
             return (_apontamentos);
         }
@@ -92,7 +92,7 @@ namespace Embraer_Backend.Controllers
                         
                         _limpezaMedicoesModel.InsertLimpeza(_configuration,md); 
                     }
-                    _apontamentos=_lpzModel.SelectLimpeza(_configuration, _limpeza.IdApontLimpeza, null, null,null);
+                    _apontamentos=_lpzModel.SelectLimpeza(_configuration, _limpeza.IdApontLimpeza, null, null,null,false);
                     log.Debug("Post do Apontamento com sucesso:" + _apontamento);  
                     return Json(_apontamentos);
                 }
