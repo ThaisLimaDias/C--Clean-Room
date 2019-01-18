@@ -25,12 +25,12 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetArComprimido
         [HttpGet]      
-        public IActionResult  GetArComprimido(long IdApontArComprimido,long IdLocalMedicao,string Ini, string Fim)
+        public IActionResult  GetArComprimido(long IdApontArComprimido,long IdLocalMedicao,string Ini, string Fim,bool? Ocorrencia)
         {
             if (IdApontArComprimido!=0 || (Ini!=null && Fim!=null) || IdLocalMedicao!=0)
             {                  
                 log.Debug("Get Dos Apontamentos de Ar Comprimido!");            
-                _ar=_arModel.SelectArComprimido(_configuration, IdApontArComprimido,IdLocalMedicao, Ini, Fim);                              
+                _ar=_arModel.SelectArComprimido(_configuration, IdApontArComprimido,IdLocalMedicao, Ini, Fim,Ocorrencia);                              
                 return Ok(_ar);
             }
             else
