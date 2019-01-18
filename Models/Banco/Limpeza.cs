@@ -14,6 +14,8 @@ namespace Embraer_Backend.Models
         public long IdApontLimpeza { get; set; }
         public long IdUsuario { get; set; }
         public long  IdLocalMedicao {get;set;}
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
         public string TipoControle { get; set; }
         public string MesControle {get;set;}
         public DateTime? DtMedicao{get;set;}
@@ -28,6 +30,8 @@ namespace Embraer_Backend.Models
         public long IdApontLimpeza { get; set; }
         public long IdUsuario { get; set; }
         public long  IdLocalMedicao {get;set;}
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
         public string TipoControle { get; set; }
         public string MesControle {get;set;}
         public DateTime? DtMedicao{get;set;}
@@ -50,18 +54,20 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdApontLimpeza,IdUsuario,IdLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
-                    sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,Status FROM TB_APONT_LIMPEZA";
+                    sSql = "SELECT IdApontLimpeza,A.IdUsuario,A.IdLocalMedicao,CodUsuario,DescLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
+                    sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,A.Status FROM TB_APONT_LIMPEZA A";                    
+                    sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                    sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
                     sSql = sSql + " WHERE 1=1";
                     
                     if (id!=null)
-                        sSql = sSql + " AND IdApontLimpeza=" + id;
+                        sSql = sSql + " AND A.IdApontLimpeza=" + id;
 
                     if (dtIni!=null && dtIni!="" && dtFim!=null && dtFim!="")
                        sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
 
                     if(Status!=null && Status!="")
-                        sSql = sSql + " AND Status='" + Status + "'";
+                        sSql = sSql + " AND A.Status='" + Status + "'";
                     
                     if (Ocorrencia.Value)
                         sSql=sSql + " AND DtOcorrencia IS NULL";
