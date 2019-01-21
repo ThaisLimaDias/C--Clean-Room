@@ -112,8 +112,8 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao AS DescSensor";
-                sSql = sSql + ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
+                sSql = "SELECT IdLocalColeta,DescLocalMedicao,DtColeta,IdSensores,Descricao as DescSensor";
+                sSql +=  ",Valor,UnidMedida,ControleMin,EspecificacaoMin,EspecificacaoMax";
 	            sSql = sSql + ",ControleMax";
                 sSql = sSql + " FROM VW_REPORT_UMIDADE";
                 sSql = sSql + " WHERE 1=1";
@@ -122,15 +122,16 @@ namespace Embraer_Backend.Models
                     sSql += " AND IdSensores=" + IdSensores;
 
                 if (IdLocalColeta!=null && IdLocalColeta!=0)
-                    sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;
+                    sSql += " AND IdLocalColeta=" + IdLocalColeta;
 
                 if (dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+                    sSql += " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + ""; 
+                
 
-                if (Umidade!=null)
+                if(Umidade!=null)
                     sSql += " AND Valor ='" + Umidade.ToString().Replace(",",".") + "'";
 
-                sSql = sSql + " ORDER BY DtColeta ";                    
+                sSql += " ORDER BY DtColeta ";                 
                                 
 
                 IEnumerable <UmidadeReport> report;

@@ -126,10 +126,9 @@ namespace Embraer_Backend.Models
             try{
                 string sSql = string.Empty;
 
-                string dataOcorrencia = (_limpeza.DtOcorrencia==null) ? "NULL" : _limpeza.DtOcorrencia.Value.ToString("yyyy-MM-ddTHH:mm:ss");
 
                 sSql = "UPDATE TB_APONT_LIMPEZA SET";                
-                sSql=sSql+ ((dataOcorrencia=="NULL")? "[DtOcorrencia]="+  dataOcorrencia + "" : "[DtOcorrencia]='"+  dataOcorrencia + "'");
+                sSql=sSql+ "[DtOcorrencia]=" +( (_limpeza.DtOcorrencia==null) ? "NULL" : "GETDATE()");
                 sSql=sSql+ ",[FatoOcorrencia]='"+ _limpeza.FatoOcorrencia + "'";
                 sSql=sSql+ ",[AcoesObservacoes]='"+ _limpeza.AcoesObservacoes + "'";
                 sSql=sSql+ ",[Status]='" + _limpeza.Status + "'";
@@ -159,7 +158,7 @@ namespace Embraer_Backend.Models
             string sSql = string.Empty;
             try
             {
-                string dataOcorrencia = (_limpeza.DtOcorrencia==null) ? "NULL" : _limpeza.DtOcorrencia.Value.ToString("yyyy-MM-ddTHH:mm:ss");
+                string dataOcorrencia = (_limpeza.DtOcorrencia==null) ? "NULL" : _limpeza.DtOcorrencia.Value.ToString();
                 
                 sSql= "INSERT INTO TB_APONT_LIMPEZA (IdUsuario,IdLocalMedicao,TipoControle,MesControle,DtMedicao,Status,DtOcorrencia,FatoOcorrencia,AcoesObservacoes)";
                 sSql = sSql + " VALUES ";
@@ -168,10 +167,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + ",'" + _limpeza.TipoControle + "'";
                 sSql = sSql + ",'" + _limpeza.MesControle + "'";
                 sSql = sSql + ", GETDATE()";
-                sSql = sSql + ",'" + _limpeza.Status + "'";
-                sSql = sSql + ((dataOcorrencia=="NULL")? ","+  dataOcorrencia + "" : ",'"+  dataOcorrencia + "'");
-                sSql = sSql +  "," + ((_limpeza.FatoOcorrencia==null) ? "NULL" : ( "'" + _limpeza.FatoOcorrencia +"'"));
-                sSql = sSql +  "," + ((_limpeza.AcoesObservacoes==null) ? "NULL" : ( "'" + _limpeza.AcoesObservacoes.ToString() + "'") ) + ")";
+                sSql = sSql + ",'" + _limpeza.Status + "',NULL,NULL,NULL)";
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
