@@ -93,6 +93,37 @@ namespace C_Embraer_Clean_Room.Controllers
 
         }
 
+        [HttpPut]
+        public IActionResult PutSenha([FromQuery]string codUsuario,[FromQuery] string SenhaAtual,[FromQuery] string SenhaNova)
+        {           
+
+            if (codUsuario!="" && codUsuario!=null)
+            {
+                log.Debug("Verifica se usuário existe!");
+                var usuario = _userModel.SelectUsuario(_configuration,codUsuario,null);
+                if(usuario.FirstOrDefault().Senha!=SenhaAtual)
+                {
+                    return StatusCode(500, "A senha atual digitada, não corresponde com a senha atual cadastrada!");
+                }
+                else
+                {
+                    var put = _userModel.UpdateUsuarioSenha(_configuration,SenhaNova,codUsuario);
+                    if (put == true)
+                    {
+                        log.Debug("Put Usuário senha alterado com sucesso");
+                        return Ok("Senha Atualizada com sucesso!");
+                    }
+                }
+                return StatusCode(500, "Houve um erro, verifique o Log do sistema!");
+
+            }
+            else
+            {
+                return StatusCode(505, "Não foi recebido o parametro CodUsuario");
+            }
+
+        }
+
          [HttpPost]
         public IActionResult PostUsuario([FromBody]Usuario _user)
         {

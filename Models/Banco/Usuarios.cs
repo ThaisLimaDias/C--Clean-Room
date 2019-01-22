@@ -83,6 +83,33 @@ namespace Embraer_Backend.Models
                 return (false);
             }
         }
+        public bool UpdateUsuarioSenha (IConfiguration _configuration,string senha,string codUsuario)
+        {
+            try{
+                string sSql = string.Empty;
+
+                sSql = "UPDATE TB_USUARIO SET";
+                sSql+=" [Senha]='"+ senha + "'";
+                sSql+= "WHERE CodUsuario='" + codUsuario +"'";
+
+                int update = 0;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    update = db.Execute(sSql,commandTimeout:0);
+                }
+                if(update<=0)
+                {
+                    return (false);
+                }
+                return (true);
+
+            }
+            catch(Exception ex)
+            {
+                log.Error("Erro UsuarioModel-UpdateUsuario:" + ex.Message.ToString());
+                return (false);
+            }
+        }
         public bool InsertUsuario(IConfiguration _configuration, Usuario _user)
         {
             

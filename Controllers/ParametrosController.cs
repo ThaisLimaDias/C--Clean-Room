@@ -31,15 +31,15 @@ namespace Embraer_Backend.Controllers
         [HttpGet]       
         public IActionResult  GetParametros(long IdLocalMedicao, string DescParam)
         {
-            log.Debug("Get Dos paramtros pelo IdLocalMedicao "+ IdLocalMedicao + "E descrição:"+ DescParam);            
+            log.Debug("Get Dos parametros pelo IdLocalMedicao "+ IdLocalMedicao + "E descrição:"+ DescParam);            
             prtm=_prtmModel.SelectParametros(_configuration,IdLocalMedicao,DescParam);
 
             return Json(prtm);           
             
         }
       
-        [HttpPost]
-        public IActionResult PostParticulas([FromBody]Parametros _parametros)
+        [HttpPut]
+        public IActionResult PutParametros([FromBody]Parametros _parametros)
         {
             if (ModelState.IsValid)            
             {

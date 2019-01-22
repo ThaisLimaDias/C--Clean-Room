@@ -35,7 +35,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdCadParametroSistema,DescParametro,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,TempoAlarmeMinutos,MsgTempoAlarme,MsgAlarme,DtUltAtlz";
+                sSql = "SELECT IdCadParametroSistema,DescParametro,DescLocalMedicao,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,TempoAlarmeMinutos,MsgTempoAlarme,MsgAlarme,DtUltAtlz";
                 sSql = sSql + " FROM TB_CADASTRO_PARAMETROS P INNER JOIN TB_LOCAL_MEDICAO L ON P.IdLocalMedicao = L.IdLocalMedicao";
                 sSql = sSql + " WHERE 1=1";               
 
@@ -65,10 +65,10 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "UPDATE TB_CADASTRO_PARAMETROS SET";  
-                sSql=sSql+ ",[ControleMin]="+ _parametros.ControleMin;
-                sSql=sSql+ ",[EspecificacaoMin]="+ _parametros.EspecificacaoMin;
-                sSql=sSql+ ",[EspecificacaoMax]="+ _parametros.EspecificacaoMax;
-                sSql=sSql+ ",[ControleMax]="+ _parametros.ControleMax;
+                sSql=sSql+ "[ControleMin]='"+ _parametros.ControleMin.ToString().Replace(",",".") + "'";
+                sSql=sSql+ ",[EspecificacaoMin]='"+ _parametros.EspecificacaoMin.ToString().Replace(",",".") + "'";
+                sSql=sSql+ ",[EspecificacaoMax]='"+ _parametros.EspecificacaoMax.ToString().Replace(",",".") + "'";
+                sSql=sSql+ ",[ControleMax]='"+ _parametros.ControleMax.ToString().Replace(",",".") + "'";
                 sSql=sSql+ ",[TempoAlarmeMinutos]="+ _parametros.TempoAlarmeMinutos;
                 sSql=sSql+ ",[MsgTempoAlarme]='"+ _parametros.MsgTempoAlarme + "'";
                 sSql=sSql+ ",[MsgAlarme]='"+ _parametros.MsgAlarme + "'";
