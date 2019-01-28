@@ -11,6 +11,7 @@ namespace Embraer_Backend.Models
     public class Usuario
     {
         public long IdUsuario { get; set; }
+        public long? IdNivelAcesso { get; set; }
         public string Nome {get; set;}
         public string CodUsuario { get; set; }
         public string Senha {get; set;}
@@ -28,7 +29,7 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdUsuario,Nome,CodUsuario,Senha,Funcao FROM TB_USUARIO WHERE 1=1";
+                    sSql = "SELECT IdUsuario,Nome,CodUsuario,Senha,Funcao,NumChapa,IdNivelAcesso,Status FROM TB_USUARIO WHERE 1=1";
 
                     if (codUsuario!="" && codUsuario!=null)
                         sSql += " AND CodUsuario='"+ codUsuario+"'"; 
@@ -62,6 +63,7 @@ namespace Embraer_Backend.Models
                 sSql+=",[Senha]='"+ _user.Senha + "'";
                 sSql+=",[Funcao]='" + _user.Funcao + "'";
                 sSql+=",[NumChapa]='" + _user.NumChapa + "'";
+                sSql+=",[IdNivelAcesso]=" + _user.IdNivelAcesso;
                 sSql+=",[Status]='" + _user.Status + "'";
                 sSql+= "WHERE IdUsuario=" + _user.IdUsuario;
 
@@ -123,7 +125,7 @@ namespace Embraer_Backend.Models
                 sSql += ",'" +  _user.Senha + "'";
                 sSql += ",'" + _user.Funcao + "'";
                 sSql += ",'" + _user.NumChapa + "'";
-                sSql += ",'Bloqueado')";
+                sSql += ",'Inativo')";
                 sSql += "SELECT @@IDENTITY";
 
                 long insertId = 0;
