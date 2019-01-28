@@ -124,6 +124,31 @@ namespace C_Embraer_Clean_Room.Controllers
 
         }
 
+         [HttpPut]
+        public IActionResult PutResetSenha([FromQuery]string codUsuario,[FromQuery] string SenhaNova)
+        {           
+
+            if (codUsuario!="" && codUsuario!=null)
+            {
+                log.Debug("Verifica se usuário existe!");
+                Usuario usuario = _userModel.SelectUsuario(_configuration,codUsuario,null).FirstOrDefault();
+                usuario.Senha = SenhaNova;
+                var put = _userModel.UpdateUsuario(_configuration,usuario);
+                if (put == true)
+                {
+                    log.Debug("Put Usuário senha alterado com sucesso");
+                    return Ok("Senha redefinida com sucesso!");
+                }                
+                return StatusCode(500, "Houve um erro, verifique o Log do sistema!");
+
+            }
+            else
+            {
+                return StatusCode(505, "Não foi recebido o parametro CodUsuario");
+            }
+
+        }
+
          [HttpPost]
         public IActionResult PostUsuario([FromBody]Usuario _user)
         {
