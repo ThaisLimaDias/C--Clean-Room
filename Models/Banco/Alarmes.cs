@@ -164,7 +164,7 @@ namespace Embraer_Backend.Models
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!=""&& tpDate==false)
                     sSql = sSql + " AND DtFim BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
-                sSql = sSql + " ORDER BY DtInicio";
+                sSql = sSql + " ORDER BY DtInicio DESC";
 
                 
                 IEnumerable <AlarmesReport> alarmes;

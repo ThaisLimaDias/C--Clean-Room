@@ -142,7 +142,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
 
-                sSql = sSql + " ORDER BY DtMedicao";
+                sSql = sSql + " ORDER BY DtMedicao,DescPonto";
 
                 
                 IEnumerable <IluminanciaReport> iluminancias;
