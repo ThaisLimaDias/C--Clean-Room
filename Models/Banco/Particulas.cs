@@ -45,6 +45,27 @@ namespace Embraer_Backend.Models
         public decimal EspecificacaoMax {get;set;}
         public decimal ControleMax {get;set;}
     }
+    public class ParticulasReport
+    {
+        public long IdApontParticulas{get;set;}
+        public long IdLocalMedicao{get;set;}
+        public string CodUsuario { get; set; }
+        public string DescLocalMedicao { get; set; }
+        public string Mes { get; set; }
+        public int Ano{get;set;}
+        public DateTime? DtMedicao{get;set;}
+        public DateTime? DtOcorrencia{get;set;}
+        public string FatoOcorrencia{get;set;}
+        public string AcoesObservacoes{get;set;}
+        public string DescPonto {get;set;}
+        public string TamParticula{get;set;}
+        public decimal ValorTamParticula {get;set;}        
+        public decimal ControleMin {get;set;}
+        public decimal EspecificacaoMin {get;set;}
+        public decimal EspecificacaoMax {get;set;}
+        public decimal ControleMax {get;set;}
+
+    }
     public class ParticulasModel
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ParticulasModel));
@@ -65,7 +86,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND IdApontParticulas=" + id;
 
                 if(dtIni !=null && dtFim!=null)
-                    sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
+                    sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
                 if (Ocorrencia.Value)
                     sSql=sSql + " AND DtOcorrencia IS NULL";
@@ -326,6 +347,41 @@ namespace Embraer_Backend.Models
                 log.Error("Erro ParticulasModel-InsertParticulasTam:" + ex.Message.ToString());
                 return false;
             }        
+        }
+        public IEnumerable<ParticulasReport> ParticulasReport(IConfiguration _configuration,long IdLocalMedicao,string dtIni, string dtFim)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT IdApontParticulas,IdLocalMedicao,CodUsuario,DescLocalMedicao,Mes,Ano,DtMedicao,DtOcorrencia";
+                sSql += ",FatoOcorrencia,AcoesObservacoes,DescPonto,TamParticula,ValorTamParticula,ControleMin";      
+                sSql += ",EspecificacaoMin,EspecificacaoMax,ControleMax";     
+                sSql += " FROM VW_REPORT_PARTICULAS";
+                sSql += " WHERE 1=1";
+
+                if (IdLocalMedicao!=0)
+                    sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
+
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
+                    sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
+
+
+                sSql = sSql + " ORDER BY DtMedicao";
+
+                
+                IEnumerable <ParticulasReport> particulas;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    particulas = db.Query<ParticulasReport>(sSql,commandTimeout:0);
+                }                 
+                return particulas;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro ParticulasModel-ParticulaReport:" + ex.Message.ToString());
+                return null;
+            }
         }
 
     }

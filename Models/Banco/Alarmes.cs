@@ -33,7 +33,30 @@ namespace Embraer_Backend.Models
         public string StatusAlarme  {get;set;} 
 
     }
+    public class AlarmesReport
+    {
+        public long IdAlarme{get;set;}
+        public long IdLocalMedicao{get;set;}
+        public string TipoAlarme { get; set; }
+        public string DescLocalMedicao { get; set; }
+        public DateTime? DtInicio{get;set;}
+        public DateTime? DtFim{get;set;}
+        public string Mensagem{get;set;}
+        public long IdUsuarioReconhecimento{get;set;}
+        public string UsuarioReconhecimento {get;set;}
+        public string DescReconhecimento {get;set;}
+        public DateTime? DtReconhecimento{get;set;}
+        public long IdUsuarioJustificativa{get;set;}
+        public string UsuarioJustificativa {get;set;}
+        public string DescJustificativa {get;set;}
+        public DateTime? DtJustificativa{get;set;}        
+        public decimal ControleMin {get;set;}
+        public decimal EspecificacaoMin {get;set;}
+        public decimal EspecificacaoMax {get;set;}
+        public decimal ControleMax {get;set;}
+        public string StatusAlarme{get;set;}
 
+    }
    
     public class AlarmesModel
     {
@@ -63,7 +86,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND StatusAlarme='" + status + "'";
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtInicio BETWEEN " + dtIni + " AND " + dtFim + "";
+                    sSql = sSql + " AND DtInicio BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
                                 
 
                 IEnumerable <Alarmes> Alarmes;
@@ -116,6 +139,44 @@ namespace Embraer_Backend.Models
             catch (Exception ex)
             {
                 log.Error("Erro AlarmesModel-SelectAlarmes:" + ex.Message.ToString());
+                return null;
+            }
+        }
+        public IEnumerable<AlarmesReport> AlarmesReport(IConfiguration _configuration,long IdLocalMedicao,string dtIni, string dtFim, bool tpDate)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT IdAlarme,IdLocalMedicao,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,IdUsuarioReconhecimento";
+                sSql += ",UsuarioReconhecimento,DescReconhecimento,DtReconhecimento";      
+                sSql += ",IdUsuarioJustificativa,UsuarioJustificativa,DescJustificativa,DtJustificativa,ControleMin,EspecificacaoMin";  
+                sSql += ",EspecificacaoMax,ControleMax,StatusAlarme";    
+                sSql += " FROM VW_REPORT_ALARMES";
+                sSql += " WHERE 1=1";
+
+                if (IdLocalMedicao!=0)
+                    sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
+
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="" && tpDate==true)
+                    sSql = sSql + " AND DtInicio BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
+                
+                if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!=""&& tpDate==false)
+                    sSql = sSql + " AND DtFim BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
+
+                sSql = sSql + " ORDER BY DtInicio";
+
+                
+                IEnumerable <AlarmesReport> alarmes;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    alarmes = db.Query<AlarmesReport>(sSql,commandTimeout:0);
+                }                 
+                return alarmes;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro AlarmesModel-AlarmesReport:" + ex.Message.ToString());
                 return null;
             }
         }

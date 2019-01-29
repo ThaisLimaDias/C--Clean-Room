@@ -16,7 +16,7 @@ namespace Embraer_Backend.Controllers
         private readonly IConfiguration _configuration; 
         AlarmesModel _alarModel = new AlarmesModel(); 
         IEnumerable <Alarmes> _alarmes;
-
+        IEnumerable<AlarmesReport> _report;
         public AlarmesController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -49,6 +49,20 @@ namespace Embraer_Backend.Controllers
                 return StatusCode(505,"Não foi recebido o parametro IdAlarme ou Status de Alarme ou os parametros de Data Inicio e Data Fim");
         }
 
+        [HttpGet]      
+        public IActionResult  GetAlarmesReport(long IdLocalMedicao,string Ini, string Fim,bool tpDate)
+        {
+            if (Ini!=null && Fim!=null)
+            {                  
+                log.Debug("Get Dos Apontamentos de Iluminancia para Report!");            
+                _report=_alarModel.AlarmesReport(_configuration, IdLocalMedicao,Ini, Fim,tpDate);
+                              
+                return Ok(_report);
+            }
+            else
+                return StatusCode(505,"Não foi recebido o parametro IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
+        }
+        
         [HttpPut]
         public IActionResult PutAlarme([FromBody]Alarmes _alarme)
         {

@@ -77,7 +77,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND A.IdLocalMedicao=" + IdLocalMedicao;
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
+                    sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
                 if (Ocorrencia.Value)
                     sSql=sSql + " AND DtOcorrencia IS NULL";
@@ -139,7 +139,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
+                    sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
 
                 sSql = sSql + " ORDER BY DtMedicao";

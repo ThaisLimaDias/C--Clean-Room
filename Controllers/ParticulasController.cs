@@ -22,7 +22,7 @@ namespace Embraer_Backend.Controllers
         IEnumerable<Parametros> _par;
 
         IEnumerable<ParticulasTam> _tampart;
-
+        IEnumerable<ParticulasReport> _report;
         public ParticulasController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -83,7 +83,19 @@ namespace Embraer_Backend.Controllers
             return StatusCode(505,"O IdTamParticulas não pode ser nulo nem Igual a 0!");
         }
 
-
+        [HttpGet]      
+        public IActionResult  GetParticulasReport(long IdLocalMedicao,string Ini, string Fim)
+        {
+            if (Ini!=null && Fim!=null)
+            {                  
+                log.Debug("Get Dos Apontamentos de Iluminancia para Report!");            
+                _report=_prtModel.ParticulasReport(_configuration, IdLocalMedicao,Ini, Fim);
+                              
+                return Ok(_report);
+            }
+            else
+                return StatusCode(505,"Não foi recebido o parametro IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
+        }
         [HttpPost]
         public IActionResult PostParticulas([FromBody]Particulas _Particulas)
         {
