@@ -23,6 +23,9 @@ namespace Embraer_Backend.Controllers
 
         IEnumerable<ParticulasTam> _tampart;
         IEnumerable<ParticulasReport> _report;
+
+        ControleApontamento _ctrl;
+        ControleApontamentoModel _ctrlModel = new ControleApontamentoModel();
         public ParticulasController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -76,8 +79,7 @@ namespace Embraer_Backend.Controllers
             if (IdMedicaoParticulas!=0)
             {
                 log.Debug("Get Dos Apontamentos de Tamanhos Particulas!");            
-                _tampart=_prtModel.SelectParticulasTam(_configuration, IdMedicaoParticulas);
-                
+                _tampart=_prtModel.SelectParticulasTam(_configuration, IdMedicaoParticulas); 
                 return Ok(_tampart);              
             }
             return StatusCode(505,"O IdTamParticulas não pode ser nulo nem Igual a 0!");
@@ -125,7 +127,9 @@ namespace Embraer_Backend.Controllers
                 {
                     _prtModel.InsertMedicaoParticulas(_configuration,item); 
                 }       
-                                                         
+                _ctrl = _ctrlModel.SelectControleApontamento(_configuration,"Particulas").FirstOrDefault();
+                _ctrl.ProxApont=_ctrl.ProxApont.Value.AddDays(_ctrl.DiasProximaMed);
+                _ctrlModel.UpdateControleApontamento(_configuration,_ctrl);                          
                 return Json(_medicoes);               
                 
             }

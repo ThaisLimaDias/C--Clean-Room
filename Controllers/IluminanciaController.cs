@@ -20,10 +20,10 @@ namespace Embraer_Backend.Controllers
         ParametrosModel _parModel = new ParametrosModel();
         IEnumerable<Iluminancia> _iluminancias;
         IEnumerable<IluminanciaMedicoes> _medicoes;
-
         IEnumerable<Parametros> _par;
-
         IEnumerable<IluminanciaReport> _report;
+        ControleApontamento _ctrl;
+        ControleApontamentoModel _ctrlModel = new ControleApontamentoModel();
 
         public IluminanciaController(IConfiguration configuration) 
         {            
@@ -89,12 +89,11 @@ namespace Embraer_Backend.Controllers
         public IActionResult PostIluminancia([FromBody]Iluminancia _iluminancia)
         {
             if (ModelState.IsValid)            
-            {
+            {                
                 var insert = _ilModel.InsertIluminancia(_configuration,_iluminancia);
 
                 if(insert==true)
                 {
-                   
                     log.Debug("Post do Apontamento com sucesso:" + _iluminancia);  
                     return Json(_iluminancia);
                 }
@@ -114,7 +113,9 @@ namespace Embraer_Backend.Controllers
                 {
                     _ilModel.InsertMedicaoIluminancia(_configuration,item); 
                 }       
-                                                         
+                _ctrl = _ctrlModel.SelectControleApontamento(_configuration,"Iluminância").FirstOrDefault();
+                _ctrl.ProxApont=_ctrl.ProxApont.Value.AddDays(_ctrl.DiasProximaMed);
+                _ctrlModel.UpdateControleApontamento(_configuration,_ctrl);                                           
                 return Json(_med);               
                 
             }

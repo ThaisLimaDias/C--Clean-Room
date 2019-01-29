@@ -14,6 +14,8 @@ namespace Embraer_Backend.Models
         public long IdControleApont { get; set; }
         public string DescApont { get; set; }
         public int QtdeApont{get;set;}
+        public DateTime? ProxApont{get;set;}
+        public int DiasProximaMed{get;set;}
     }
 
    
@@ -27,7 +29,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdControleApont,DescApont,QtdeApont";
+                sSql = "SELECT IdControleApont,DescApont,QtdeApont,ProxApont,DiasProximaMed";
                 sSql = sSql + " FROM TB_CONTROLE_APONTAMENTO";
                 sSql = sSql + " WHERE 1=1";
                
@@ -54,8 +56,10 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "UPDATE TB_CONTROLE_APONTAMENTO SET"; 
-                sSql = sSql + "QtdeApont=" + _ctrl.QtdeApont + ")";
-                sSql = sSql + " WHERE IdControleApont=" + _ctrl.IdControleApont;
+                sSql += " QtdeApont=" + _ctrl.QtdeApont;
+                sSql += ",DiasProximaMed=" + _ctrl.DiasProximaMed;
+                sSql += ",ProxApont='" + _ctrl.ProxApont.Value.ToString("yyyy-MM-ddTHH:mm:ss") + "'";
+                sSql += " WHERE IdControleApont=" + _ctrl.IdControleApont;
 
                 long update = 0;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
