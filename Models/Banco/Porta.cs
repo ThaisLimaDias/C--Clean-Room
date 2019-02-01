@@ -63,10 +63,18 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT IdColetaPorta,IdLocalColeta, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
-                sSql = sSql + " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA ";
-                sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta + " AND IdSensores =" + IdSensores + " ORDER BY DtColeta DESC)";                                
-                                
+                sSql += " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
+                sSql += " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA ";
+                sSql += " WHERE 1=1";                                
+
+                if(IdLocalColeta!=0)                
+                    sSql += " AND IdLocalColeta=" + IdLocalColeta;
+
+                if(IdSensores!=0)                
+                    sSql += sSql + " AND IdSensores=" + IdSensores;
+
+                sSql+= " ORDER BY DtColeta DESC)";
+
                 log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
                 using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))

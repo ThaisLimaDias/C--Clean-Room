@@ -231,11 +231,11 @@ namespace Embraer_Backend.Controllers
             if (IdLocalColeta!=0)
             {                 
                 log.Debug("Get Do Dashboard quadro Portas Sala Limpa!"); 
-                _sensores = _senModel.SelectSensor(_configuration,0,IdLocalColeta,"Porta");
+                _sensores = _senModel.SelectSensor(_configuration,0,0,"Porta");
 
                 foreach(var item in _sensores)
                 {
-                    var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
+                    var porta = _model.SelectPorta(_configuration,0,item.IdSensores).FirstOrDefault();
                     if (porta!=null)
                     {                   
                         var difMinMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                

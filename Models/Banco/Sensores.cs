@@ -36,7 +36,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE 1=1";
 
                 if(IdSensores!=0)                
-                    sSql = sSql + " AND IdAlarme=" + IdSensores;
+                    sSql = sSql + " AND IdSensores=" + IdSensores;
 
                 if(IdLocalMedicao!=0)                
                     sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;  

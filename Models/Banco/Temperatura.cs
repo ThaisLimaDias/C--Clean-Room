@@ -55,7 +55,7 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT IdColetaTemperatura,IdLocalColeta,DtColeta,T.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",Valor,UnidMedida,T.IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax,Etapa";
                 sSql = sSql + " FROM TB_COLETA_TEMPERATURA T INNER JOIN TB_SENSORES S ON T.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
@@ -87,7 +87,7 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT TOP 1 IdColetaTemperatura,IdLocalColeta,DtColeta,T.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",Valor,UnidMedida,T.IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax,Etapa";
                 sSql = sSql + " FROM TB_COLETA_TEMPERATURA T INNER JOIN TB_SENSORES S ON T.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  

@@ -52,7 +52,7 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT IdColetaPressao,IdLocalColeta,DtColeta,P.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",Valor,UnidMedida,P.IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax";
                 sSql = sSql + " FROM TB_COLETA_PRESSAO P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE 1=1";
@@ -84,7 +84,7 @@ namespace Embraer_Backend.Models
                 string sSql = string.Empty;
 
                 sSql = "SELECT TOP 1 IdColetaPressao,IdLocalColeta,DtColeta,P.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + ",Valor,UnidMedida,IdCadParametroSistema,ControleMin,EspecificacaoMin";
+                sSql = sSql + ",Valor,UnidMedida,P.IdCadParametroSistema,ControleMin,EspecificacaoMin";
                 sSql = sSql + ",EspecificacaoMax,ControleMax";
                 sSql = sSql + " FROM TB_COLETA_PRESSAO P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
                 sSql = sSql + " WHERE IdLocalColeta=" + IdLocalColeta;  
