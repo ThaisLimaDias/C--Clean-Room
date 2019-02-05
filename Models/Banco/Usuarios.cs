@@ -60,7 +60,6 @@ namespace Embraer_Backend.Models
 
                 sSql = "UPDATE TB_USUARIO SET";
                 sSql+="[Nome]='"+ _user.Nome + "'";
-                sSql+=",[Senha]='"+ _user.Senha + "'";
                 sSql+=",[Funcao]='" + _user.Funcao + "'";
                 sSql+=",[NumChapa]='" + _user.NumChapa + "'";
                 sSql+=",[IdNivelAcesso]=" + _user.IdNivelAcesso;
