@@ -59,9 +59,9 @@ namespace Embraer_Backend.Controllers
 
         //Get api/Limpeza
         [HttpGet]       
-        public IEnumerable<LimpezaApontamento>  GetLimpeza(long id,string status,string Ini, string Fim,bool? Ocorrencia)
+        public IEnumerable<LimpezaApontamento>  GetLimpeza(long id,string status,string Ini, string Fim,bool Ocorrencia)
         {
-            if (id!=0 || (Ini!=null & Fim!=null) || status!=null )
+            if (id!=0 || (Ini!=null && Fim!=null) || status!=null )
             {
 
                 log.Debug("Get Dos Apontamentos de Limpeza!");            

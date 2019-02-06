@@ -22,6 +22,8 @@ namespace Embraer_Backend.Models
         public DateTime? DtOcorrencia{get;set;}
         public string FatoOcorrencia{get;set;}
         public string AcoesObservacoes{get;set;}
+        public bool CorDashboard{get;set;}
+        public IEnumerable<ParticulasMedicoes> medicoes{get;set;}
     }
    public class ParticulasMedicoes
     {
@@ -29,6 +31,7 @@ namespace Embraer_Backend.Models
         public long IdApontParticulas {get;set;}
         public string DescPonto {get;set;}
 
+        public IEnumerable<ParticulasTam> tamanhos{get;set;}
     }
 
     public class ParticulasTam

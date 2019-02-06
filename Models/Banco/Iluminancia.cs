@@ -22,7 +22,9 @@ namespace Embraer_Backend.Models
         public DateTime? DtOcorrencia{get;set;}
         public string FatoOcorrencia{get;set;}
         public string AcoesObservacoes{get;set;}
-    }
+        public bool CorDashboard{get;set;}
+        public IEnumerable<IluminanciaMedicoes> medicoes {get;set;}
+    }   
 
     public class IluminanciaMedicoes
     {
@@ -34,8 +36,7 @@ namespace Embraer_Backend.Models
         public decimal ControleMin {get;set;}
         public decimal EspecificacaoMin {get;set;}
         public decimal EspecificacaoMax {get;set;}
-        public decimal ControleMax {get;set;}
-
+        public decimal ControleMax {get;set;} 
     }
 
     public class IluminanciaReport
@@ -51,8 +52,8 @@ namespace Embraer_Backend.Models
         public decimal Valor {get;set;}        
         public decimal EspecificacaoMin {get;set;}
         public decimal EspecificacaoMax {get;set;}
-
     }
+    
     public class IluminanciaModel
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(IluminanciaModel));

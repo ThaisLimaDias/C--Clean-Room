@@ -23,6 +23,7 @@ namespace Embraer_Backend.Models
         public string FatoOcorrencia{get;set;}
         public string AcoesObservacoes{get;set;}
         public string Status {get;set;}
+        public bool CorDashboard{get;set;}
     }
     
     public class LimpezaApontamento
@@ -48,7 +49,7 @@ namespace Embraer_Backend.Models
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LimpezaModel));
 
         LimpezaMedicoesModel _lm = new LimpezaMedicoesModel();
-        public IEnumerable<LimpezaApontamento> SelectLimpeza(IConfiguration _configuration, long? id, string dtIni, string dtFim,string Status,bool? Ocorrencia)
+        public IEnumerable<LimpezaApontamento> SelectLimpeza(IConfiguration _configuration, long? id, string dtIni, string dtFim,string Status,bool Ocorrencia)
         {            
                 try
                 {
@@ -60,16 +61,16 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
                     sSql = sSql + " WHERE 1=1";
                     
-                    if (id!=null)
+                    if (id!=null && id!=0)
                         sSql = sSql + " AND A.IdApontLimpeza=" + id;
 
                     if (dtIni!=null && dtIni!="" && dtFim!=null && dtFim!="")
-                       sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";
+                       sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
 
                     if(Status!=null && Status!="")
                         sSql = sSql + " AND A.Status='" + Status + "'";
                     
-                    if (Ocorrencia.Value)
+                    if (Ocorrencia)
                         sSql=sSql + " AND DtOcorrencia IS NULL";
 
                     IEnumerable <LimpezaApontamento> Apontamentos;
