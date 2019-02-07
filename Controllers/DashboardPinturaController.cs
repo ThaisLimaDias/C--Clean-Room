@@ -52,7 +52,7 @@ namespace Embraer_Backend.Controllers
                         return Json(_retorno);
                 }    
                 log.Debug("Retorno nulo!" );
-                return Ok();
+                return StatusCode(204);
                 
             }
             else
@@ -76,7 +76,7 @@ namespace Embraer_Backend.Controllers
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);
 
                     //Definindo a cor de fundo do quadrante de temperatura
-                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Umidade",0);
                     if (alarmes.Count()>0)                
                         _retorno.CorDashboard = true;
                     else              
@@ -87,7 +87,7 @@ namespace Embraer_Backend.Controllers
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
                 }
-                return Ok();
+                return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -97,19 +97,32 @@ namespace Embraer_Backend.Controllers
         public IActionResult  GetIluminancia(long IdLocalColeta)
         {
             IluminanciaModel _model= new IluminanciaModel();
-            List<IluminanciaMedicoes> _retorno = new List<IluminanciaMedicoes>();
+            Iluminancia _retorno = new Iluminancia();
 
             if (IdLocalColeta!=0)
             {                 
-                log.Debug("Get Do Dashboard quadro Iluminância Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);    
+                log.Debug("Get Do Dashboard quadro Iluminância Sala de Pintura !");            
                 var list=_model.SelectIluminancia(_configuration,IdLocalColeta);
                 if (list.Count()!=0)
                 {
-                    _retorno = _model.SelectMedicaoIluminancia(_configuration,list.FirstOrDefault().IdApontIluminancia).ToList();
+                    _retorno.medicoes=_model.SelectMedicaoIluminancia(_configuration,list.FirstOrDefault().IdApontIluminancia);
+                    
+                    foreach(var item in _retorno.medicoes)
+                    {
+                        if (item.Valor<item.EspecificacaoMin || item.Valor>item.EspecificacaoMax)
+                            _retorno.CorDashboard =true;                        
+                    }
+
+                    var proxApt = _ctrlApt.SelectControleApontamento(_configuration,"Iluminância");
+                    TimeSpan date =  Convert.ToDateTime(DateTime.Now) - Convert.ToDateTime(list.FirstOrDefault().DtMedicao.Value);
+                    int totalDias = date.Days;
+                    if(totalDias>proxApt.FirstOrDefault().DiasProximaMed)
+                        _retorno.CorDashboard = true;
+
                     return Ok(_retorno);
                 }
                 else
-                    return Ok(_retorno);
+                    return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -118,28 +131,43 @@ namespace Embraer_Backend.Controllers
         [HttpGet]      
         public IActionResult  GetParticulas(long IdLocalColeta)
         {
-            ParticulasModel _model= new ParticulasModel();
-            List<ParticulasTam> _particulas = new List<ParticulasTam>();
+             ParticulasModel _model= new ParticulasModel();
+            Particulas _particulas = new Particulas();
+            List<ParticulasTam> _particulasTam = new List<ParticulasTam>();
 
             if (IdLocalColeta!=0)
             {                 
-                log.Debug("Get Do Dashboard quadro Iluminância Sala Pintura Cabine Pintura de Id "+ IdLocalColeta);            
-                var list=_model.SelectParticulas(_configuration,IdLocalColeta);
-                if (list.Count()!=0)
+                log.Debug("Get Do Dashboard quadro Particulas Sala Limpa !");            
+                _particulas=_model.SelectParticulas(_configuration,IdLocalColeta).FirstOrDefault();
+                if (_particulas!=null)
                 {
-                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,list.FirstOrDefault().IdApontParticulas.Value).ToList();
+                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,_particulas.IdApontParticulas.Value).ToList();                    
                     var vlMax1 =listMed.Where(p=>p.TamParticula==">1").Max(p=>p.ValorTamParticula);
                     var vlMax2 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula==">10").Max(p=>p.ValorTamParticula);
                     var vlMax4 =listMed.Where(p=>p.TamParticula==">25").Max(p=>p.ValorTamParticula);
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">1").FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">5").FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">10").FirstOrDefault());
-                    _particulas.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">25").FirstOrDefault());
-                    return Ok(_particulas);
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">1").FirstOrDefault());
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">5").FirstOrDefault());
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">10").FirstOrDefault());
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">25").FirstOrDefault());          
+
+                                        
+                    foreach(var item in _particulasTam)
+                    {
+                        if (item.ValorTamParticula<item.EspecificacaoMin || item.ValorTamParticula>item.EspecificacaoMax)
+                            item.CorDashboard =true;                        
+                    }
+
+                    var proxApt = _ctrlApt.SelectControleApontamento(_configuration,"Particulas");
+                    TimeSpan date =  Convert.ToDateTime(DateTime.Now) - Convert.ToDateTime(_particulas.DtMedicao.Value);
+                    int totalDias = date.Days;
+                    if(totalDias>proxApt.FirstOrDefault().DiasProximaMed)
+                        _particulasTam.FirstOrDefault().CorDashboard = true;
+
+                    return Ok(_particulasTam);                
                 }
                 else
-                    return Ok(_particulas);
+                    return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -162,11 +190,20 @@ namespace Embraer_Backend.Controllers
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));  
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
 
+                    //Definindo a cor de fundo do quadrante de temperatura
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Pressão",0);
+                    if (alarmes.Count()>0)                
+                        _retorno.CorDashboard = true;
+                    else              
+                        _retorno.CorDashboard = false;
+                    /////////////
+
+
                     if (difMinutes)
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
                 }
-                return Ok();
+                return StatusCode(204);
                 
             }
             else
@@ -194,11 +231,8 @@ namespace Embraer_Backend.Controllers
                         log.Debug("Retorno Json!" + _retorno.Valor);
                         return Ok(_retorno);
                     }
-                    else
-                        return Ok();
-                }
-                else
-                    return Ok();
+                }                
+                return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -223,12 +257,23 @@ namespace Embraer_Backend.Controllers
                     log.Debug("Retorno não nulo!" + porta.Valor);
                     var difMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                        
 
+
+                    //Definindo a cor de fundo do quadrante de porta
+                        var alarmes = _alm.SelectAlarmesAbertos(_configuration,0, "Porta",item.IdSensores);
+                        if (alarmes.Count()>0)                
+                            porta.CorDashboard = true;
+                        else              
+                            porta.CorDashboard = false;
+                    /////////////
                     if (difMinutes)
                         log.Debug("retorna Json!" + porta.DescPorta);  
                         _retorno.Add(porta);
                 }
 
-                return Ok(_retorno);
+                if (_retorno.Count()==0)
+                    return StatusCode(204);                    
+                else
+                    return Ok(_retorno);  
                 
             }
             else
@@ -248,7 +293,7 @@ namespace Embraer_Backend.Controllers
                 return Ok(_retorno);
             }
             else
-                return Ok();
+                return StatusCode(204);
         }
 
     }

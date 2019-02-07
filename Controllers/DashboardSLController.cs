@@ -361,17 +361,13 @@ namespace Embraer_Backend.Controllers
                             _retorno.Add(porta);
                 }                    
             } 
-
             if (_retorno.Count()==0)
                 return StatusCode(204);                    
             else
-                return Ok(_retorno);
-               
-            
-
+                return Ok(_retorno);     
         }
 
-         [HttpGet]      
+        [HttpGet]      
         public IActionResult  GetAlarmes()
         {
             AlarmesModel _model= new AlarmesModel();
@@ -382,9 +378,7 @@ namespace Embraer_Backend.Controllers
                 if(_retorno!=null)
                     return Ok(_retorno);
                 else
-                    return Ok();
+                    return StatusCode(204);
         }
-
-
     }
 }
