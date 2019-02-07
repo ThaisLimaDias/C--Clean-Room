@@ -23,6 +23,7 @@ namespace Embraer_Backend.Models
         public decimal EspecificacaoMin {get;set;}
         public decimal EspecificacaoMax {get;set;}
         public decimal ControleMax {get;set;}
+        public bool CorDashboard{get;set;}
 
     }
     public class PressaoReport

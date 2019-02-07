@@ -26,7 +26,7 @@ namespace Embraer_Backend.Controllers
         public IActionResult  Index()
         { 
             log.Debug("Get Dos Apontamentos de Iluminancia em Aberto pela tela Index!");            
-            _alarmes=_alarModel.SelectAlarmesAbertos(_configuration,0);
+            _alarmes=_alarModel.SelectAlarmesAbertos(_configuration,0,null,0);
 
             if (_alarmes.Count()>0)
                 return Ok(_alarmes);

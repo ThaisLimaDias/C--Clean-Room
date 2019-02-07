@@ -17,7 +17,8 @@ namespace Embraer_Backend.Models
         public long? IdSensores{get;set;}
         public string DescSensor{get;set;}
         public string Valor {get;set;}  
-        public string DescPorta{get;set;}     
+        public string DescPorta{get;set;} 
+        public bool CorDashboard{get;set;}    
     }
 
    
@@ -62,18 +63,17 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaPorta,IdLocalColeta, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
+                sSql = "SELECT TOP 1 IdColetaPorta,IdLocalColeta, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
                 sSql += " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
-                sSql += " WHERE  IdColetaPorta IN (SELECT TOP 1 IdColetaPorta FROM TB_COLETA_PORTA ";
                 sSql += " WHERE 1=1";                                
 
                 if(IdLocalColeta!=0)                
                     sSql += " AND IdLocalColeta=" + IdLocalColeta;
 
                 if(IdSensores!=0)                
-                    sSql += sSql + " AND IdSensores=" + IdSensores;
+                    sSql += " AND P.IdSensores=" + IdSensores;
 
-                sSql+= " ORDER BY DtColeta DESC)";
+                sSql+= " ORDER BY DtColeta DESC";
 
                 log.Debug(sSql);  
                 IEnumerable <Porta> _portas;

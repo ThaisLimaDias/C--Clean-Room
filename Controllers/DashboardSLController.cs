@@ -51,7 +51,7 @@ namespace Embraer_Backend.Controllers
                 var difMaxMinutes= _funcDate.Minutos(_configuration,minTemp.DtColeta.Value); 
 
                 //Definindo a cor de fundo do quadrante de temperatura
-                var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta);
+                var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
                 if (alarmes.Count()>0)                
                     _retorno.FirstOrDefault().CorDashboard = true;
                 else              
@@ -60,7 +60,7 @@ namespace Embraer_Backend.Controllers
 
 
                 if (difMinMinutes==false || difMaxMinutes==false)
-                    return Ok();
+                    return StatusCode(204);
                 else
                     return Ok(_retorno);
             }
@@ -84,7 +84,7 @@ namespace Embraer_Backend.Controllers
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                
 
                     //Definindo a cor de fundo do quadrante de temperatura
-                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta);
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Umidade",0);
                     if (alarmes.Count()>0)                
                         _retorno.CorDashboard = true;
                     else              
@@ -93,8 +93,9 @@ namespace Embraer_Backend.Controllers
 
                     if (difMinMinutes)
                         return Ok(_retorno);
+                        
                 }
-                    return Ok();
+                    return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -115,8 +116,8 @@ namespace Embraer_Backend.Controllers
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value); 
 
-                     //Definindo a cor de fundo do quadrante de temperatura
-                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta);
+                    //Definindo a cor de fundo do quadrante de temperatura
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
                     if (alarmes.Count()>0)                
                         _retorno.CorDashboard = true;
                     else              
@@ -127,7 +128,7 @@ namespace Embraer_Backend.Controllers
                     if (difMinMinutes)
                         return Ok(_retorno);          
                 }
-                return Ok();
+                return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -148,54 +149,69 @@ namespace Embraer_Backend.Controllers
                     
                     //Pegando o Ultima limpeza DIARIO
                     var vldiario = list.Where(p=>p.TipoControle=="DIARIO").Max(p=>p.DtMedicao); 
-                    var dia = list.Where(p=> p.DtMedicao==vldiario.Value).FirstOrDefault();
-                    //Verifica se o APontamento está vencido
-                    if(dia.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>1)
-                        dia.CorDashboard=true;
-                    
-                    _retorno.Add(dia);                  
+                    if(vldiario!=null)
+                    {
+                        var dia = list.Where(p=> p.DtMedicao==vldiario.Value).FirstOrDefault();
+                        //Verifica se o APontamento está vencido
+                        if(dia.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>1)
+                            dia.CorDashboard=true;
+                        
+                        _retorno.Add(dia);   
+                    }               
 
 
                     //Pegando o Ultima limpeza SEMANAL
                     var vlsema = list.Where(p=>p.TipoControle=="SEMANAL").Max(p=>p.DtMedicao); 
-                    var semana= list.Where(p=> p.DtMedicao==vlsema.Value).FirstOrDefault();
-                    //Verifica se o APontamento está vencido
-                    if(semana.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>1)
-                        semana.CorDashboard=true;
-                     
-                    _retorno.Add(semana);
+                    if(vlsema!=null)
+                    {
+                        var semana= list.Where(p=> p.DtMedicao==vlsema.Value).FirstOrDefault();
+                        //Verifica se o APontamento está vencido
+                        if(semana.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>7)
+                            semana.CorDashboard=true;
+                        
+                        _retorno.Add(semana);
+                    }
 
                     
                     //Pegando o Ultima limpeza QUINZENAL
-                    var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL").Max(p=>p.DtMedicao);  
-                    var quinzena = list.Where(p=> p.DtMedicao==vlQz.Value).FirstOrDefault();
-                    //Verifica se o APontamento está vencido
-                    if(quinzena.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>15)
-                        quinzena.CorDashboard=true;
-                                        
-                    _retorno.Add(quinzena);
+                    var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL").Max(p=>p.DtMedicao); 
+                    if(vlQz!=null)
+                    { 
+                        var quinzena = list.Where(p=> p.DtMedicao==vlQz.Value).FirstOrDefault();
+                        //Verifica se o APontamento está vencido
+                        if(quinzena.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>15)
+                            quinzena.CorDashboard=true;
+                                            
+                        _retorno.Add(quinzena);
 
-                    //Pegando o Ultima limpeza MENSAL
-                    var vlMen = list.Where(p=>p.TipoControle=="MENSAL").Max(p=>p.DtMedicao); 
-                    var mes= list.Where(p=> p.DtMedicao==vlMen.Value).FirstOrDefault();                    
-                    //Verifica se o APontamento está vencido
-                    if(mes.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>31)
-                        mes.CorDashboard=true;
-                    
-                    _retorno.Add(mes);
+                        //Pegando o Ultima limpeza MENSAL
+                        var vlMen = list.Where(p=>p.TipoControle=="MENSAL").Max(p=>p.DtMedicao); 
+
+                        var mes= list.Where(p=> p.DtMedicao==vlMen.Value).FirstOrDefault();                    
+                        //Verifica se o APontamento está vencido
+                        if(mes.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>31)
+                            mes.CorDashboard=true;
+                        
+                        _retorno.Add(mes);
+                    }
 
 
                     //Pegando o Ultima limpeza SEMESTRAL
                     var vlSem = list.Where(p=>p.TipoControle=="SEMESTRAL").Max(p=>p.DtMedicao);
-                    var semestre =list.Where(p=> p.DtMedicao==vlSem.Value).FirstOrDefault();                     
-                    //Verifica se o APontamento está vencido
-                    if(semestre.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>183)
-                        semestre.CorDashboard=true;
+                    if(vlSem!=null)
+                    { 
+                        var semestre =list.Where(p=> p.DtMedicao==vlSem.Value).FirstOrDefault();                     
+                        //Verifica se o APontamento está vencido
+                        if(semestre.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>183)
+                            semestre.CorDashboard=true;
 
-                    _retorno.Add(semestre);
+                        _retorno.Add(semestre);
+                    }
+                    return Ok(_retorno);
                 }
 
-                return Ok(_retorno);
+                return StatusCode(204);
+                
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -214,14 +230,25 @@ namespace Embraer_Backend.Controllers
                 if (list.Count()!=0)
                 {
                     _retorno.medicoes=_model.SelectMedicaoIluminancia(_configuration,list.FirstOrDefault().IdApontIluminancia);
+                    
+
+                    foreach(var item in _retorno.medicoes)
+                    {
+                        if (item.Valor<item.EspecificacaoMin || item.Valor>item.EspecificacaoMax)
+                            _retorno.CorDashboard =true;
+                        
+                    }
+
                     var proxApt = _ctrlApt.SelectControleApontamento(_configuration,"Iluminância");
-                    if(_retorno.DtMedicao<proxApt.FirstOrDefault().ProxApont)
+                    TimeSpan date =  Convert.ToDateTime(DateTime.Now) - Convert.ToDateTime(list.FirstOrDefault().DtMedicao.Value);
+                    int totalDias = date.Days;
+                    if(totalDias>proxApt.FirstOrDefault().DiasProximaMed)
                         _retorno.CorDashboard = true;
 
                     return Ok(_retorno);
                 }
                 else
-                    return StatusCode(505,"Não foi encontrado nenhum apontamento para o IdLocalColeta!");
+                    return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
@@ -240,7 +267,7 @@ namespace Embraer_Backend.Controllers
                 _particulas=_model.SelectParticulas(_configuration,IdLocalColeta).FirstOrDefault();
                 if (_particulas!=null)
                 {
-                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,_particulas.IdApontParticulas.Value).ToList();
+                    var listMed= _model.SelectMedicaoParticulasTam(_configuration,_particulas.IdApontParticulas.Value).ToList();                    
                     var vlMax1 =listMed.Where(p=>p.TamParticula==">0,5").Max(p=>p.ValorTamParticula);
                     var vlMax2 =listMed.Where(p=>p.TamParticula==">1").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
@@ -248,25 +275,29 @@ namespace Embraer_Backend.Controllers
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">0,5").FirstOrDefault());
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">1").FirstOrDefault());
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">5").FirstOrDefault());
-                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">10").FirstOrDefault());
-                    _particulas.medicoes.FirstOrDefault().DescPonto="Todos";
-                    _particulas.medicoes.FirstOrDefault().tamanhos=_particulasTam;
-                    
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">10").FirstOrDefault());          
+
+                                        
+                    foreach(var item in _particulasTam)
+                    {
+                        if (item.ValorTamParticula<item.EspecificacaoMin || item.ValorTamParticula>item.EspecificacaoMax)
+                            item.CorDashboard =true;                        
+                    }
+
                     var proxApt = _ctrlApt.SelectControleApontamento(_configuration,"Particulas");
-                    if(_particulas.DtMedicao<proxApt.FirstOrDefault().ProxApont)
-                        _particulas.CorDashboard = true;
+                    TimeSpan date =  Convert.ToDateTime(DateTime.Now) - Convert.ToDateTime(_particulas.DtMedicao.Value);
+                    int totalDias = date.Days;
+                    if(totalDias>proxApt.FirstOrDefault().DiasProximaMed)
+                        _particulasTam.FirstOrDefault().CorDashboard = true;
 
-
-                    return Ok(_particulas);                
+                    return Ok(_particulasTam);                
                 }
                 else
-                    return StatusCode(505,"Não foi encontrado nenhum apontamento para o IdLocalColeta!");
+                    return StatusCode(204);
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
         }
-
-//////////////////////Continuar daqui
 
         [HttpGet]      
         public IActionResult  GetPressao(long IdLocalColeta)
@@ -283,44 +314,61 @@ namespace Embraer_Backend.Controllers
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     var difMinMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                
 
+                    //Definindo a cor de fundo do quadrante de pressão
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Pressão",0);
+                    if (alarmes.Count()>0)                
+                        _retorno.CorDashboard = true;
+                    else              
+                        _retorno.CorDashboard = false;
+                        /////////////  
+
                     if (difMinMinutes)        
                         return Ok(_retorno);
+                    
                 }                                
-                    return Ok();                                
+                    return StatusCode(204);                                
             }
             else
                 return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
         }
 
         [HttpGet]      
-        public IActionResult  GetPortas(long IdLocalColeta)
+        public IActionResult  GetPortas()
         {
             PortaModel _model= new PortaModel();
             SensoresModel _senModel= new SensoresModel();
             IEnumerable<Sensores> _sensores;
             List<Porta> _retorno = new List<Porta>();
+              
+            log.Debug("Get Do Dashboard quadro Portas Sala Limpa!"); 
+            _sensores = _senModel.SelectSensor(_configuration,0,0,"Porta");
+            foreach(var item in _sensores)
+            {
+                var porta = _model.SelectPorta(_configuration,0,item.IdSensores).FirstOrDefault();
+                if (porta!=null)
+                {                   
+                    var difMinMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                
 
-            if (IdLocalColeta!=0)
-            {                 
-                log.Debug("Get Do Dashboard quadro Portas Sala Limpa!"); 
-                _sensores = _senModel.SelectSensor(_configuration,0,0,"Porta");
+                    //Definindo a cor de fundo do quadrante de porta
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,0, "Porta",item.IdSensores);
+                    if (alarmes.Count()>0)                
+                        porta.CorDashboard = true;
+                    else              
+                        porta.CorDashboard = false;
+                    /////////////
 
-                foreach(var item in _sensores)
-                {
-                    var porta = _model.SelectPorta(_configuration,0,item.IdSensores).FirstOrDefault();
-                    if (porta!=null)
-                    {                   
-                        var difMinMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                
+                    if (difMinMinutes) 
+                            _retorno.Add(porta);
+                }                    
+            } 
 
-                        if (difMinMinutes) 
-                                _retorno.Add(porta);
-                    }
-                }                           
-                return Ok(_retorno);
-                
-            }
+            if (_retorno.Count()==0)
+                return StatusCode(204);                    
             else
-                return StatusCode(505,"Não foi recebido o parametro IdLocalColeta!");
+                return Ok(_retorno);
+               
+            
+
         }
 
          [HttpGet]      
@@ -330,7 +378,7 @@ namespace Embraer_Backend.Controllers
             IEnumerable <Alarmes> _retorno;
                 
                 log.Debug("Get Do Dashboard quadro Alarmes Sala Limpa !");            
-                _retorno=_model.SelectAlarmesAbertos(_configuration,99);
+                _retorno=_model.SelectAlarmesAbertos(_configuration,99,null,0);
                 if(_retorno!=null)
                     return Ok(_retorno);
                 else

@@ -12,6 +12,8 @@ namespace Embraer_Backend.Models
     public class Alarmes
     {
         public long IdAlarme { get; set; }
+        public long IdSensor { get; set; }
+        public string DescSensor{get;set;}
         public string DescLocalMedicao { get; set; }
         public string  TipoAlarme {get;set;}
         public DateTime? DtInicio{get;set;}  
@@ -36,6 +38,8 @@ namespace Embraer_Backend.Models
     public class AlarmesReport
     {
         public long IdAlarme{get;set;}
+        public long IdSensor { get; set; }
+        public string DescSensor{get;set;}
         public long IdLocalMedicao{get;set;}
         public string TipoAlarme { get; set; }
         public string DescLocalMedicao { get; set; }
@@ -68,12 +72,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,USR.CodUsuario AS CodUsuarioReconhecimento,IdUsuarioReconhecimento";
-                sSql = sSql + ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
-                sSql = sSql + ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
-                sSql = sSql + " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
-                sSql = sSql + " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
-                sSql = sSql + " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
+                sSql = "SELECT * FROM VW_ALARMES";
                 sSql = sSql + " WHERE 1=1";
 
                 if(id!=0)                
@@ -103,19 +102,21 @@ namespace Embraer_Backend.Models
             }
         }
 
-        public IEnumerable<Alarmes> SelectAlarmesAbertos(IConfiguration _configuration,long IdLocalMedicao)
+        public IEnumerable<Alarmes> SelectAlarmesAbertos(IConfiguration _configuration,long IdLocalMedicao,string TipoAlarme,long IdSensor)
         {            
             try
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdAlarme,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,USR.CodUsuario AS CodUsuarioReconhecimento,IdUsuarioReconhecimento";
-                sSql += ",DescReconhecimento,DtReconhecimento,U.CodUsuario AS CodUsuarioJustificativa,IdUsuarioJustificativa,DescJustificativa,DtJustificativa";
-                sSql += ",IdCadParametroSistema,ControleMin,EspecificacaoMin,EspecificacaoMax,ControleMax,StatusAlarme";
-                sSql += " FROM TB_ALARMES A INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao=L.IdLocalMedicao";
-                sSql += " LEFT JOIN TB_USUARIO USR ON USR.IdUsuario = A.IdUsuarioReconhecimento";
-                sSql += " LEFT JOIN TB_USUARIO U ON U.IdUsuario = A.IdUsuarioJustificativa";
+                sSql = "SELECT * FROM VW_ALARMES";
                 sSql += " WHERE StatusAlarme in ('Ativo','Reconhecido','Justificado')";
+                
+                if (TipoAlarme!="" && TipoAlarme!=null)
+                    sSql = sSql + " AND TipoAlarme='"+ TipoAlarme + "'";
+
+                if (IdSensor!=0)
+                    sSql = sSql + " AND IdSensor="+ IdSensor;
+
 
                 if (IdLocalMedicao==97)
                     sSql = sSql + " AND A.IdLocalMedicao IN(2,3,4,5)";
@@ -148,7 +149,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdAlarme,IdLocalMedicao,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,IdUsuarioReconhecimento";
+                sSql = "SELECT IdAlarme,IdLocalMedicao,IdSensor,DescSensor,DescLocalMedicao,TipoAlarme,DtInicio,DtFim,Mensagem,IdUsuarioReconhecimento";
                 sSql += ",UsuarioReconhecimento,DescReconhecimento,DtReconhecimento";      
                 sSql += ",IdUsuarioJustificativa,UsuarioJustificativa,DescJustificativa,DtJustificativa,ControleMin,EspecificacaoMin";  
                 sSql += ",EspecificacaoMax,ControleMax,StatusAlarme";    

@@ -21,17 +21,14 @@ namespace Embraer_Backend.Models
         public DateTime? DtMedicao{get;set;}
         public DateTime? DtOcorrencia{get;set;}
         public string FatoOcorrencia{get;set;}
-        public string AcoesObservacoes{get;set;}
-        public bool CorDashboard{get;set;}
-        public IEnumerable<ParticulasMedicoes> medicoes{get;set;}
+        public string AcoesObservacoes{get;set;}        
+       
     }
    public class ParticulasMedicoes
     {
         public long? IdMedicaoParticulas {get;set;}
         public long IdApontParticulas {get;set;}
         public string DescPonto {get;set;}
-
-        public IEnumerable<ParticulasTam> tamanhos{get;set;}
     }
 
     public class ParticulasTam
@@ -47,6 +44,7 @@ namespace Embraer_Backend.Models
         public decimal EspecificacaoMin {get;set;}
         public decimal EspecificacaoMax {get;set;}
         public decimal ControleMax {get;set;}
+        public bool CorDashboard{get;set;}
     }
     public class ParticulasReport
     {

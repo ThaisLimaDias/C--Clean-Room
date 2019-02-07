@@ -15,6 +15,8 @@ namespace Embraer_Backend.Controllers
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(DashboardPinturaController));
         private readonly IConfiguration _configuration;
         public  DateDiferenceModel _funcDate = new DateDiferenceModel();
+        AlarmesModel _alm = new AlarmesModel();
+        ControleApontamentoModel _ctrlApt = new ControleApontamentoModel();
         public DashboardPinturaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -36,6 +38,14 @@ namespace Embraer_Backend.Controllers
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);   
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
+
+                    //Definindo a cor de fundo do quadrante de temperatura
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
+                    if (alarmes.Count()>0)                
+                        _retorno.CorDashboard = true;
+                    else              
+                        _retorno.CorDashboard = false;
+                    /////////////  
 
                     if (difMinutes)                    
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
@@ -64,7 +74,14 @@ namespace Embraer_Backend.Controllers
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
                     log.Debug("Retorno não nulo!" + _retorno.Valor);                   
                     var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);
-                                        
+
+                    //Definindo a cor de fundo do quadrante de temperatura
+                    var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
+                    if (alarmes.Count()>0)                
+                        _retorno.CorDashboard = true;
+                    else              
+                        _retorno.CorDashboard = false;
+                    /////////////                
 
                     if (difMinutes)
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
@@ -224,7 +241,7 @@ namespace Embraer_Backend.Controllers
             AlarmesModel _model= new AlarmesModel();
             IEnumerable <Alarmes> _retorno;                       
             log.Debug("Get Do Dashboard quadro Portas Sala Limpa !");            
-            _retorno=_model.SelectAlarmesAbertos(_configuration,cabines);
+            _retorno=_model.SelectAlarmesAbertos(_configuration,cabines,null,0);
             if(_retorno.Count()>0)
             {
                 log.Debug("Retorno não nulo,tem alarmes!" + _retorno.FirstOrDefault().Mensagem);

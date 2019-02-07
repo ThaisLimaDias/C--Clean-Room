@@ -11,8 +11,9 @@ namespace Embraer_Backend.Models
 {
     public class Limpeza
     {
-        public long IdApontLimpeza { get; set; }
-        public long IdUsuario { get; set; }
+        public long IdApontLimpeza { get; set; }        
+        public long IdUsuarioVezani { get; set; }
+        public long IdUsuarioEmbraer { get; set; }
         public long  IdLocalMedicao {get;set;}
         public string CodUsuario { get; set; }
         public string DescLocalMedicao { get; set; }
@@ -29,7 +30,10 @@ namespace Embraer_Backend.Models
     public class LimpezaApontamento
     {
         public long IdApontLimpeza { get; set; }
-        public long IdUsuario { get; set; }
+        public long IdUsuarioVezani { get; set; }
+        public long IdUsuarioEmbraer { get; set; }
+        public string UserVz{get;set;}
+        public string UserEb{get;set;}
         public long  IdLocalMedicao {get;set;}
         public string CodUsuario { get; set; }
         public string DescLocalMedicao { get; set; }
@@ -55,9 +59,10 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdApontLimpeza,A.IdUsuario,A.IdLocalMedicao,CodUsuario,DescLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
+                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,U.CodUsuario AS UserVz,EB.CodUsuario AS UserEb,IdUsuarioEmbraer,A.IdLocalMedicao,DescLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
                     sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,A.Status FROM TB_APONT_LIMPEZA A";                    
-                    sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
+                    sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuarioVezani = U.IdUsuario";
+                    sSql = sSql + " INNER JOIN TB_USUARIO EB ON A.IdUsuarioEmbraer = EB.IdUsuario";
                     sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
                     sSql = sSql + " WHERE 1=1";
                     
@@ -100,7 +105,7 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT TOP 5000 IdApontLimpeza,IdUsuario,IdLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
+                    sSql = "SELECT TOP 5000 IdApontLimpeza,IdUsuarioVezani,IdUsuarioEmbraer,IdLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
                     sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,Status FROM TB_APONT_LIMPEZA";
                     sSql = sSql + " WHERE IdLocalMedicao=" + IdLocalMedicao + " AND Status='Finalizado'";
                     sSql = sSql + " ORDER BY DtMedicao DESC "; 
@@ -161,9 +166,10 @@ namespace Embraer_Backend.Models
             {
                 string dataOcorrencia = (_limpeza.DtOcorrencia==null) ? "NULL" : _limpeza.DtOcorrencia.Value.ToString();
                 
-                sSql= "INSERT INTO TB_APONT_LIMPEZA (IdUsuario,IdLocalMedicao,TipoControle,MesControle,DtMedicao,Status,DtOcorrencia,FatoOcorrencia,AcoesObservacoes)";
+                sSql= "INSERT INTO TB_APONT_LIMPEZA (IdUsuarioEmbraer,IdUsuarioVezani,IdLocalMedicao,TipoControle,MesControle,DtMedicao,Status,DtOcorrencia,FatoOcorrencia,AcoesObservacoes)";
                 sSql = sSql + " VALUES ";
-                sSql = sSql + "(" + _limpeza.IdUsuario;
+                sSql = sSql + "(" + _limpeza.IdUsuarioEmbraer;
+                 sSql = sSql + "," + _limpeza.IdUsuarioVezani;
                 sSql = sSql + "," + _limpeza.IdLocalMedicao;
                 sSql = sSql + ",'" + _limpeza.TipoControle + "'";
                 sSql = sSql + ",'" + _limpeza.MesControle + "'";
