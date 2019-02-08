@@ -119,14 +119,14 @@ namespace Embraer_Backend.Models
 
 
                 if (IdLocalMedicao==97)
-                    sSql = sSql + " AND A.IdLocalMedicao IN(2,3,4,5)";
+                    sSql = sSql + " AND IdLocalMedicao IN(2,3,4,5)";
                 
                 if (IdLocalMedicao==98)
-                    sSql = sSql + " AND A.IdLocalMedicao IN(6,7,8,9,13)";
+                    sSql = sSql + " AND IdLocalMedicao IN(6,7,8,9,13)";
 
 
                 if (IdLocalMedicao==99)
-                    sSql = sSql + " AND A.IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%SALA%')";
+                    sSql = sSql + " AND IdLocalMedicao IN(SELECT IdLocalMedicao FROM TB_LOCAL_MEDICAO WHERE DescLocalMedicao LIKE '%SALA%')";
 
                 log.Debug("Alarmes!" + sSql);
 

@@ -66,8 +66,7 @@ namespace Embraer_Backend.Controllers
         [HttpPut]
         public IActionResult PutSecagens([FromBody]Secagens _sec)
         {
-            if (ModelState.IsValid)            
-            {      
+             
                 ///------------Status possíveis das Secagens-------------------------//
                 //Iniciado (Secagens com coleta Iniciada)
                 //Aberto (Secagens com coleta finalizada porém podem ainda podem ter ops vinculadas)
@@ -87,11 +86,7 @@ namespace Embraer_Backend.Controllers
                     else
                         return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
                 }
-                
-            }
-            else 
-                log.Debug("Put Secagens não efetuado, Bad Request" + ModelState.ToString());  
-                return BadRequest(ModelState);
+    
         }  
         [HttpPost]
         public IActionResult PostSecagensOp([FromBody]List<SecagensOp> _secop)
