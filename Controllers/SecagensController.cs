@@ -67,25 +67,25 @@ namespace Embraer_Backend.Controllers
         public IActionResult PutSecagens([FromBody]Secagens _sec)
         {
              
-                ///------------Status possíveis das Secagens-------------------------//
-                //Iniciado (Secagens com coleta Iniciada)
-                //Aberto (Secagens com coleta finalizada porém podem ainda podem ter ops vinculadas)
-                //Encerrado (Secagens com coleta finalizada que não podem mais ter ops vinculadas)
-                if(_sec.DtFimMalote==null || _sec.StatusMalote=="Iniciado")
-                    return StatusCode(500,"Uma secagem que a coleta não esteja finalizada não pode ser encerrada!");
+            ///------------Status possíveis das Secagens-------------------------//
+            //Iniciado (Secagens com coleta Iniciada)
+            //Aberto (Secagens com coleta finalizada porém podem ainda podem ter ops vinculadas)
+            //Encerrado (Secagens com coleta finalizada que não podem mais ter ops vinculadas)
+            if(_sec.DtFimMalote==null || _sec.StatusMalote=="Iniciado")
+                return StatusCode(500,"Uma secagem que a coleta não esteja finalizada não pode ser encerrada!");
 
-                else
+            else
+            {
+                var update = _secModel.UpdateSecagens(_configuration,_sec);
+                if(update==true)
                 {
-                    var update = _secModel.UpdateSecagens(_configuration,_sec);
-                    if(update==true)
-                    {
-                    
-                        log.Debug("Put da Secagem com sucesso:" + _sec);  
-                        return Ok();
-                    }
-                    else
-                        return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
+                
+                    log.Debug("Put da Secagem com sucesso:" + _sec);  
+                    return Ok();
                 }
+                else
+                    return StatusCode(500,"Houve um erro, verifique o Log do sistema!");
+            }
     
         }  
         [HttpPost]
