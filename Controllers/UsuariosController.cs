@@ -124,7 +124,7 @@ namespace C_Embraer_Clean_Room.Controllers
 
         }
 
-         [HttpPut]
+        [HttpPut]
         public IActionResult PutResetSenha([FromQuery]string codUsuario,[FromQuery] string SenhaNova)
         {           
 
