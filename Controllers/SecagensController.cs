@@ -23,6 +23,18 @@ namespace Embraer_Backend.Controllers
             _configuration = configuration;
         }
 
+        [HttpGet] 
+        public IActionResult Index()
+        {
+            //Apontamentos Pendentes
+           _sec=_secModel.SelectSecagensAbertas(_configuration);
+            if(_sec.Count()>0)            
+                return Ok(_sec);
+            
+            return StatusCode(204);
+            
+        }
+
         [HttpGet]      
         public IActionResult  GetSecagens(long? id,string status,string Ini, string Fim)
         {
@@ -56,7 +68,7 @@ namespace Embraer_Backend.Controllers
         {
             if (ModelState.IsValid)            
             {      
-                ///Status possíveis das Secagens
+                ///------------Status possíveis das Secagens-------------------------//
                 //Iniciado (Secagens com coleta Iniciada)
                 //Aberto (Secagens com coleta finalizada porém podem ainda podem ter ops vinculadas)
                 //Encerrado (Secagens com coleta finalizada que não podem mais ter ops vinculadas)

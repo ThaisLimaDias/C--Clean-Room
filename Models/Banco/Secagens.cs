@@ -66,6 +66,30 @@ namespace Embraer_Backend.Models
             }
         }
 
+        public IEnumerable<Secagens> SelectSecagensAbertas(IConfiguration _configuration)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SELECT IdSecagem,DescMalote,DtIniMalote,DtFimMalote,DtEncMalote,StatusMalote";
+                sSql = sSql + " FROM TB_SECAGEM";
+                sSql = sSql + " WHERE StatusMalote in ('Iniciado','Aberto')";               
+
+                IEnumerable <Secagens> Secagens;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    Secagens = db.Query<Secagens>(sSql,commandTimeout:0);
+                }
+                return  Secagens;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro SecagensModel-SelectSecagens:" + ex.Message.ToString());
+                return null;
+            }
+        }
+
          public bool UpdateSecagens(IConfiguration _configuration,Secagens _Secagens)
         {
             try{
