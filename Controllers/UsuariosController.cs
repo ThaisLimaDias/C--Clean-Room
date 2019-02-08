@@ -131,9 +131,7 @@ namespace C_Embraer_Clean_Room.Controllers
             if (codUsuario!="" && codUsuario!=null)
             {
                 log.Debug("Verifica se usuário existe!");
-                Usuario usuario = _userModel.SelectUsuario(_configuration,codUsuario,null).FirstOrDefault();
-                usuario.Senha = SenhaNova;
-                var put = _userModel.UpdateUsuario(_configuration,usuario);
+                var put = _userModel.UpdateUsuarioSenha(_configuration,SenhaNova,codUsuario);
                 if (put == true)
                 {
                     log.Debug("Put Usuário senha alterado com sucesso");
