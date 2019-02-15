@@ -17,7 +17,11 @@ namespace Embraer_Backend.Controllers
         
         IEnumerable<ControleApontamento> _ctrl;
         ControleApontamentoModel _ctrlModel= new ControleApontamentoModel();
-    
+
+        public ControleApontamentoController(IConfiguration configuration) 
+        {            
+            _configuration = configuration;
+        }
 
         [HttpPut]
         public IActionResult PutParametros([FromBody]ControleApontamento _ctrls)

@@ -13,6 +13,7 @@ namespace Embraer_Backend.Models
     {
         public long? IdColetaPorta { get; set; }
         public long? IdLocalColeta { get; set; }
+        public string DescLocalMedicao { get; set; }
         public DateTime? DtColeta{get;set;}  
         public long? IdSensores{get;set;}
         public string DescSensor{get;set;}
@@ -26,22 +27,26 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(PortaModel));
         
-        public IEnumerable<Porta> SelectPorta(IConfiguration _configuration,long? IdLocalColeta,string dtIni, string dtFim)
+        public IEnumerable<Porta> SelectPorta(IConfiguration _configuration,long? IdLocalColeta,string dtIni, string dtFim,string status)
         {            
             try
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdColetaPorta,IdLocalColeta,DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
-                sSql = sSql + " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
-                sSql = sSql + " WHERE 1=1";
+                sSql = "SELECT IdColetaPorta,IdLocalColeta,L.DescLocalMedicao,DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
+                sSql += " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
+                sSql += " INNER JOIN TB_LOCAL_MEDICAO L ON P.IdLocalColeta = L.IdLocalMedicao";
+                sSql += " WHERE 1=1";
 
 
                 if(IdLocalColeta !=null)
-                    sSql = sSql + " AND IdLocalColeta=" + IdLocalColeta;                                 
+                    sSql += " AND IdLocalColeta=" + IdLocalColeta;                                 
 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtColeta BETWEEN " + dtIni + " AND " + dtFim + "";
+                    sSql += " AND DtColeta BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
+
+                if(status !=null && status!="")
+                    sSql += " AND Valor ='" + status + "'";
                                 
                 log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
@@ -63,8 +68,9 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT TOP 1 IdColetaPorta,IdLocalColeta, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
+                sSql = "SELECT TOP 1 IdColetaPorta,IdLocalColeta,L.DescLocalMedicao, DtColeta,Valor,DescPorta,P.IdSensores,Descricao AS DescSensor";
                 sSql += " FROM TB_COLETA_PORTA P INNER JOIN TB_SENSORES S ON P.IdSensores=S.IdSensores";
+                sSql += " INNER JOIN TB_LOCAL_MEDICAO L ON P.IdLocalColeta = L.IdLocalMedicao";
                 sSql += " WHERE 1=1";                                
 
                 if(IdLocalColeta!=0)                
