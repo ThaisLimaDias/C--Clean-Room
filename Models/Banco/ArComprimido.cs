@@ -28,7 +28,7 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ArComprimidoModel));
         
-        public IEnumerable<ArComprimido> SelectArComprimido(IConfiguration _configuration,long IdApontArComprimido,long IdLocalMedicao,string dtIni,string dtFim,bool? Ocorrencia)
+        public IEnumerable<ArComprimido> SelectArComprimido(IConfiguration _configuration,long? IdApontArComprimido,long? IdLocalMedicao,string dtIni,string dtFim,bool? Ocorrencia)
         {            
             try
             {
@@ -40,14 +40,14 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
                 sSql = sSql + " WHERE 1=1";
                
-                if(IdApontArComprimido!=0)                
+                if(IdApontArComprimido!=0 && IdApontArComprimido!=null)                
                     sSql = sSql + " AND IdApontArComprimido=" + IdApontArComprimido;
 
-                if(IdLocalMedicao!=0)                
+                if(IdLocalMedicao!=0 && IdLocalMedicao!=null)                 
                     sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
                 
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
-                    sSql = sSql + " AND DtMedicao BETWEEN " + dtIni + " AND " + dtFim + "";   
+                    sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";   
 
                 if (Ocorrencia.Value)
                     sSql=sSql + " AND DtOcorrencia IS NULL";      

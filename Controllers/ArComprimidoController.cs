@@ -75,5 +75,18 @@ namespace Embraer_Backend.Controllers
                 log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
                 return BadRequest(ModelState);
         }
+
+         [HttpGet]      
+        public IActionResult  GetReportPorta(long? IdLocalMedicao,string Ini, string Fim)
+        {
+            if (Ini!=null && Fim!=null)
+            {                  
+                log.Debug("Get Dos Apontamentos de Ar Comprimido para Report!");            
+                _ar=_arModel.SelectArComprimido(_configuration, null,IdLocalMedicao, Ini, Fim,false);                              
+                return Ok(_ar);
+            }
+            else
+                return StatusCode(505,"Não foi recebido o parametro IdApontArComprimido ou  IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
+        }
    }
 }
