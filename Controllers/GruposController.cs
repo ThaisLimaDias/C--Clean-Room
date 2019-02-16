@@ -108,7 +108,9 @@ namespace Embraer_Backend.Controllers
             {
                 foreach(var item in _func)
                 {
-                    _gruposModel.InsertGrupoFuncoes(_configuration,item); 
+                    var existis = _gruposModel.SelectFuncoesUsuario(_configuration,null,item.IdNivelAcesso).Where(x=>x.IdFuncaoSistema==item.IdFuncaoSistema);
+                    if(existis.Count()==0)
+                        _gruposModel.InsertGrupoFuncoes(_configuration,item); 
                 }                                                                
                 return Ok(_func);    
             }
@@ -145,13 +147,12 @@ namespace Embraer_Backend.Controllers
             if (ModelState.IsValid)            
             {    
                 foreach(var item in _func)
-                {    
-                    var del = _gruposModel.DeleteGrupoFuncoes(_configuration,item);
-                    if (del == true)
-                    {
-                        log.Debug("Put De Deletar Função Com Sucesso  "+ item);  
-                        
-                    }
+                {  
+                    var existis = _gruposModel.SelectFuncoesUsuario(_configuration,null,item.IdNivelAcesso).Where(x=>x.IdFuncaoSistema==item.IdFuncaoSistema && x.Status=="Ativo");
+                    
+                    if(existis.Count()>0)  
+                        _gruposModel.DeleteGrupoFuncoes(_configuration,item);
+
                 }
                 return Ok();
             }
