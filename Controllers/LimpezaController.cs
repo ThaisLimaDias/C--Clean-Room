@@ -70,13 +70,38 @@ namespace Embraer_Backend.Controllers
             return (_apontamentos);
         }
 
+                //Get api/Limpeza
+        [HttpGet]       
+        public IActionResult  GetLimpezaParametros(string TipoControle, string Status)
+        {
+            _parametrosLimpeza=_parametrosModel.SelectParametros(_configuration, TipoControle,Status);
+            
+            return Ok(_parametrosLimpeza);
+        }
+
+        [HttpPost]
+        public IActionResult PostLimpezaParametros([FromBody]LimpezaParametros _prtLimpeza)
+        {
+            if (ModelState.IsValid)  
+            {        
+                _parametrosModel.InsertParametros(_configuration,_prtLimpeza);                  
+                
+               log.Debug("Post de Parametro com sucesso");  
+                return Ok(_prtLimpeza);
+               
+            }
+            log.Debug("Post de Parametro de Limpeza não efetuado, Bad Request"+ ModelState.ToString());              
+            return BadRequest(ModelState);
+        }
+
+
         [HttpPost]
         public IActionResult PostLimpeza([FromBody]Limpeza _limpeza)
         {
             if (ModelState.IsValid)            
             {
                 var insert = _lpzModel.InsertLimpeza(_configuration,_limpeza);
-                _parametrosLimpeza =  _parametrosModel.SelectParametros( _configuration,_limpeza.TipoControle);
+                _parametrosLimpeza=_parametrosModel.SelectParametros( _configuration,_limpeza.TipoControle,"Ativo");
 
                 if(insert==true)
                 {
@@ -137,6 +162,20 @@ namespace Embraer_Backend.Controllers
             return BadRequest(ModelState);
         }
         
+        [HttpPut]
+        public IActionResult PutLimpezaParametros([FromBody]LimpezaParametros _prtLimpeza)
+        {
+            if (ModelState.IsValid)  
+            {        
+                _parametrosModel.UpdateParametros(_configuration,_prtLimpeza);                  
+                
+               log.Debug("Put Parametro com sucesso");  
+                return Ok();
+               
+            }
+            log.Debug("Put de Parametro de Limpeza não efetuado, Bad Request"+ ModelState.ToString());              
+            return BadRequest(ModelState);
+        }
     
     }
 }

@@ -34,7 +34,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdApontArComprimido,A.IdLocalMedicao,DescLocalMedicao,A.IdUsuario,CodUsuario,DtMedicao,Valor";
+                sSql = "SELECT IdApontArComprimido,A.IdLocalMedicao,DescLocalMedicao,A.IdUsuario,CodUsuario,DtMedicao,Valor,FatoOcorrencia,AcoesObservacoes";
                 sSql = sSql + " FROM TB_APONT_AR_COMPRIMIDO A";
                 sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
                 sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuario = U.IdUsuario";
