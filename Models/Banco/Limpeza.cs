@@ -48,6 +48,28 @@ namespace Embraer_Backend.Models
         public IEnumerable<LimpezaMedicoes> ApontamentoMedicoes{get;set;}
     }
 
+     public class LimpezaReport
+    {
+        public long IdApontLimpeza { get; set; }
+        public long IdUsuarioVezani { get; set; }
+        public long IdUsuarioEmbraer { get; set; }
+        public string UsuarioVezani {get;set;}
+        public string UsuarioEmbraer {get;set;}
+        public long IdLocalMedicao {get;set;}
+        public string DescLocalMedicao {get;set;}
+        public string TipoControle {get;set;}
+        public string MesControle {get;set;}
+        public DateTime? DtMedicao {get;set;}
+        public DateTime? DtOcorrencia {get;set;}
+        public string FatoOcorrencia {get;set;}
+        public string AcoesObservacoes {get;set;}
+        public string Status {get;set;}
+        public string IdMedicaoLimpeza {get;set;}
+        public long IdCadParametroLimpeza {get;set;}
+        public string DescOQue {get;set;}
+        public string DescMetodoLimpeza {get;set;}
+        public string Atividade_Concluida {get;set;}
+    }
     public class LimpezaModel
     {        
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LimpezaModel));
@@ -126,7 +148,42 @@ namespace Embraer_Backend.Models
                     return null;
                 }
         }
+        public IEnumerable<LimpezaReport> SelectLimpezaReport(IConfiguration _configuration, long? IdLocalMedicao,string dtIni, string dtFim,string TipoControle)
+        {            
+                try
+                {
+                    string sSql = string.Empty;
 
+                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,UsuarioVezani,IdUsuarioEmbraer,UsuarioEmbraer,IdLocalMedicao,DescLocalMedicao";
+                    sSql += ",TipoControle,MesControle,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes,Status,IdMedicaoLimpeza";
+                    sSql += ",IdCadParametroLimpeza,DescOQue,DescMetodoLimpeza,Atividade_Concluida";
+                    sSql += " FROM VW_APONTAMENTO_LIMPEZA";
+                    sSql += " WHERE 1=1";
+
+                    if (IdLocalMedicao!=null && IdLocalMedicao!=0)
+                        sSql += " AND IdLocalMedicao=" + IdLocalMedicao;
+
+                    if (dtIni!=null && dtIni!="" && dtFim!=null && dtFim!="")
+                       sSql += " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";
+
+                    if (TipoControle!=null && TipoControle!="")
+                        sSql += " AND TipoControle='" + TipoControle + "'";
+
+                    IEnumerable <LimpezaReport> _report;
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    {
+                        
+                        _report = db.Query<LimpezaReport>(sSql,commandTimeout:0);
+                    }
+                    
+                    return _report;
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Erro LimpezaModel-SelectLimpezaReport:" + ex.Message.ToString());
+                    return null;
+                }
+        }
         public bool UpdateLimpeza (IConfiguration _configuration,Limpeza _limpeza)
         {
             try{

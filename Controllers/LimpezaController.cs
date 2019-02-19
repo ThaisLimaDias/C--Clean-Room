@@ -24,7 +24,7 @@ namespace Embraer_Backend.Controllers
         LimpezaApontamento _apontamento = new LimpezaApontamento();
 
         IEnumerable<LimpezaParametros> _parametrosLimpeza;
-        
+        IEnumerable <LimpezaReport> report;
         LimpezaIndex _limpezaIndex = new LimpezaIndex();
         
         public LimpezaController(IConfiguration configuration) 
@@ -79,6 +79,17 @@ namespace Embraer_Backend.Controllers
             return Ok(_parametrosLimpeza);
         }
 
+        [HttpGet]       
+        public IActionResult  GetLimpezaReport(long IdLocalMedicao,string Ini, string Fim,string TipoControle)
+        {            
+            if (IdLocalMedicao!=0 || (Ini!=null && Fim!=null) || TipoControle!=null )
+            {
+
+                log.Debug("Get Dos Apontamentos de Limpeza!");            
+                report=_lpzModel.SelectLimpezaReport(_configuration, IdLocalMedicao, Ini, Fim,TipoControle);
+            }
+            return Ok(report);
+        }
         [HttpPost]
         public IActionResult PostLimpezaParametros([FromBody]LimpezaParametros _prtLimpeza)
         {
