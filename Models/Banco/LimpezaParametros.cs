@@ -34,10 +34,10 @@ namespace Embraer_Backend.Models
                 sSql += " WHERE 1=1";               
 
                 if(TipoControle!="" && TipoControle!=null)
-                    sSql = sSql + " AND TipoControle=" + TipoControle;
+                    sSql = sSql + " AND TipoControle='" + TipoControle + "'";
 
                 if(Status!="" && Status!=null)
-                    sSql = sSql + " AND Status=" + Status;
+                    sSql = sSql + " AND Status='" + Status +"'";
 
 
                 IEnumerable <LimpezaParametros> parametros;
