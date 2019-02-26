@@ -13,7 +13,8 @@ namespace Embraer_Backend.Models
     {
         public long IdSecagem { get; set; }
         public string DescMalote { get; set; }
-        public DateTime  DtIniMalote {get;set;}
+        public string Desc_Estufa { get; set; }
+        public DateTime?  DtIniMalote {get;set;}
         public DateTime? DtFimMalote{get;set;} 
         public DateTime? DtEncMalote{get;set;}         
         public string  StatusMalote {get;set;}
@@ -38,7 +39,7 @@ namespace Embraer_Backend.Models
             {
                 string sSql = string.Empty;
 
-                sSql = "SELECT IdSecagem,DescMalote,DtIniMalote,DtFimMalote,DtEncMalote,StatusMalote";
+                sSql = "SELECT IdSecagem,DescMalote,Desc_Estufa,DtIniMalote,DtFimMalote,DtEncMalote,StatusMalote";
                 sSql = sSql + " FROM TB_SECAGEM";
                 sSql = sSql + " WHERE 1=1";
 

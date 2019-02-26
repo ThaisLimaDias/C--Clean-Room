@@ -146,27 +146,32 @@ namespace Embraer_Backend.Controllers
                 var list=_model.SelectLimpezaDashboard(_configuration,IdLocalColeta);
                 if (list.Count()!=0)
                 {
-                    
                     //Pegando o Ultima limpeza DIARIO
-                    var vldiario = list.Where(p=>p.TipoControle=="DIARIO").Max(p=>p.DtMedicao); 
+                    var vldiario = list.Where(p=>p.TipoControle=="DIARIO" && p.Status=="Finalizado").Max(p=>p.DtMedicao); 
+                    var dtAptDiario = _ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Diário").FirstOrDefault();
                     if(vldiario!=null)
                     {
                         var dia = list.Where(p=> p.DtMedicao==vldiario.Value).FirstOrDefault();
                         //Verifica se o APontamento está vencido
-                        if(dia.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>1)
+                        TimeSpan date =  Convert.ToDateTime(dtAptDiario.ProxApont.Value) - Convert.ToDateTime(dia.DtMedicao.Value);
+                        int totalDias = date.Days;
+                        if(totalDias>dtAptDiario.DiasProximaMed)
                             dia.CorDashboard=true;
                         
                         _retorno.Add(dia);   
-                    }               
+                    }        
 
 
                     //Pegando o Ultima limpeza SEMANAL
-                    var vlsema = list.Where(p=>p.TipoControle=="SEMANAL").Max(p=>p.DtMedicao); 
+                    var vlsema = list.Where(p=>p.TipoControle=="SEMANAL" && p.Status=="Finalizado").Max(p=>p.DtMedicao);
+                    var dtAptSemanal = _ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Semanal").FirstOrDefault(); 
                     if(vlsema!=null)
                     {
                         var semana= list.Where(p=> p.DtMedicao==vlsema.Value).FirstOrDefault();
                         //Verifica se o APontamento está vencido
-                        if(semana.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>7)
+                        TimeSpan date =  Convert.ToDateTime(dtAptSemanal.ProxApont.Value) - Convert.ToDateTime(semana.DtMedicao.Value);
+                        int totalDias = date.Days;
+                        if(totalDias>dtAptSemanal.DiasProximaMed)
                             semana.CorDashboard=true;
                         
                         _retorno.Add(semana);
@@ -174,39 +179,53 @@ namespace Embraer_Backend.Controllers
 
                     
                     //Pegando o Ultima limpeza QUINZENAL
-                    var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL").Max(p=>p.DtMedicao); 
+                    var vlQz = list.Where(p=>p.TipoControle=="QUINZENAL" && p.Status=="Finalizado").Max(p=>p.DtMedicao); 
+                    var dtAptQuinzenal = _ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Quinzenal").FirstOrDefault(); 
                     if(vlQz!=null)
                     { 
                         var quinzena = list.Where(p=> p.DtMedicao==vlQz.Value).FirstOrDefault();
                         //Verifica se o APontamento está vencido
-                        if(quinzena.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>15)
+                        TimeSpan date =  Convert.ToDateTime(dtAptQuinzenal.ProxApont.Value) - Convert.ToDateTime(quinzena.DtMedicao.Value);
+                        int totalDias = date.Days;
+                        if(totalDias>dtAptQuinzenal.DiasProximaMed)
                             quinzena.CorDashboard=true;
                                             
                         _retorno.Add(quinzena);
+                    }
 
-                        //Pegando o Ultima limpeza MENSAL
-                        var vlMen = list.Where(p=>p.TipoControle=="MENSAL").Max(p=>p.DtMedicao); 
-
+                    //Pegando o Ultima limpeza MENSAL
+                    var vlMen = list.Where(p=>p.TipoControle=="MENSAL" && p.Status=="Finalizado").Max(p=>p.DtMedicao); 
+                    var dtAptMensal = _ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Mensal").FirstOrDefault(); 
+                    if(vlMen!=null)
+                    { 
                         var mes= list.Where(p=> p.DtMedicao==vlMen.Value).FirstOrDefault();                    
                         //Verifica se o APontamento está vencido
-                        if(mes.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>31)
+                        TimeSpan date =  Convert.ToDateTime(dtAptMensal.ProxApont.Value) - Convert.ToDateTime(mes.DtMedicao.Value);
+                        int totalDias = date.Days;
+                        if(totalDias>dtAptMensal.DiasProximaMed)
                             mes.CorDashboard=true;
-                        
+                            
                         _retorno.Add(mes);
+                        
                     }
 
 
                     //Pegando o Ultima limpeza SEMESTRAL
-                    var vlSem = list.Where(p=>p.TipoControle=="SEMESTRAL").Max(p=>p.DtMedicao);
+                    var vlSem = list.Where(p=>p.TipoControle=="SEMESTRAL" && p.Status=="Finalizado").Max(p=>p.DtMedicao);
+                    var dtAptSemestral = _ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Semestral").FirstOrDefault();
                     if(vlSem!=null)
                     { 
                         var semestre =list.Where(p=> p.DtMedicao==vlSem.Value).FirstOrDefault();                     
                         //Verifica se o APontamento está vencido
-                        if(semestre.DtMedicao.Value.Subtract(DateTime.Now).TotalDays>183)
+
+                        TimeSpan date =  Convert.ToDateTime(dtAptSemestral.ProxApont.Value) - Convert.ToDateTime(semestre.DtMedicao.Value);
+                        int totalDias = date.Days;
+                        if(totalDias>dtAptSemestral.DiasProximaMed)
                             semestre.CorDashboard=true;
 
                         _retorno.Add(semestre);
                     }
+
                     return Ok(_retorno);
                 }
 

@@ -15,6 +15,7 @@ namespace Embraer_Backend.Controllers
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(LimpezaController));
         private readonly IConfiguration _configuration; 
         LimpezaModel _lpzModel = new LimpezaModel();     
+        ControleApontamentoModel _ctrlApt = new ControleApontamentoModel();
         LimpezaMedicoesModel _limpezaMedicoesModel = new LimpezaMedicoesModel();
         LimpezaParametrosModel _parametrosModel = new LimpezaParametrosModel();
 
@@ -89,6 +90,21 @@ namespace Embraer_Backend.Controllers
                 report=_lpzModel.SelectLimpezaReport(_configuration, IdLocalMedicao, Ini, Fim,TipoControle);
             }
             return Ok(report);
+        }
+
+        
+        [HttpGet]       
+        public IActionResult  GetDatas()
+        {            
+            List<ControleApontamento> list = new List<ControleApontamento>();
+            log.Debug("Get das próximas datas dos Apontamentos de Limpeza!");            
+            list.Add(_ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Diário").FirstOrDefault());
+            list.Add(_ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Semanal").FirstOrDefault());
+            list.Add(_ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Quinzenal").FirstOrDefault());
+            list.Add(_ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Mensal").FirstOrDefault());
+            list.Add(_ctrlApt.SelectControleApontamento(_configuration, "Limpeza - Semestral").FirstOrDefault());
+
+            return Ok(list);
         }
         [HttpPost]
         public IActionResult PostLimpezaParametros([FromBody]LimpezaParametros _prtLimpeza)
