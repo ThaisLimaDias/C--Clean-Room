@@ -17,6 +17,7 @@ namespace Embraer_Backend.Controllers
         public  DateDiferenceModel _funcDate = new DateDiferenceModel();
         AlarmesModel _alm = new AlarmesModel();
         ControleApontamentoModel _ctrlApt = new ControleApontamentoModel();
+        StatusSensorModel _status = new StatusSensorModel();
         public DashboardPinturaController(IConfiguration configuration) 
         {            
             _configuration = configuration;
@@ -36,9 +37,10 @@ namespace Embraer_Backend.Controllers
                 if (_retorno!=null)
                 {      
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));
-                    log.Debug("Retorno não nulo!" + _retorno.Valor);   
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
-
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);  
+                    StatusSensor dataUltimaColetaSensor =  _status.SelectStatus(_configuration,_retorno.IdSensores).FirstOrDefault();
+                    var dif= _funcDate.Seconds(_configuration,dataUltimaColetaSensor.Dt_Status.Value);                                        
+                  
                     //Definindo a cor de fundo do quadrante de temperatura
                     var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Temperatura",0);
                     if (alarmes.Count()>0)                
@@ -47,9 +49,11 @@ namespace Embraer_Backend.Controllers
                         _retorno.CorDashboard = false;
                     /////////////  
 
-                    if (difMinutes)                    
+                    if (dif==true)  
+                    {                  
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Json(_retorno);
+                    }
                 }    
                 log.Debug("Retorno nulo!" );
                 return StatusCode(204);
@@ -72,9 +76,9 @@ namespace Embraer_Backend.Controllers
                 if (_retorno!=null)
                 { 
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,2));
-                    log.Debug("Retorno não nulo!" + _retorno.Valor);                   
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);
-
+                    log.Debug("Retorno não nulo!" + _retorno.Valor);   
+                    StatusSensor dataUltimaColetaSensor =  _status.SelectStatus(_configuration,_retorno.IdSensores).FirstOrDefault();
+                    var dif= _funcDate.Seconds(_configuration,dataUltimaColetaSensor.Dt_Status.Value); 
                     //Definindo a cor de fundo do quadrante de temperatura
                     var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Umidade",0);
                     if (alarmes.Count()>0)                
@@ -83,9 +87,11 @@ namespace Embraer_Backend.Controllers
                         _retorno.CorDashboard = false;
                     /////////////                
 
-                    if (difMinutes)
+                    if (dif==true)  
+                    {
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
+                    }
                 }
                 return StatusCode(204);
             }
@@ -188,7 +194,8 @@ namespace Embraer_Backend.Controllers
                 {
                     log.Debug("Retorno não nulo!" + _retorno.Valor);
                     _retorno.Valor=Convert.ToDecimal(_retorno.Valor.ToString().Substring(0,4));  
-                    var difMinutes= _funcDate.Minutos(_configuration,_retorno.DtColeta.Value);                                        
+                    StatusSensor dataUltimaColetaSensor =  _status.SelectStatus(_configuration,_retorno.IdSensores).FirstOrDefault();
+                    var dif= _funcDate.Seconds(_configuration,dataUltimaColetaSensor.Dt_Status.Value);                                        
 
                     //Definindo a cor de fundo do quadrante de temperatura
                     var alarmes = _alm.SelectAlarmesAbertos(_configuration,IdLocalColeta, "Pressão",0);
@@ -199,9 +206,11 @@ namespace Embraer_Backend.Controllers
                     /////////////
 
 
-                    if (difMinutes)
+                    if (dif==true)  
+                    {
                         log.Debug("retorna Json!" + _retorno.DtColeta.Value);  
                         return Ok(_retorno);
+                    }
                 }
                 return StatusCode(204);
                 
@@ -223,7 +232,8 @@ namespace Embraer_Backend.Controllers
                 if(_retorno!=null)
                 {
                      log.Debug("Retorno não nulo!" + _retorno.Valor);
-                    var difMinutes= _funcDate.Dias(_configuration,_retorno.DtMedicao.Value);                                        
+                    var ParametroApont=_ctrlApt.SelectControleApontamento(_configuration,"Pureza Ar Comprimido").FirstOrDefault();
+                    var difMinutes= _funcDate.Dias(_configuration,_retorno.DtMedicao.Value,ParametroApont.DiasProximaMed);                                        
 
                     log.Debug("difMinutes" + difMinutes);
                     if (difMinutes)
@@ -255,7 +265,8 @@ namespace Embraer_Backend.Controllers
                 {                   
                     var porta = _model.SelectPorta(_configuration,IdLocalColeta,item.IdSensores).FirstOrDefault();
                     log.Debug("Retorno não nulo!" + porta.Valor);
-                    var difMinutes= _funcDate.Minutos(_configuration,porta.DtColeta.Value);                                        
+                    StatusSensor dataUltimaColetaSensor =  _status.SelectStatus(_configuration,item.IdSensores).FirstOrDefault();
+                    var dif= _funcDate.Seconds(_configuration,dataUltimaColetaSensor.Dt_Status.Value);                                        
 
 
                     //Definindo a cor de fundo do quadrante de porta
@@ -265,7 +276,7 @@ namespace Embraer_Backend.Controllers
                         else              
                             porta.CorDashboard = false;
                     /////////////
-                    if (difMinutes)
+                    if (dif==true)  
                         log.Debug("retorna Json!" + porta.DescPorta);  
                         _retorno.Add(porta);
                 }

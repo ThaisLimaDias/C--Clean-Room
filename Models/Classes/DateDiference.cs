@@ -9,20 +9,17 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(SecagensModel));
         
-        public bool Minutos(IConfiguration _configuration,DateTime dateColeta)
+        public bool Seconds(IConfiguration _configuration,DateTime dateColeta)
         {
             // Transformando a data recebida para uma data compativel com o SQL
             System.Globalization.CultureInfo brCulture = new System.Globalization.CultureInfo("pt-br");
             log.Debug(brCulture.ThreeLetterISOLanguageName.ToString());
             DateTime coleta  = Convert.ToDateTime(dateColeta,brCulture);          
-            DateTime agora = Convert.ToDateTime(DateTime.Now,brCulture); 
-                 
-            TimeSpan dateNow = DateTime.Now.TimeOfDay;                   
-            TimeSpan difMin =(agora - coleta);
-            long minutosDif = difMin.Minutes;
-            long ultColetaMinutos = Convert.ToInt64(_configuration.GetSection("Settings:MinutosUltimaColeta").Value);
-            log.Debug(ultColetaMinutos);
-            if (minutosDif<ultColetaMinutos)            
+            DateTime agora = Convert.ToDateTime(DateTime.Now,brCulture);    
+                      
+            TimeSpan difSec =agora.Subtract(coleta);
+            long ultColetaSec = 30;
+            if (difSec.Seconds<ultColetaSec  && difSec.Minutes==0 && difSec.Hours==0)            
             {
                 log.Debug("true");       
                 return true;
@@ -31,7 +28,7 @@ namespace Embraer_Backend.Models
                 log.Debug("false");  
                 return false;
         }
-        public bool Dias(IConfiguration _configuration,DateTime dateColeta)
+        public bool Dias(IConfiguration _configuration,DateTime dateColeta,int Dias)
         {   
             // Transformando a data recebida para uma data compativel com o SQL
             System.Globalization.CultureInfo brCulture = new System.Globalization.CultureInfo("pt-br");
@@ -41,10 +38,8 @@ namespace Embraer_Backend.Models
 
             TimeSpan dateNow = DateTime.Now.TimeOfDay;                                       
             TimeSpan difMin =(agora - coleta);
-            long diasDiff = difMin.Days;
-            long ultColetaDias= Convert.ToInt64(_configuration.GetSection("Settings:DiasUltimoApontamento").Value);
-            log.Debug(ultColetaDias);
-            if (diasDiff<ultColetaDias)     
+            long diasDiff = difMin.Days;  
+            if (diasDiff<Dias)     
             {
                 log.Debug("true");       
                 return true;
