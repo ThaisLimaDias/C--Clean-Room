@@ -11,18 +11,18 @@ namespace Embraer_Backend.Models
 {  
     public class Temperatura
     {
-        public long IdColetaTemperatura { get; set; }
-        public long IdLocalColeta { get; set; }
+        public long? IdColetaTemperatura { get; set; }
+        public long? IdLocalColeta { get; set; }
         public DateTime? DtColeta{get;set;}  
         public long IdSensores{get;set;} 
         public string DescSensor{get;set;}
         public decimal Valor {get;set;}
         public string UnidMedida {get;set;}
-        public long IdCadParametroSistema { get; set; }
-        public decimal ControleMin {get;set;}
-        public decimal EspecificacaoMin {get;set;}
-        public decimal EspecificacaoMax {get;set;}
-        public decimal ControleMax {get;set;}
+        public long? IdCadParametroSistema { get; set; }
+        public decimal? ControleMin {get;set;}
+        public decimal? EspecificacaoMin {get;set;}
+        public decimal? EspecificacaoMax {get;set;}
+        public decimal? ControleMax {get;set;}
         public string Etapa{get;set;}
         public bool CorDashboard{get;set;}
 
@@ -81,6 +81,29 @@ namespace Embraer_Backend.Models
                 return null;
             }
         }
+        public IEnumerable<Temperatura> SelectTemperaturaSL(IConfiguration _configuration,long IdLocalColeta)
+        {            
+            try
+            {
+                string sSql = string.Empty;
+
+                sSql = "SPI_SP_TEMPERATURA_MIN_MAX_SL " + IdLocalColeta ;                
+                              
+                                
+                IEnumerable <Temperatura> temperaturas;
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                {
+                    temperaturas = db.Query<Temperatura>(sSql,commandTimeout:0);
+                }
+                return  temperaturas;
+            }
+            catch (Exception ex)
+            {
+                log.Error("Erro TemperaturaModel-SelectTemperatura:" + ex.Message.ToString());
+                return null;
+            }
+        }
+
         public IEnumerable<Temperatura> SelectTemperatura(IConfiguration _configuration,long IdLocalColeta)
         {            
             try

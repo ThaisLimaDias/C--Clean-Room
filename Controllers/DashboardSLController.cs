@@ -34,7 +34,7 @@ namespace Embraer_Backend.Controllers
             if (IdLocalColeta!=0)
             {                 
                 log.Debug("Get Do Dashboard quadro Temperatura Sala Limpa !");            
-                var list=_model.SelectTemperatura(_configuration, IdLocalColeta,null,null);
+                var list=_model.SelectTemperaturaSL(_configuration, IdLocalColeta);
                 if (list.Count()==0)
                     return StatusCode(505,"Não foi encontrado nenhuma coleta de temperatura");
 
@@ -48,7 +48,7 @@ namespace Embraer_Backend.Controllers
                 minTemp.Valor=Convert.ToDecimal(minTemp.Valor.ToString().Substring(0,4));
                 _retorno.Add(minTemp);
                 
-                StatusSensor dataSensorMin =  _status.SelectStatus(_configuration,maxTemp.IdSensores).FirstOrDefault();
+                StatusSensor dataSensorMin =  _status.SelectStatus(_configuration,minTemp.IdSensores).FirstOrDefault();
                 StatusSensor dataSensorMax =  _status.SelectStatus(_configuration,maxTemp.IdSensores).FirstOrDefault();
 
                 var difMinMinutes= _funcDate.Seconds(_configuration,dataSensorMin.Dt_Status.Value);
@@ -297,11 +297,11 @@ namespace Embraer_Backend.Controllers
                 if (_particulas!=null)
                 {
                     var listMed= _model.SelectMedicaoParticulasTam(_configuration,_particulas.IdApontParticulas.Value).ToList();                    
-                    var vlMax1 =listMed.Where(p=>p.TamParticula==">0,5").Max(p=>p.ValorTamParticula);
+                    var vlMax1 =listMed.Where(p=>p.TamParticula==">0.5").Max(p=>p.ValorTamParticula);
                     var vlMax2 =listMed.Where(p=>p.TamParticula==">1").Max(p=>p.ValorTamParticula);
                     var vlMax3 =listMed.Where(p=>p.TamParticula==">5").Max(p=>p.ValorTamParticula);
                     var vlMax4 =listMed.Where(p=>p.TamParticula==">10").Max(p=>p.ValorTamParticula);
-                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">0,5").FirstOrDefault());
+                    _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax1 && p.TamParticula==">0.5").FirstOrDefault());
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax2 && p.TamParticula==">1").FirstOrDefault());
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax3 && p.TamParticula==">5").FirstOrDefault());
                     _particulasTam.Add(listMed.Where(p=>p.ValorTamParticula==vlMax4 && p.TamParticula==">10").FirstOrDefault());          
