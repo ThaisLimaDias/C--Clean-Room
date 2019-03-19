@@ -61,7 +61,7 @@ namespace Embraer_Backend.Controllers
         public IActionResult  Equipamentos()
         { 
             log.Debug("Get Dos Equipamentos");        
-            _equips= _equipsModel.SelectEquipamentos(_configuration);
+            _equips= _equipsModel.SelectEquipamentos(_configuration,null);
 
             if (_equips.Count()>0)
                 return Ok(_equips);

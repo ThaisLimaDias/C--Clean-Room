@@ -171,8 +171,7 @@ namespace Embraer_Backend.Models
 
                     IEnumerable <LimpezaReport> _report;
                     using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
-                    {
-                        
+                    {                        
                         _report = db.Query<LimpezaReport>(sSql,commandTimeout:0);
                     }
                     
