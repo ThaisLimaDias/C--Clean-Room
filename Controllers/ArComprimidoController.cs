@@ -25,12 +25,12 @@ namespace Embraer_Backend.Controllers
 
         //Get api/GetArComprimido
         [HttpGet]      
-        public IActionResult  GetArComprimido(long IdApontArComprimido,long IdLocalMedicao,string Ini, string Fim,bool? Ocorrencia)
+        public IActionResult  GetArComprimido(long IdApontArComprimido,long IdLocalMedicao,string Ini, string Fim,string status,bool? Ocorrencia)
         {
             if (IdApontArComprimido!=0 || (Ini!=null && Fim!=null) || IdLocalMedicao!=0)
             {                  
                 log.Debug("Get Dos Apontamentos de Ar Comprimido!");            
-                _ar=_arModel.SelectArComprimido(_configuration, IdApontArComprimido,IdLocalMedicao, Ini, Fim,Ocorrencia);                              
+                _ar=_arModel.SelectArComprimido(_configuration, IdApontArComprimido,IdLocalMedicao, Ini, Fim,status,Ocorrencia);                              
                 return Ok(_ar);
             }
             else
@@ -74,19 +74,6 @@ namespace Embraer_Backend.Controllers
             else 
                 log.Debug("Post não efetuado, Bad Request" + ModelState.ToString());  
                 return BadRequest(ModelState);
-        }
-
-         [HttpGet]      
-        public IActionResult  GetReportPorta(long? IdLocalMedicao,string Ini, string Fim)
-        {
-            if (Ini!=null && Fim!=null)
-            {                  
-                log.Debug("Get Dos Apontamentos de Ar Comprimido para Report!");            
-                _ar=_arModel.SelectArComprimido(_configuration, null,IdLocalMedicao, Ini, Fim,false);                              
-                return Ok(_ar);
-            }
-            else
-                return StatusCode(505,"Não foi recebido o parametro IdApontArComprimido ou  IdLocalMedicao ou os parametros de Data Inicio e Data Fim");
         }
    }
 }

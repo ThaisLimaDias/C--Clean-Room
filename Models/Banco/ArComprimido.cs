@@ -28,7 +28,7 @@ namespace Embraer_Backend.Models
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(typeof(ArComprimidoModel));
         
-        public IEnumerable<ArComprimido> SelectArComprimido(IConfiguration _configuration,long? IdApontArComprimido,long? IdLocalMedicao,string dtIni,string dtFim,bool? Ocorrencia)
+        public IEnumerable<ArComprimido> SelectArComprimido(IConfiguration _configuration,long? IdApontArComprimido,long? IdLocalMedicao,string dtIni,string dtFim,string Valor,bool? Ocorrencia)
         {            
             try
             {
@@ -44,8 +44,12 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND IdApontArComprimido=" + IdApontArComprimido;
 
                 if(IdLocalMedicao!=0 && IdLocalMedicao!=null)                 
-                    sSql = sSql + " AND IdLocalMedicao=" + IdLocalMedicao;
+                    sSql = sSql + " AND A.IdLocalMedicao=" + IdLocalMedicao;
+
+                if(Valor!="" && Valor!=null)                 
+                    sSql = sSql + " AND Valor='" + Valor + "'";
                 
+
                 if(dtIni !=null && dtIni!="" && dtFim!=null && dtFim!="")
                     sSql = sSql + " AND DtMedicao BETWEEN '" + dtIni + "' AND '" + dtFim + "'";   
 
