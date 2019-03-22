@@ -267,7 +267,14 @@ namespace Embraer_Backend.Controllers
                     log.Debug("Retorno não nulo!" + porta.Valor);
                     StatusSensor dataUltimaColetaSensor =  _status.SelectStatus(_configuration,item.IdSensores).FirstOrDefault();
                     var dif= _funcDate.Seconds(_configuration,dataUltimaColetaSensor.Dt_Status.Value);                                        
+                    System.Globalization.CultureInfo brCulture = new System.Globalization.CultureInfo("pt-br");
+                    DateTime coleta  = Convert.ToDateTime(porta.DtColeta,brCulture);          
+                    DateTime agora = Convert.ToDateTime(DateTime.Now,brCulture);  
+                    TimeSpan diff =agora.Subtract(coleta);
 
+                    porta.horaTv = Convert.ToInt32(diff.TotalHours).ToString() +"h"+(diff.Minutes.ToString().Length<2 
+                    ?"0"+diff.Minutes.ToString() : diff.Minutes.ToString()) +"m";
+                    
 
                     //Definindo a cor de fundo do quadrante de porta
                         var alarmes = _alm.SelectAlarmesAbertos(_configuration,0, "Porta",item.IdSensores);

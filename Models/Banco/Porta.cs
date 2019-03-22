@@ -19,7 +19,8 @@ namespace Embraer_Backend.Models
         public string DescSensor{get;set;}
         public string Valor {get;set;}  
         public string DescPorta{get;set;} 
-        public bool CorDashboard{get;set;}    
+        public bool CorDashboard{get;set;}  
+        public string horaTv  {get;set;}
     }
 
    
