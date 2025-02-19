@@ -5,15 +5,15 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class Limpeza
     {
         public long IdApontLimpeza { get; set; }        
         public long IdUsuarioVezani { get; set; }
-        public long IdUsuarioEmbraer { get; set; }
+        public long IdUsuarioProjectCleanning { get; set; }
         public long  IdLocalMedicao {get;set;}
         public string CodUsuario { get; set; }
         public string DescLocalMedicao { get; set; }
@@ -31,7 +31,7 @@ namespace Embraer_Backend.Models
     {
         public long IdApontLimpeza { get; set; }
         public long IdUsuarioVezani { get; set; }
-        public long IdUsuarioEmbraer { get; set; }
+        public long IdUsuarioProjectCleanning { get; set; }
         public string UserVz{get;set;}
         public string UserEb{get;set;}
         public long  IdLocalMedicao {get;set;}
@@ -52,9 +52,9 @@ namespace Embraer_Backend.Models
     {
         public long IdApontLimpeza { get; set; }
         public long IdUsuarioVezani { get; set; }
-        public long IdUsuarioEmbraer { get; set; }
+        public long IdUsuarioProjectCleanning { get; set; }
         public string UsuarioVezani {get;set;}
-        public string UsuarioEmbraer {get;set;}
+        public string UsuarioProjectCleanning {get;set;}
         public long IdLocalMedicao {get;set;}
         public string DescLocalMedicao {get;set;}
         public string TipoControle {get;set;}
@@ -81,10 +81,10 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,U.CodUsuario AS UserVz,EB.CodUsuario AS UserEb,IdUsuarioEmbraer,A.IdLocalMedicao,DescLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
+                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,U.CodUsuario AS UserVz,EB.CodUsuario AS UserEb,IdUsuarioProjectCleanning,A.IdLocalMedicao,DescLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
                     sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,A.Status FROM TB_APONT_LIMPEZA A";                    
                     sSql = sSql + " INNER JOIN TB_USUARIO U ON A.IdUsuarioVezani = U.IdUsuario";
-                    sSql = sSql + " INNER JOIN TB_USUARIO EB ON A.IdUsuarioEmbraer = EB.IdUsuario";
+                    sSql = sSql + " INNER JOIN TB_USUARIO EB ON A.IdUsuarioProjectCleanning = EB.IdUsuario";
                     sSql = sSql + " INNER JOIN TB_LOCAL_MEDICAO L ON A.IdLocalMedicao = L.IdLocalMedicao";
                     sSql = sSql + " WHERE 1=1";
                     
@@ -101,7 +101,7 @@ namespace Embraer_Backend.Models
                         sSql=sSql + " AND DtOcorrencia IS NULL";
 
                     IEnumerable <LimpezaApontamento> Apontamentos;
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         
                         Apontamentos = db.Query<LimpezaApontamento>(sSql,commandTimeout:0);
@@ -127,14 +127,14 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT TOP 5000 IdApontLimpeza,IdUsuarioVezani,IdUsuarioEmbraer,IdLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
+                    sSql = "SELECT TOP 5000 IdApontLimpeza,IdUsuarioVezani,IdUsuarioProjectCleanning,IdLocalMedicao,TipoControle,MesControle,DtMedicao,DtOcorrencia";
                     sSql = sSql + ",FatoOcorrencia,AcoesObservacoes,Status FROM TB_APONT_LIMPEZA";
                     sSql = sSql + " WHERE IdLocalMedicao=" + IdLocalMedicao + " AND Status='Finalizado'";
                     sSql = sSql + " ORDER BY DtMedicao DESC "; 
 
 
                     IEnumerable <Limpeza> _limpezas;
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         
                         _limpezas = db.Query<Limpeza>(sSql,commandTimeout:0);
@@ -154,7 +154,7 @@ namespace Embraer_Backend.Models
                 {
                     string sSql = string.Empty;
 
-                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,UsuarioVezani,IdUsuarioEmbraer,UsuarioEmbraer,IdLocalMedicao,DescLocalMedicao";
+                    sSql = "SELECT IdApontLimpeza,IdUsuarioVezani,UsuarioVezani,IdUsuarioProjectCleanning,UsuarioProjectCleanning,IdLocalMedicao,DescLocalMedicao";
                     sSql += ",TipoControle,MesControle,DtMedicao,DtOcorrencia,FatoOcorrencia,AcoesObservacoes,Status,IdMedicaoLimpeza";
                     sSql += ",IdCadParametroLimpeza,DescOQue,DescMetodoLimpeza,Atividade_Concluida";
                     sSql += " FROM VW_APONTAMENTO_LIMPEZA";
@@ -170,7 +170,7 @@ namespace Embraer_Backend.Models
                         sSql += " AND TipoControle='" + TipoControle + "'";
 
                     IEnumerable <LimpezaReport> _report;
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {                        
                         _report = db.Query<LimpezaReport>(sSql,commandTimeout:0);
                     }
@@ -197,7 +197,7 @@ namespace Embraer_Backend.Models
                 sSql =sSql+ " WHERE IdApontLimpeza=" + _limpeza.IdApontLimpeza;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -222,9 +222,9 @@ namespace Embraer_Backend.Models
             {
                 string dataOcorrencia = (_limpeza.DtOcorrencia==null) ? "NULL" : _limpeza.DtOcorrencia.Value.ToString();
                 
-                sSql= "INSERT INTO TB_APONT_LIMPEZA (IdUsuarioEmbraer,IdUsuarioVezani,IdLocalMedicao,TipoControle,MesControle,DtMedicao,Status,DtOcorrencia,FatoOcorrencia,AcoesObservacoes)";
+                sSql= "INSERT INTO TB_APONT_LIMPEZA (IdUsuarioProjectCleanning,IdUsuarioVezani,IdLocalMedicao,TipoControle,MesControle,DtMedicao,Status,DtOcorrencia,FatoOcorrencia,AcoesObservacoes)";
                 sSql = sSql + " VALUES ";
-                sSql = sSql + "(" + _limpeza.IdUsuarioEmbraer;
+                sSql = sSql + "(" + _limpeza.IdUsuarioProjectCleanning;
                  sSql = sSql + "," + _limpeza.IdUsuarioVezani;
                 sSql = sSql + "," + _limpeza.IdLocalMedicao;
                 sSql = sSql + ",'" + _limpeza.TipoControle + "'";
@@ -234,7 +234,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }

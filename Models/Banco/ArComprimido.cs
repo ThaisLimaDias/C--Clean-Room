@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class ArComprimido
     {
@@ -57,7 +57,7 @@ namespace Embraer_Backend.Models
                     sSql=sSql + " AND DtOcorrencia IS NULL";      
 
                 IEnumerable <ArComprimido> _arcomp;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _arcomp = db.Query<ArComprimido>(sSql,commandTimeout:0);
                 }
@@ -85,7 +85,7 @@ namespace Embraer_Backend.Models
 
 
                 IEnumerable <ArComprimido> _arcomp;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _arcomp = db.Query<ArComprimido>(sSql,commandTimeout:0);
                 }
@@ -111,7 +111,7 @@ namespace Embraer_Backend.Models
                 sSql =sSql+ " WHERE IdApontArComprimido=" + _ar.IdApontArComprimido;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -144,7 +144,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }

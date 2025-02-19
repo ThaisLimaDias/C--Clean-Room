@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace C_Embraer_Clean_Room.Models.Banco
+namespace C_ProjectCleanning_Clean_Room.Models.Banco
 {
     public class Liberar
     {
@@ -40,7 +40,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                     
                     IEnumerable<Liberar> liberar;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         liberar = db.Query<Liberar>(sSql,commandTimeout:0);
                     }

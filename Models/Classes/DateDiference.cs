@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class DateDiferenceModel
     {

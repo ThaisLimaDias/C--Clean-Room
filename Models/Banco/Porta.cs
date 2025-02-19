@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Porta
     {
@@ -51,7 +51,7 @@ namespace Embraer_Backend.Models
                                 
                 log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _portas = db.Query<Porta>(sSql,commandTimeout:0);
                 }
@@ -84,7 +84,7 @@ namespace Embraer_Backend.Models
 
                 log.Debug(sSql);  
                 IEnumerable <Porta> _portas;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _portas = db.Query<Porta>(sSql,commandTimeout:0);
                 }

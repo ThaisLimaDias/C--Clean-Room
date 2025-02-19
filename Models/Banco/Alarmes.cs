@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Alarmes
     {
@@ -89,7 +89,7 @@ namespace Embraer_Backend.Models
                                 
 
                 IEnumerable <Alarmes> Alarmes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     Alarmes = db.Query<Alarmes>(sSql,commandTimeout:0);
                 }
@@ -131,7 +131,7 @@ namespace Embraer_Backend.Models
                 log.Debug("Alarmes!" + sSql);
 
                 IEnumerable <Alarmes> Alarmes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     Alarmes = db.Query<Alarmes>(sSql,commandTimeout:0);
                 }
@@ -169,7 +169,7 @@ namespace Embraer_Backend.Models
 
                 
                 IEnumerable <AlarmesReport> alarmes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     alarmes = db.Query<AlarmesReport>(sSql,commandTimeout:0);
                 }                 
@@ -201,7 +201,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdAlarme=" + _alarmes.IdAlarme;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }

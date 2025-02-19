@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Sensores
     {
@@ -46,7 +46,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND TipoSensor='" + TipoSensor + "'";             
 
                 IEnumerable <Sensores> _sen;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _sen = db.Query<Sensores>(sSql,commandTimeout:0);
                 }

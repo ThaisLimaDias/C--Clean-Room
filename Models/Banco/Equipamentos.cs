@@ -5,10 +5,10 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 using System.Linq;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class Equipamentos
     {
@@ -34,7 +34,7 @@ namespace Embraer_Backend.Models
             if (cod != null && cod != "")
                 sSql += " and CodEquip in(" + cod + ");";
 
-            using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+            using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
             {
                 equip = db.Query<Equipamentos>(sSql);
             }
@@ -54,7 +54,7 @@ namespace Embraer_Backend.Models
                 sSql += " WHERE IdEquip= " + _equip.IdEquip + ";";
 
                 long update;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql);
                 }
@@ -87,7 +87,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     insertId = db.QueryFirstOrDefault<long>(sSql);
                 }

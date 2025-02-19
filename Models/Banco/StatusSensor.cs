@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class StatusSensor
     {    
@@ -33,7 +33,7 @@ namespace Embraer_Backend.Models
                 sSql = "EXEC SPI_SP_ULTIMO_STATUS_SENSOR " + idSensor;
                        
                 IEnumerable <StatusSensor> _st;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _st = db.Query<StatusSensor>(sSql,commandTimeout:0);
                 }

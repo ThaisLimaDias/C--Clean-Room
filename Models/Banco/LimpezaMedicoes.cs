@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class LimpezaMedicoes
     {
@@ -36,7 +36,7 @@ namespace Embraer_Backend.Models
                     
                     IEnumerable<LimpezaMedicoes> medicoes;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         medicoes = db.Query<LimpezaMedicoes>(sSql,commandTimeout:0);
                     }
@@ -59,7 +59,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdMedicaoLimpeza=" + _medicoes.IdMedicaoLimpeza;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update =db.Execute(sSql);
                 }
@@ -90,7 +90,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }

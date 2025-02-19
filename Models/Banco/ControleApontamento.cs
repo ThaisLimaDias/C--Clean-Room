@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class ControleApontamento
     {
@@ -38,7 +38,7 @@ namespace Embraer_Backend.Models
          
 
                 IEnumerable <ControleApontamento> _ctrlApont;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _ctrlApont = db.Query<ControleApontamento>(sSql,commandTimeout:0);
                 }
@@ -62,7 +62,7 @@ namespace Embraer_Backend.Models
                 sSql += " WHERE IdControleApont=" + _ctrl.IdControleApont;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }

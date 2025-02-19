@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class LimpezaParametros
     {
@@ -41,7 +41,7 @@ namespace Embraer_Backend.Models
 
 
                 IEnumerable <LimpezaParametros> parametros;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {                    
                     parametros = db.Query<LimpezaParametros>(sSql,commandTimeout:0);
                 }
@@ -67,7 +67,7 @@ namespace Embraer_Backend.Models
                 sSql+=  " WHERE IdCadParametroLimpeza=" + _parametros.IdCadParametroLimpeza;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -100,7 +100,7 @@ namespace Embraer_Backend.Models
                 sSql +=" SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }

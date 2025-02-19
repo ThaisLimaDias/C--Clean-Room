@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace C_Embraer_Clean_Room.Models.Banco
+namespace C_ProjectCleanning_Clean_Room.Models.Banco
 {
     public class GruposAcesso
     {
@@ -65,7 +65,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                     sSql+= " AND IdNivelAcesso='" + IdNivelAcesso + "'";
                 
                 IEnumerable <FuncoesUsuario> permissoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     permissoes = db.Query<FuncoesUsuario>(sSql,commandTimeout:0);
                 }                 
@@ -86,7 +86,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                 sSql = "SELECT IdFuncaoSistema,DescFuncaoSistema FROM TB_TELAS_SISTEMA";
                 
                 IEnumerable <FuncoesSistema> permissoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     permissoes = db.Query<FuncoesSistema>(sSql,commandTimeout:0);
                 }                 
@@ -117,7 +117,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                     sSql+= "AND DescNivelAcesso='" + descNivelAcesso + "'";
                 
                 IEnumerable <GruposAcesso> _grupo;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _grupo = db.Query<GruposAcesso>(sSql,commandTimeout:0);
                 }
@@ -130,7 +130,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                     sSql2 += " INNER JOIN TB_TELAS_SISTEMA T ON A.IdFuncaoSistema=T.IdFuncaoSistema";
                     sSql2 += " WHERE IdNivelAcesso=" + item.IdNivelAcesso;
                     IEnumerable <GrupoFuncoes> _funcoes;
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         _funcoes = db.Query<GrupoFuncoes>(sSql2,commandTimeout:0);
                     }
@@ -155,7 +155,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                 sSql+= " WHERE IdNivelAcesso=" + _grupo.IdNivelAcesso;
 
                 int update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -186,7 +186,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
 
                 long insertId = 0;
 
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     insertId=db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -218,7 +218,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
 
                 long insertId = 0;
 
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     insertId=db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -247,7 +247,7 @@ namespace C_Embraer_Clean_Room.Models.Banco
                     
                     IEnumerable<GruposAcesso> grupos;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         grupos = db.Query<GruposAcesso>(sSql,commandTimeout:0);
                     }

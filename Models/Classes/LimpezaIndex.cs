@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class LimpezaIndex
     {

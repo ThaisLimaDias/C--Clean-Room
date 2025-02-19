@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class IluminanciaIndex
     {

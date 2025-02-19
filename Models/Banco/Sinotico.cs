@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class Sinotico
     {    
@@ -41,7 +41,7 @@ namespace Embraer_Backend.Models
                 sSql = "EXEC SPI_SP_SINOTICO " + porta +","+ temperatura +","+ pressao +","+ umidade +","+local;
                        
                 IEnumerable <Sinotico> _sn;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _sn = db.Query<Sinotico>(sSql,commandTimeout:0);
                 }
@@ -62,7 +62,7 @@ namespace Embraer_Backend.Models
                 sSql = "EXEC SPI_SP_SINOTICO_SL";
                        
                 IEnumerable <Sinotico> _snSl;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _snSl = db.Query<Sinotico>(sSql,commandTimeout:0);
                 }

@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Parametros
     {
@@ -46,7 +46,7 @@ namespace Embraer_Backend.Models
                     sSql = sSql + " AND DescParametro LIKE '%" + DescParametro + "'";
 
                 IEnumerable <Parametros> _parametros;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     _parametros = db.Query<Parametros>(sSql,commandTimeout:0);
                 }                 
@@ -76,7 +76,7 @@ namespace Embraer_Backend.Models
                 sSql =sSql+ " WHERE IdCadParametroSistema=" + _parametros.IdCadParametroSistema;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }

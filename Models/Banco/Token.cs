@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class Token
     {
@@ -28,7 +28,7 @@ namespace Embraer_Backend.Models
 
                     Token token;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         token = db.QueryFirstOrDefault<Token>(sSql,commandTimeout:0);
                     }
@@ -53,7 +53,7 @@ namespace Embraer_Backend.Models
                 sSql+= " WHERE IdToken=" + _tk.IdToken;
 
                 int update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -83,7 +83,7 @@ namespace Embraer_Backend.Models
                 sSql += "SELECT @@IDENTITY";
 
                 long insertId = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -111,7 +111,7 @@ namespace Embraer_Backend.Models
                 sSql = "DELETE TB_TOKEN WHERE IdUsuario=" + IdUsuario;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }

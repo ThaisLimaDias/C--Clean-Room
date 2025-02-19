@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class Usuario
     {
@@ -39,7 +39,7 @@ namespace Embraer_Backend.Models
                     
                     IEnumerable<Usuario> usuarios;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         usuarios = db.Query<Usuario>(sSql,commandTimeout:0);
                     }
@@ -67,7 +67,7 @@ namespace Embraer_Backend.Models
                 sSql+= "WHERE IdUsuario=" + _user.IdUsuario;
 
                 int update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -94,7 +94,7 @@ namespace Embraer_Backend.Models
                 sSql+= "WHERE CodUsuario='" + codUsuario +"'";
 
                 int update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -128,7 +128,7 @@ namespace Embraer_Backend.Models
                 sSql += "SELECT @@IDENTITY";
 
                 long insertId = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -156,7 +156,7 @@ namespace Embraer_Backend.Models
                 sSql = "UPDATE TB_USUARIO SET [Status]='Inativo', IdNivelAcesso=NULL WHERE CodUsuario='" + CodUsuario + "'";
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Embraer_Backend
+namespace ProjectCleanning_Backend
 {
     public class Program
     {

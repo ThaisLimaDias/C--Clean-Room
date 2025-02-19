@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {
     public class LocalMedicao
     {
@@ -29,7 +29,7 @@ public class LocalMedicaoModel
                     
                     IEnumerable<LocalMedicao> locais;
          
-                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                    using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                     {
                         locais = db.Query<LocalMedicao>(sSql,commandTimeout:0);
                     }

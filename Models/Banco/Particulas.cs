@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Particulas
     {
@@ -93,7 +93,7 @@ namespace Embraer_Backend.Models
                     sSql=sSql + " AND DtOcorrencia IS NULL";
                     
                 IEnumerable <Particulas> particulas;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     particulas = db.Query<Particulas>(sSql,commandTimeout:0);
                 }                 
@@ -119,7 +119,7 @@ namespace Embraer_Backend.Models
                 sSql += " ORDER BY DtMedicao DESC";
                 
                 IEnumerable <Particulas> particulas;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     particulas = db.Query<Particulas>(sSql,commandTimeout:0);
                 }                 
@@ -152,7 +152,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -184,7 +184,7 @@ namespace Embraer_Backend.Models
                 sSql += " WHERE IdApontParticulas=" + _particulas.IdApontParticulas;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -212,7 +212,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdApontParticulas=" + idApont;  
 
                 IEnumerable <ParticulasMedicoes> medicoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     medicoes = db.Query<ParticulasMedicoes>(sSql,commandTimeout:0);
                 }                   
@@ -239,7 +239,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -270,7 +270,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdMedicaoParticulas=" + IdMedicaoParticulas;  
 
                 IEnumerable <ParticulasTam> medicoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     medicoes = db.Query<ParticulasTam>(sSql,commandTimeout:0);
                 }                   
@@ -297,7 +297,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE M.IdApontParticulas=" + IdApontParticulas;  
 
                 IEnumerable <ParticulasTam> medicoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     medicoes = db.Query<ParticulasTam>(sSql,commandTimeout:0);
                 }                   
@@ -331,7 +331,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -372,7 +372,7 @@ namespace Embraer_Backend.Models
 
                 
                 IEnumerable <ParticulasReport> particulas;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     particulas = db.Query<ParticulasReport>(sSql,commandTimeout:0);
                 }                 

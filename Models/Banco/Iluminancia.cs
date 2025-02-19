@@ -5,9 +5,9 @@ using Dapper;
 using System.Data;
 using System.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Embraer_Backend.Models;
+using ProjectCleanning_Backend.Models;
 
-namespace Embraer_Backend.Models
+namespace ProjectCleanning_Backend.Models
 {  
     public class Iluminancia
     {
@@ -84,7 +84,7 @@ namespace Embraer_Backend.Models
                     sSql=sSql + " AND DtOcorrencia IS NULL";
 
                 IEnumerable <Iluminancia> iluminancias;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     iluminancias = db.Query<Iluminancia>(sSql,commandTimeout:0);
                 }                 
@@ -112,7 +112,7 @@ namespace Embraer_Backend.Models
 
                 
                 IEnumerable <Iluminancia> iluminancias;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     iluminancias = db.Query<Iluminancia>(sSql,commandTimeout:0);
                 }                 
@@ -147,7 +147,7 @@ namespace Embraer_Backend.Models
 
                 
                 IEnumerable <IluminanciaReport> iluminancias;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     iluminancias = db.Query<IluminanciaReport>(sSql,commandTimeout:0);
                 }                 
@@ -180,7 +180,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
@@ -212,7 +212,7 @@ namespace Embraer_Backend.Models
                 sSql =sSql+ " WHERE IdApontIluminancia=" + _iluminancia.IdApontIluminancia;
 
                 long update = 0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     update = db.Execute(sSql,commandTimeout:0);
                 }
@@ -241,7 +241,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " WHERE IdApontIluminancia=" + idApont;  
 
                 IEnumerable <IluminanciaMedicoes> medicoes;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                     medicoes = db.Query<IluminanciaMedicoes>(sSql,commandTimeout:0);
                 }                   
@@ -275,7 +275,7 @@ namespace Embraer_Backend.Models
                 sSql = sSql + " SELECT @@IDENTITY";
 
                 long insertId=0;
-                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_Embraer_Sala_Limpa")))
+                using (IDbConnection db = new SqlConnection(_configuration.GetConnectionString("DB_ProjectCleanning_Sala_Limpa")))
                 {
                    insertId =db.QueryFirstOrDefault<long>(sSql,commandTimeout:0);
                 }
